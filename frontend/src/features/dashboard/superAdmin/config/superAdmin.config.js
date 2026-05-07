@@ -1,7 +1,5 @@
 import { Users, Stethoscope, CalendarCheck, Activity } from "lucide-react";
-// import { useGetDashboardDataQuery } from "../../adminDashboardApiSlice";
 
-// const { data } = useGetDashboardDataQuery();
 export const statusCardItems = [
   {
     id: 1,

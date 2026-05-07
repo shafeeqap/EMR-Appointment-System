@@ -4,9 +4,9 @@ import { useGetDashboardDataQuery } from "../../../dashboard/adminDashboardApiSl
 
 const PatientStatus = () => {
   const { data } = useGetDashboardDataQuery();
-  console.log(data, 'Dashboard data...');
+  // console.log(data, 'Dashboard data...');
   
-  const totalStatus = data?.data?.totalStatus || [];
+  const totalStatus = data?.data?.charts.appointmentsByStatus || [];
 
   const statusData = totalStatus?.map((item) => ({
     name:

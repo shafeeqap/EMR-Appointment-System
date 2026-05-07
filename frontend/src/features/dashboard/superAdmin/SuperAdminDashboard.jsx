@@ -1,15 +1,22 @@
 import React from "react";
 import { StatusCard, ProfileCard } from "../components/index.js";
-import { statusCardItems, superAdminData } from "./config/superAdmin.config";
+import { statusCardItems } from "./config/superAdmin.config";
 import { useSelector } from "react-redux";
 import { getFullName } from "../../../utils/userHelpers";
 import ChartWrapper from "../components/ChartWrapper";
 import AppointmentTrends from "./charts/AppointmentTrends";
 import RevenueOverview from "./charts/RevenueOverview";
+import { useGetDashboardDataQuery } from "../adminDashboardApiSlice.js";
 
 
 const SuperAdminDashboard = () => {
   const { user } = useSelector((state) => state.auth);
+  const { data } = useGetDashboardDataQuery();
+  console.log(data, 'Dashboard data...');
+
+  const appointmentsByMonth = data?.data.charts?.appointmentsByMonth
+  console.log(appointmentsByMonth);
+  
 
   const fullName = getFullName(user);
 
@@ -19,8 +26,8 @@ const SuperAdminDashboard = () => {
       <StatusCard statusCardItems={statusCardItems} role={user.role} />
 
       <div className="text-center mt-5 w-full">
-        <ChartWrapper title="Appointment Trends" data={superAdminData}>
-          <AppointmentTrends data={superAdminData} />
+        <ChartWrapper title="Appointment Trends" data={appointmentsByMonth}>
+          <AppointmentTrends data={appointmentsByMonth} />
         </ChartWrapper>
       </div>
 

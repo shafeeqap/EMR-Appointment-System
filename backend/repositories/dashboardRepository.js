@@ -18,7 +18,8 @@ export const getDashboard = async () => {
     totalCompleted,
     todaysAppointments,
     checkedInPatients,
-    totalStatus,
+    appointmentsByStatus,
+    appointmentsByMonth,
   ] = await Promise.all([
     User.countDocuments(),
     Doctor.countDocuments(),
@@ -42,6 +43,22 @@ export const getDashboard = async () => {
         },
       },
     ]),
+
+    Appointment.aggregate([
+      {
+        $group: {
+          _id: {
+            month: { $month: "$createdAt" },
+          },
+          total: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          "_id.month": 1,
+        },
+      },
+    ]),
   ]);
 
   return {
@@ -52,6 +69,8 @@ export const getDashboard = async () => {
     todaysAppointments,
     checkedInPatients,
     totalCompleted,
-    totalStatus,
+
+    appointmentsByStatus,
+    appointmentsByMonth,
   };
 };
