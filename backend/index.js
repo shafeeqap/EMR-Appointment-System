@@ -10,7 +10,7 @@ import { patientRoutes } from "./routes/patientRoutes.js";
 import cookieParser from "cookie-parser";
 import { notFound } from "./middleware/notFoundMiddleware.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
-import { dashboardRoutes } from "./routes/dashboardRoutes.js";
+import { adminDashboardRoutes } from "./routes/adminDashboardRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -36,7 +36,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/doctors", doctorRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/appointments", appointmentRoutes);
-app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/admin/dashboard", adminDashboardRoutes);
+// app.use("/api/dcotor/dashboard", dashboardRoutes);
+// app.use("/api/receptionist/dashboard", dashboardRoutes);
 
 // 404 handler
 app.use(notFound);

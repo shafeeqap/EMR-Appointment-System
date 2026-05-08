@@ -6,4 +6,4 @@ const router = express.Router();
 
 router.get("/", protect, getDashboardData);
 
-export const dashboardRoutes = router;
+export const adminDashboardRoutes = router;

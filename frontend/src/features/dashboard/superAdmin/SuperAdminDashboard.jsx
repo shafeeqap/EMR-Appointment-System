@@ -8,15 +8,13 @@ import AppointmentTrends from "./charts/AppointmentTrends";
 import RevenueOverview from "./charts/RevenueOverview";
 import { useGetDashboardDataQuery } from "../adminDashboardApiSlice.js";
 
-
 const SuperAdminDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const { data } = useGetDashboardDataQuery();
-  console.log(data, 'Dashboard data...');
-
-  const appointmentsByMonth = data?.data.charts?.appointmentsByMonth
-  console.log(appointmentsByMonth);
+  console.log(data, 'data...');
   
+
+  const appointmentsByMonth = data?.data?.charts?.appointmentsByMonth;
 
   const fullName = getFullName(user);
 

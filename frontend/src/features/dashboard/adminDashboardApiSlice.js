@@ -3,7 +3,7 @@ import { apiSlice } from "../../app/apiSlice";
 export const adminDashboardApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDashboardData: builder.query({
-      query: () => "/dashboard",
+      query: () => "/admin/dashboard",
 
       providesTags: ["Dashboard"],
     }),

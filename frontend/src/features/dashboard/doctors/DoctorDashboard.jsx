@@ -9,10 +9,17 @@ import {
 import { StatusCard, ChartWrapper, ProfileCard } from "../components/index";
 import DailyAppointmentsTimelineChart from "./charts/DailyAppointmentsTimelineChart";
 import PatientStatus from "./charts/PatientStatus";
+import { useGetDashboardDataQuery } from "../adminDashboardApiSlice";
 
 const DoctorDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const fullName = getFullName(user);
+  console.log(user, "User...");
+
+  const { data } = useGetDashboardDataQuery();
+  console.log(data, "Dashboard data...");
+
+  const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
 
   return (
     <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
@@ -22,9 +29,9 @@ const DoctorDashboard = () => {
       <div className="text-center mt-5 w-full">
         <ChartWrapper
           title="Daily Appointments Timeline"
-          data={appointmentTimelineData}
+          data={appointmentsByDay}
         >
-          <DailyAppointmentsTimelineChart data={appointmentTimelineData} />
+          <DailyAppointmentsTimelineChart data={appointmentsByDay} />
         </ChartWrapper>
       </div>
 
