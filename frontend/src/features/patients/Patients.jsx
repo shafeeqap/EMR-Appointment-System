@@ -18,7 +18,6 @@ const Patients = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
-
   const { data, isLoading, error } = useGetPatientQuery({
     page,
     limit: 5,
@@ -44,7 +43,10 @@ const Patients = () => {
 
   const handleEditModalOpen = (row) => {
     dispatch(
-      openModal({ modalType: "EDIT_PATIENT", modalProps: { patientId: row._id } })
+      openModal({
+        modalType: "EDIT_PATIENT",
+        modalProps: { patientId: row._id },
+      })
     );
     console.log("EDIT CLICKED", row);
   };
@@ -85,12 +87,23 @@ const Patients = () => {
 
   return (
     <>
-      <div className="flex justify-between">
-        <FilterSearch value={search} onChange={setSearch} />
+      <div className="flex flex-col sm:flex-row sm:justify-between space-y-3 sm:space-y-0">
+        <div className="flex justify-between sm:w-1/2 md:w-1/4">
+          <FilterSearch
+            value={search}
+            onChange={setSearch}
+            className="w-full"
+          />
+        </div>
 
-        <Button onClick={handleAddModalOpen}>
-          <Plus size={20} />
-        </Button>
+        <div className="h-10">
+          <Button
+            onClick={handleAddModalOpen}
+            className="w-full h-full flex justify-center items-center"
+          >
+            <Plus size={20} />
+          </Button>
+        </div>
       </div>
 
       {/* <FilterOption status={status} setStatus={setStatus} /> */}

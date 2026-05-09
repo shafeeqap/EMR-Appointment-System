@@ -81,23 +81,33 @@ const Users = () => {
 
   if (error) return <ErrorMessage />;
 
-
   return (
     <>
-      <div className="flex justify-between">
-        <FilterSearch value={search} onChange={setSearch} />
+      <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0">
+        <div className="flex flex-col md:flex-row items-center md:space-x-5 space-y-3 md:space-y-0 sm:w-1/2">
+          <FilterSearch
+            value={search}
+            onChange={setSearch}
+            className="w-full"
+          />
 
-        <Button onClick={handleAddModalOpen}>
-          <Plus size={20} />
-        </Button>
+          <FilterOption
+            status={status}
+            onChange={setStatus}
+            options={statusOptions}
+            className="w-full"
+          />
+        </div>
+
+        <div className="h-10">
+          <Button
+            onClick={handleAddModalOpen}
+            className="w-full h-full flex justify-center items-center"
+          >
+            <Plus size={20} />
+          </Button>
+        </div>
       </div>
-
-      <FilterOption
-        status={status}
-        onChange={setStatus}
-        options={statusOptions}
-        className="w-52"
-      />
 
       {users.length === 0 ? (
         <div className="flex justify-center items-center bg-gray-100 mt-5 rounded min-h-20">

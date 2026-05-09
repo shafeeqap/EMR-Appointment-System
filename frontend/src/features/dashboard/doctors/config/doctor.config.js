@@ -102,3 +102,9 @@ export const statusData = [
   { name: "completed", value: 300 },
   { name: "Canceled", value: 100 },
 ];
+
+export const statusOptions = [
+  { label: "All", value: "" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+];
