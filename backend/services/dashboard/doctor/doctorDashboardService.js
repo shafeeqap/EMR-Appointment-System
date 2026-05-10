@@ -1,9 +1,7 @@
-import { getDashboard } from "../../../repositories/dashboard/adminDashboardRepository.js";
-import {
-  findDoctorById,
-  findDoctorOne,
-} from "../../../repositories/doctorRepository.js";
+import { getDoctorDashboardRepo } from "../../../repositories/dashboard/doctorDashboardRepository.js";
+import { findDoctorOne } from "../../../repositories/doctorRepository.js";
 import { AppError } from "../../../utils/AppError.js";
+
 const MONTHS = [
   "",
   "Jan",
@@ -22,22 +20,18 @@ const MONTHS = [
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export const getDashboardDataService = async (user) => {
-  const userId = user.id;
-  console.log(user, "User...");
+export const getDoctorDashboardServices = async (params) => {
+  const userId = params.id;
 
   const doctor = await findDoctorOne({ userId });
+
   if (!doctor) {
     throw new AppError("Doctor not found", 404);
   }
 
-  const data = await getDashboard(doctor._id);
-  console.log(data, "Data...");
-
-  const formattedAppointmentsByMonth = data.appointmentsByMonth.map((item) => ({
-    name: MONTHS[item._id.month],
-    appointment: item.total,
-  }));
+  const data = await getDoctorDashboardRepo(doctor._id);
+  console.log(data.appointmentsByDay, 'appointmentsByDay');
+  
 
   const formattedAppointmentsByDays = data.appointmentsByDay.map((item) => ({
     name: DAYS[new Date(item._id.date).getDay()],
@@ -50,8 +44,6 @@ export const getDashboardDataService = async (user) => {
 
   return {
     stats: {
-      totalUsers: data.totalUsers,
-      totalDoctors: data.totalDoctors,
       totalPatients: data.totalPatients,
       totalAppointments: data.totalAppointments,
       todaysAppointments: data.todaysAppointments,
@@ -60,8 +52,6 @@ export const getDashboardDataService = async (user) => {
     },
 
     charts: {
-      appointmentsByStatus: data.appointmentsByStatus,
-      appointmentsByMonth: formattedAppointmentsByMonth,
       appointmentsByDay: formattedAppointmentsByDays,
     },
   };

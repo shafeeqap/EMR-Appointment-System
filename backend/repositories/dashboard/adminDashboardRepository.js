@@ -4,10 +4,10 @@ import { Doctor } from "../../models/Doctor.js";
 import { Patient } from "../../models/Patient.js";
 import { User } from "../../models/User.js";
 
-export const getDashboard = async (doctorId) => {
-  if (!mongoose.Types.ObjectId.isValid(doctorId)) {
-    throw new Error("Invalid doctor ID");
-  }
+export const getDashboard = async () => {
+  // if (!mongoose.Types.ObjectId.isValid(doctorId)) {
+  //   throw new Error("Invalid doctor ID");
+  // }
 
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
@@ -24,32 +24,20 @@ export const getDashboard = async (doctorId) => {
     totalDoctors,
     totalPatients,
     totalAppointments,
-    totalCompleted,
-    todaysAppointments,
-    checkedInPatients,
     appointmentsByStatus,
     appointmentsByMonth,
- 
   ] = await Promise.all([
     User.countDocuments(),
     Doctor.countDocuments(),
     Patient.countDocuments(),
     Appointment.countDocuments(),
-    Appointment.countDocuments({ status: "completed" }),
-    Appointment.countDocuments({
-      status: "booked",
-      date: { $gte: startOfDay, $lte: endOfDay },
-    }),
-    Appointment.countDocuments({
-      status: "arrived",
-      date: { $gte: startOfDay, $lte: endOfDay },
-    }),
 
     // appointment by status
     Appointment.aggregate([
       {
         $group: {
           _id: "$status",
+
           total: { $sum: 1 },
         },
       },
@@ -76,7 +64,7 @@ export const getDashboard = async (doctorId) => {
     // Appointment.aggregate([
     //   {
     //     $match: {
-    //       doctorId: new mongoose.Types.ObjectId(doctorId),
+    //       // doctorId: new mongoose.Types.ObjectId(doctorId),
 
     //       date: {
     //         $gte: sevenDaysAgo,
@@ -111,9 +99,9 @@ export const getDashboard = async (doctorId) => {
     totalDoctors,
     totalPatients,
     totalAppointments,
-    todaysAppointments,
-    checkedInPatients,
-    totalCompleted,
+    // todaysAppointments,
+    // checkedInPatients,
+    // totalCompleted,
 
     appointmentsByStatus,
     appointmentsByMonth,

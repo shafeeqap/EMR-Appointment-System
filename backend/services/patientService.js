@@ -1,5 +1,8 @@
-import { Doctor } from "../models/Doctor.js";
-import { findAppointmentDetails } from "../repositories/appointmentRepository.js";
+import {
+  findAppointmentDetails,
+  getAppointmentDistinctValue,
+} from "../repositories/appointmentRepository.js";
+import { findDoctorOne } from "../repositories/doctorRepository.js";
 import {
   countPatientDocuments,
   createPatientRepo,
@@ -84,6 +87,27 @@ export const getPatientService = async (query, user) => {
 
   const filter = {};
 
+  let doctorId = null;
+
+  if (user.role === "doctor") {
+    const doctor = await findDoctorOne({ userId: user.id });
+    // console.log(doctor, 'Doctor...');
+    
+    if (!doctor) {
+      throw new AppError("Doctor profile not found for the user", 404);
+    }
+
+    doctorId = doctor._id;
+  }
+
+  const patientIds = await getAppointmentDistinctValue("patientId", {
+    doctorId,
+  });
+
+  filter._id = {
+    $in: patientIds,
+  };
+
   if (search) {
     const isNumeric = /^\d+$/.test(search);
 
@@ -98,6 +122,7 @@ export const getPatientService = async (query, user) => {
   }
 
   const total = await countPatientDocuments(filter);
+
   const patients = await findPatient(filter, skip, limit);
 
   const totalPages = Math.ceil(total / limit);

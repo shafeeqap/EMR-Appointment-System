@@ -1,12 +1,11 @@
 import React from "react";
+import { useGetAdminDashboardDataQuery } from "../adminDashboardApiSlice";
 import { PieChart } from "../../../../components/charts";
-import { useGetDashboardDataQuery } from "../../../dashboard/adminDashboardApiSlice.js";
 
 const PatientStatus = () => {
-  const { data } = useGetDashboardDataQuery();
-  // console.log(data, 'Dashboard data...');
-  
-  const totalStatus = data?.data?.charts.appointmentsByStatus || [];
+  const { data } = useGetAdminDashboardDataQuery();
+
+  const totalStatus = data?.data?.charts?.appointmentsByStatus || [];
 
   const statusData = totalStatus?.map((item) => ({
     name:

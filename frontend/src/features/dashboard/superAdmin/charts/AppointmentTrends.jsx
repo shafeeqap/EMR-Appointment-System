@@ -2,7 +2,7 @@ import React from "react";
 import { BarChart } from "../../../../components/charts";
 
 const AppointmentTrends = ({ data }) => {
-  console.log(data, 'Appointment trend...');
+  
   
   return (
     <div className="h-full w-full">

@@ -1,9 +1,10 @@
 import React from "react";
 import clsx from "clsx";
-import { useGetDashboardDataQuery } from "../adminDashboardApiSlice";
+import { useGetAdminDashboardDataQuery } from "../superAdmin/adminDashboardApiSlice";
+
 
 const StatusCard = ({ statusCardItems, role }) => {
-  const { data } = useGetDashboardDataQuery();
+  const { data } = useGetAdminDashboardDataQuery();
 
   const stats = data?.data?.stats;
 

@@ -142,7 +142,8 @@ export const superAdminData = [
 ];
 
 export const statusData = [
-  { name: "Appointments", value: 400 },
-  { name: "completed", value: 300 },
-  { name: "Canceled", value: 100 },
+  { name: "Appointments" },
+  { name: "completed" },
+  { name: "Canceled" },
+  { name: "No show" },
 ];

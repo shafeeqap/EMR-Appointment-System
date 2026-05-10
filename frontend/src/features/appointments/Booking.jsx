@@ -120,7 +120,7 @@ const Booking = () => {
           />
         </div>
 
-        <div className="flex flex-col sm:items-end md:flex-row md:space-x-5 space-y-3 sm:space-y-0">
+        <div className="flex flex-col sm:items-end md:flex-row md:space-x-5 space-y-3 md:space-y-0">
           <InputField
             type="date"
             value={date}

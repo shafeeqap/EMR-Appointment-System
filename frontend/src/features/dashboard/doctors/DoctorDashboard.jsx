@@ -1,22 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { getFullName } from "../../../utils/userHelpers";
-import {
-  appointmentTimelineData,
-  statusCardItems,
-  statusData,
-} from "./config/doctor.config";
+import { statusCardItems, statusData } from "./config/doctor.config";
 import { StatusCard, ChartWrapper, ProfileCard } from "../components/index";
 import DailyAppointmentsTimelineChart from "./charts/DailyAppointmentsTimelineChart";
-import PatientStatus from "./charts/PatientStatus";
-import { useGetDashboardDataQuery } from "../adminDashboardApiSlice";
+import RevenueOverview from "./charts/RevenueOverview";
+import { useGetDoctorDashboardDataQuery } from "./doctorsApiSlice";
 
 const DoctorDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const fullName = getFullName(user);
-  console.log(user, "User...");
 
-  const { data } = useGetDashboardDataQuery();
+  const { data } = useGetDoctorDashboardDataQuery({ id: user._id });
   console.log(data, "Dashboard data...");
 
   const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
@@ -37,7 +32,7 @@ const DoctorDashboard = () => {
 
       <div className="text-center mt-5 w-full">
         <ChartWrapper title="Patient Status" data={statusData}>
-          <PatientStatus statusData={statusData} />
+          <RevenueOverview />
         </ChartWrapper>
       </div>
     </div>

@@ -1,8 +1,8 @@
-import { apiSlice } from "../../app/apiSlice";
+import { apiSlice } from "../../../app/apiSlice";
 
 export const adminDashboardApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getDashboardData: builder.query({
+    getAdminDashboardData: builder.query({
       query: () => "/admin/dashboard",
 
       providesTags: ["Dashboard"],
@@ -10,4 +10,4 @@ export const adminDashboardApiSlice = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetDashboardDataQuery } = adminDashboardApiSlice;
+export const { useGetAdminDashboardDataQuery } = adminDashboardApiSlice;

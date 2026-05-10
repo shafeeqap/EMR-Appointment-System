@@ -5,14 +5,15 @@ import { useSelector } from "react-redux";
 import { getFullName } from "../../../utils/userHelpers";
 import ChartWrapper from "../components/ChartWrapper";
 import AppointmentTrends from "./charts/AppointmentTrends";
-import RevenueOverview from "./charts/RevenueOverview";
-import { useGetDashboardDataQuery } from "../adminDashboardApiSlice.js";
+import { useGetAdminDashboardDataQuery } from "./adminDashboardApiSlice.js";
+import PatientStatus from "./charts/PatientStatus.jsx";
 
 const SuperAdminDashboard = () => {
   const { user } = useSelector((state) => state.auth);
-  const { data } = useGetDashboardDataQuery();
-  console.log(data, 'data...');
-  
+  console.log(user, "User on admin...");
+
+  const { data } = useGetAdminDashboardDataQuery();
+  console.log(data, "data...");
 
   const appointmentsByMonth = data?.data?.charts?.appointmentsByMonth;
 
@@ -30,8 +31,8 @@ const SuperAdminDashboard = () => {
       </div>
 
       <div className="text-center mt-5 w-full">
-        <ChartWrapper title="Revenue Overview" data={"5"}>
-          <RevenueOverview />
+        <ChartWrapper title="Patient Status" data={'5'}>
+          <PatientStatus />
         </ChartWrapper>
       </div>
     </div>

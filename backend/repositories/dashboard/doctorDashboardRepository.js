@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import { Doctor } from "../../models/Doctor";
-import { Patient } from "../../models/Patient";
-import Appointment from "../../models/Appointment";
+import { Patient } from "../../models/Patient.js";
+import Appointment from "../../models/Appointment.js";
 
-export const getDoctorDashboard = async (doctorId) => {
+export const getDoctorDashboardRepo = async (doctorId) => {
+  console.log(doctorId, 'DotorId...');
+  
   if (!mongoose.Types.ObjectId.isValid(doctorId)) {
     throw new Error("Invalid doctor ID");
   }
@@ -13,10 +14,14 @@ export const getDoctorDashboard = async (doctorId) => {
 
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
+  console.log(endOfDay, 'End of day...');
+  
 
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   sevenDaysAgo.setHours(0, 0, 0, 0);
+  console.log(sevenDaysAgo, 'Seven days ago...');
+  
 
   const [
     totalPatients,
@@ -24,48 +29,29 @@ export const getDoctorDashboard = async (doctorId) => {
     totalCompleted,
     todaysAppointments,
     checkedInPatients,
-    appointmentsByStatus,
-
     appointmentsByDay,
   ] = await Promise.all([
-    Patient.countDocuments(),
+
+    // Total patients
+    Patient.countDocuments({}),
+
+    // Total appointments
     Appointment.countDocuments(),
+
+    // Total doctor consulting completed
     Appointment.countDocuments({ status: "completed" }),
+
+    // Today's appointments
     Appointment.countDocuments({
       status: "booked",
       date: { $gte: startOfDay, $lte: endOfDay },
     }),
+
+    // checked in patients
     Appointment.countDocuments({
       status: "arrived",
       date: { $gte: startOfDay, $lte: endOfDay },
     }),
-
-    // appointment by status
-    Appointment.aggregate([
-      {
-        $group: {
-          _id: "$status",
-          total: { $sum: 1 },
-        },
-      },
-    ]),
-
-    // appointment by month
-    // Appointment.aggregate([
-    //   {
-    //     $group: {
-    //       _id: {
-    //         month: { $month: "$createdAt" },
-    //       },
-    //       total: { $sum: 1 },
-    //     },
-    //   },
-    //   {
-    //     $sort: {
-    //       "_id.month": 1,
-    //     },
-    //   },
-    // ]),
 
     // appointment by day
     Appointment.aggregate([
@@ -107,9 +93,6 @@ export const getDoctorDashboard = async (doctorId) => {
     todaysAppointments,
     checkedInPatients,
     totalCompleted,
-
-    appointmentsByStatus,
-
     appointmentsByDay,
   };
 };

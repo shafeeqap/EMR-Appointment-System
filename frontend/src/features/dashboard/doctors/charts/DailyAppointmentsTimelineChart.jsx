@@ -2,8 +2,6 @@ import React from "react";
 import { LineChart } from "../../../../components/charts";
 
 const DailyAppointmentsTimelineChart = ({ data }) => {
-  // console.log(data, 'Data daily appointment...');
-  
   return (
     <div className="w-full h-full">
       <LineChart

@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import { notFound } from "./middleware/notFoundMiddleware.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import { adminDashboardRoutes } from "./routes/adminDashboardRoutes.js";
+import { doctordashboardRoutes } from "./routes/doctorDashboardRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -37,7 +38,7 @@ app.use("/api/doctors", doctorRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/admin/dashboard", adminDashboardRoutes);
-// app.use("/api/dcotor/dashboard", dashboardRoutes);
+app.use("/api/dcotor/dashboard", doctordashboardRoutes);
 // app.use("/api/receptionist/dashboard", dashboardRoutes);
 
 // 404 handler
