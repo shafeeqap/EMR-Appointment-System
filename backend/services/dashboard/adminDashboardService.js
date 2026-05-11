@@ -1,4 +1,4 @@
-import { getDashboard } from "../../../repositories/dashboard/adminDashboardRepository.js";
+import { getAdminDashboardRepo } from "../../repositories/dashboard/adminDashboardRepository.js";
 
 const MONTHS = [
   "",
@@ -18,10 +18,8 @@ const MONTHS = [
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export const getDashboardDataService = async () => {
-
-
-  const data = await getDashboard();
+export const getAdminDashboardDataService = async () => {
+  const data = await getAdminDashboardRepo();
   // console.log(data, "Data...");
 
   const formattedAppointmentsByMonth = data.appointmentsByMonth.map((item) => ({

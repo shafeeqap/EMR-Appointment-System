@@ -22,7 +22,11 @@ const SuperAdminDashboard = () => {
   return (
     <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
       <ProfileCard fullName={fullName} />
-      <StatusCard statusCardItems={statusCardItems} role={user.role} />
+      <StatusCard
+        statusCardItems={statusCardItems}
+        role={user.role}
+        data={data}
+      />
 
       <div className="text-center mt-5 w-full">
         <ChartWrapper title="Appointment Trends" data={appointmentsByMonth}>
@@ -31,7 +35,7 @@ const SuperAdminDashboard = () => {
       </div>
 
       <div className="text-center mt-5 w-full">
-        <ChartWrapper title="Patient Status" data={'5'}>
+        <ChartWrapper title="Patient Status" data={"5"}>
           <PatientStatus />
         </ChartWrapper>
       </div>

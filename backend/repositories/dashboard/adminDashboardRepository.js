@@ -4,7 +4,7 @@ import { Doctor } from "../../models/Doctor.js";
 import { Patient } from "../../models/Patient.js";
 import { User } from "../../models/User.js";
 
-export const getDashboard = async () => {
+export const getAdminDashboardRepo = async () => {
   // if (!mongoose.Types.ObjectId.isValid(doctorId)) {
   //   throw new Error("Invalid doctor ID");
   // }

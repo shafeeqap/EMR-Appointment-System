@@ -1,4 +1,3 @@
-import { Doctor } from "../models/Doctor.js";
 import {
   createAppointmentRepo,
   findAppointmentById,
@@ -8,7 +7,7 @@ import {
   getAppointment,
   getAppointmentById,
 } from "../repositories/appointmentRepository.js";
-import { findDoctorById } from "../repositories/doctorRepository.js";
+import { findDoctorById, findDoctorOne } from "../repositories/doctorRepository.js";
 import { AppError } from "../utils/AppError.js";
 import { logAction } from "../utils/auditLogger.js";
 import { generateAppointmentToken } from "../utils/generateAppointmentToken.js";
@@ -18,12 +17,12 @@ import { generateAvailableSlots } from "./slotService.js";
 export const createAppointmentService = async (data, user) => {
   const { doctorId, patientId, date, slotTime, notes } = data;
 
+  const now = new Date();
+
   const appointmentDateTime = new Date(date);
   const [hours, minutes] = slotTime.split(":");
 
   appointmentDateTime.setHours(hours, minutes, 0, 0);
-
-  const now = new Date();
 
   if (appointmentDateTime < now) {
     throw new AppError("Past slot not allowed", 405);
@@ -46,9 +45,10 @@ export const createAppointmentService = async (data, user) => {
   }
 
   const existingAppointment = await findAppointmentOne({
+    patientId,
     doctorId,
     date,
-    slotTime,
+    // slotTime,
     status: "booked",
   });
 
@@ -97,7 +97,7 @@ export const getAppointmentsService = async (query, user) => {
   let doctorId = null;
 
   if (user.role === "doctor") {
-    const doctor = await Doctor.findOne({ userId: user.id });
+    const doctor = await findDoctorOne({ userId: user.id });
 
     if (!doctor) {
       throw new AppError("Doctor profile not found for the user", 404);

@@ -1,4 +1,4 @@
-import { CalendarCheck, CalendarDays, Activity } from "lucide-react";
+import { CalendarCheck, CalendarDays, Activity, HeartHandshake } from "lucide-react";
 
 export const statusCardItems = [
   {
@@ -9,14 +9,21 @@ export const statusCardItems = [
   },
   {
     id: 2,
-    title: "Total Appointments",
-    key: "totalAppointments",
+    title: "Today's Appointments",
+    key: "todaysAppointments",
     icon: CalendarDays,
   },
   {
     id: 3,
+    title: "Today's Patients",
+    key: "todaysPatients",
+    icon: HeartHandshake ,
+    // value: 350,
+  },
+  {
+    id: 4,
     title: "Total Completed",
-    key: "totalCompleted",
+    key: "todaysCompleted",
     icon: CalendarCheck,
     // value: 350,
   },

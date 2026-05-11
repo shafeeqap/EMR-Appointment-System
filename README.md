@@ -5,19 +5,28 @@ EMRix is a full-stack Electronic Medical Records (EMR) and appointment managemen
     ⚠️ This project is currently in progress and actively being improved.
 
 ### 🚀 Features
+
 - 🔐 Authentication & Security
     - JWT-based authentication (Access + Refresh Tokens)
     - Token rotation for enhanced security
     - Role-Based Access Control (Admin, Doctor, Receptionist)
+    - Rate limiting for sensitive routes (forgot-password, verify-otp)
+    - Session limiting to control concurrent active logins
+    - Secure refresh token storage using HTTP-only cookies
+    - OTP verification and password reset protection
+
 - 📅 Appointment Scheduling
     - Dynamic slot generation based on doctor availability
     - Configurable working hours and slot duration
     - Real-time slot status tracking
+
 - 📌 Appointment Management
     - Book, reschedule, and cancel appointments
     - Prevent double booking using concurrency control
+
 - 🆔 Patient Management
     - Unique Patient ID generation (UHID-like format: PAT-YYYY/SEQ)
+
 - 📊 System Reliability
     - Logging and audit tracking for system activities
     - Optimized database queries and indexing

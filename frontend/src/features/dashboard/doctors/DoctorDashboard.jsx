@@ -4,8 +4,10 @@ import { getFullName } from "../../../utils/userHelpers";
 import { statusCardItems, statusData } from "./config/doctor.config";
 import { StatusCard, ChartWrapper, ProfileCard } from "../components/index";
 import DailyAppointmentsTimelineChart from "./charts/DailyAppointmentsTimelineChart";
-import RevenueOverview from "./charts/RevenueOverview";
+import RevenueOverview from "./charts/PatientSummary";
 import { useGetDoctorDashboardDataQuery } from "./doctorsApiSlice";
+import TodayAppointments from "./components/TodayAppointments";
+import NextPatient from "./components/NextPatient";
 
 const DoctorDashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -19,21 +21,27 @@ const DoctorDashboard = () => {
   return (
     <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
       <ProfileCard fullName={fullName} />
-      <StatusCard statusCardItems={statusCardItems} role={user.role} />
+      <StatusCard statusCardItems={statusCardItems} role={user.role} data={data} />
 
-      <div className="text-center mt-5 w-full">
+      <div className="text-center mt-5 w-full flex flex-col gap-4">
         <ChartWrapper
           title="Daily Appointments Timeline"
           data={appointmentsByDay}
         >
           <DailyAppointmentsTimelineChart data={appointmentsByDay} />
         </ChartWrapper>
-      </div>
 
-      <div className="text-center mt-5 w-full">
-        <ChartWrapper title="Patient Status" data={statusData}>
+        <ChartWrapper title="Patient Summary" data={statusData}>
           <RevenueOverview />
         </ChartWrapper>
+
+      </div>
+
+      <div className="text-center mt-5 w-full flex flex-col gap-4">
+
+        <TodayAppointments/>
+
+        <NextPatient />
       </div>
     </div>
   );

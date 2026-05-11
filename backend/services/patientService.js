@@ -91,8 +91,7 @@ export const getPatientService = async (query, user) => {
 
   if (user.role === "doctor") {
     const doctor = await findDoctorOne({ userId: user.id });
-    // console.log(doctor, 'Doctor...');
-    
+
     if (!doctor) {
       throw new AppError("Doctor profile not found for the user", 404);
     }

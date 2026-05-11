@@ -1,8 +1,8 @@
-import { getDoctorDashboardServices } from "../../services/dashboard/doctor/doctorDashboardService.js";
+import { getDoctorDashboardServices } from "../../services/dashboard/doctorDashboardService.js";
 
 export const getDoctorDashboard = async (req, res, next) => {
-    console.log(req.params);
-    
+  console.log(req.params);
+
   try {
     const dashboardData = await getDoctorDashboardServices(req.params);
 

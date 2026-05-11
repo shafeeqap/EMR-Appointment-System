@@ -1,21 +1,11 @@
 import React from "react";
 import clsx from "clsx";
-import { useGetAdminDashboardDataQuery } from "../superAdmin/adminDashboardApiSlice";
 
-
-const StatusCard = ({ statusCardItems, role }) => {
-  const { data } = useGetAdminDashboardDataQuery();
-
+const StatusCard = ({ statusCardItems, data }) => {
   const stats = data?.data?.stats;
 
   return (
-    <div
-      className={clsx(
-        "bg-white  min-h-28 grid grid-cols-1",
-        role === "super_admin" ? "sm:grid-cols-4" : "sm:grid-cols-3",
-        "px-4 py-2 border shadow"
-      )}
-    >
+    <div className="bg-white  min-h-28 grid grid-cols-1 sm:grid-cols-4 px-4 py-2 border shadow">
       {statusCardItems.map((item, index) => {
         const Icon = item.icon;
 

@@ -1,6 +1,6 @@
-import { getDoctorDashboardRepo } from "../../../repositories/dashboard/doctorDashboardRepository.js";
-import { findDoctorOne } from "../../../repositories/doctorRepository.js";
-import { AppError } from "../../../utils/AppError.js";
+import { getDoctorDashboardRepo } from "../../repositories/dashboard/doctorDashboardRepository.js";
+import { findDoctorOne } from "../../repositories/doctorRepository.js";
+import { AppError } from "../../utils/AppError.js";
 
 const MONTHS = [
   "",
@@ -30,8 +30,7 @@ export const getDoctorDashboardServices = async (params) => {
   }
 
   const data = await getDoctorDashboardRepo(doctor._id);
-  console.log(data.appointmentsByDay, 'appointmentsByDay');
-  
+  console.log(data, "Data...");
 
   const formattedAppointmentsByDays = data.appointmentsByDay.map((item) => ({
     name: DAYS[new Date(item._id.date).getDay()],
@@ -44,11 +43,10 @@ export const getDoctorDashboardServices = async (params) => {
 
   return {
     stats: {
-      totalPatients: data.totalPatients,
-      totalAppointments: data.totalAppointments,
+      totalPatients: data.totalPatients.length,
       todaysAppointments: data.todaysAppointments,
-      checkedInPatients: data.checkedInPatients,
-      totalCompleted: data.totalCompleted,
+      todaysPatients: data.todaysPatients,
+      todaysCompleted: data.todaysCompleted,
     },
 
     charts: {

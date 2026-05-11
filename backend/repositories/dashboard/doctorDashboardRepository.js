@@ -3,8 +3,8 @@ import { Patient } from "../../models/Patient.js";
 import Appointment from "../../models/Appointment.js";
 
 export const getDoctorDashboardRepo = async (doctorId) => {
-  console.log(doctorId, 'DotorId...');
-  
+  console.log(doctorId, "DotorId...");
+
   if (!mongoose.Types.ObjectId.isValid(doctorId)) {
     throw new Error("Invalid doctor ID");
   }
@@ -14,42 +14,41 @@ export const getDoctorDashboardRepo = async (doctorId) => {
 
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
-  console.log(endOfDay, 'End of day...');
-  
 
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
   sevenDaysAgo.setHours(0, 0, 0, 0);
-  console.log(sevenDaysAgo, 'Seven days ago...');
-  
 
   const [
     totalPatients,
-    totalAppointments,
-    totalCompleted,
     todaysAppointments,
-    checkedInPatients,
+    todaysPatients,
+    todaysCompleted,
     appointmentsByDay,
   ] = await Promise.all([
-
     // Total patients
-    Patient.countDocuments({}),
+    Appointment.distinct("patientId", {
+      doctorId: new mongoose.Types.ObjectId(doctorId),
+    }),
 
-    // Total appointments
-    Appointment.countDocuments(),
-
-    // Total doctor consulting completed
-    Appointment.countDocuments({ status: "completed" }),
-
-    // Today's appointments
+    // Today's total appointments
     Appointment.countDocuments({
-      status: "booked",
+      doctorId: new mongoose.Types.ObjectId(doctorId),
+      // status: "booked",
       date: { $gte: startOfDay, $lte: endOfDay },
     }),
 
-    // checked in patients
+    // Today's total patients
     Appointment.countDocuments({
+      doctorId: new mongoose.Types.ObjectId(doctorId),
       status: "arrived",
+      date: { $gte: startOfDay, $lte: endOfDay },
+    }),
+
+    // Today's total completed appointment
+    Appointment.countDocuments({
+      doctorId: new mongoose.Types.ObjectId(doctorId),
+      status: "completed",
       date: { $gte: startOfDay, $lte: endOfDay },
     }),
 
@@ -89,10 +88,10 @@ export const getDoctorDashboardRepo = async (doctorId) => {
 
   return {
     totalPatients,
-    totalAppointments,
     todaysAppointments,
-    checkedInPatients,
-    totalCompleted,
+    todaysPatients,
+    todaysCompleted,
+
     appointmentsByDay,
   };
 };
