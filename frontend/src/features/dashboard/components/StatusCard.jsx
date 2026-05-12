@@ -5,7 +5,7 @@ const StatusCard = ({ statusCardItems, data }) => {
   const stats = data?.data?.stats;
 
   return (
-    <div className="bg-white  min-h-28 grid grid-cols-1 sm:grid-cols-4 px-4 py-2 border shadow">
+    <div className="bg-white min-h-28 grid grid-cols-1 sm:grid-cols-4 px-4 py-2 border shadow">
       {statusCardItems.map((item, index) => {
         const Icon = item.icon;
 
@@ -19,7 +19,11 @@ const StatusCard = ({ statusCardItems, data }) => {
           >
             {/* Icon */}
             <Icon size={30} className="text-icon" />
-            <p className="text-textPrimary text-sm">{item.title}</p>
+            <div className="w-full">
+              <p className="text-textPrimary text-sm truncate text-center">
+                {item.title}
+              </p>
+            </div>
             <h2 className="text-lg font-bold">{stats?.[item.key] || 0}</h2>
           </div>
         );

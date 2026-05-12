@@ -19,11 +19,18 @@ const DoctorDashboard = () => {
   const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
 
   return (
-    <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
-      <ProfileCard fullName={fullName} />
-      <StatusCard statusCardItems={statusCardItems} role={user.role} data={data} />
+    <>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <ProfileCard fullName={fullName} />
 
-      <div className="text-center mt-5 w-full flex flex-col gap-4">
+        <StatusCard
+          statusCardItems={statusCardItems}
+          role={user.role}
+          data={data}
+        />
+      </div>
+
+      <div className="text-center mt-5 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         <ChartWrapper
           title="Daily Appointments Timeline"
           data={appointmentsByDay}
@@ -31,19 +38,19 @@ const DoctorDashboard = () => {
           <DailyAppointmentsTimelineChart data={appointmentsByDay} />
         </ChartWrapper>
 
-        <ChartWrapper title="Patient Summary" data={statusData}>
+        {/* <ChartWrapper title="Patient Summary" data={statusData}>
           <RevenueOverview />
-        </ChartWrapper>
+        </ChartWrapper> */}
 
-      </div>
+        {/* </div>
 
-      <div className="text-center mt-5 w-full flex flex-col gap-4">
+<div className="text-center mt-5 w-full flex flex-col gap-4"> */}
 
-        <TodayAppointments/>
+        <TodayAppointments />
 
         <NextPatient />
       </div>
-    </div>
+    </>
   );
 };
 
