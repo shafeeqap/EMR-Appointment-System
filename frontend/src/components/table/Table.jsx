@@ -22,7 +22,18 @@ const Table = ({ columns = [], data = [] }) => {
             >
               {columns.map((col, colIndex) => (
                 <td key={colIndex} className="px-4 py-3">
-                  {col.render ? col.render(row, rowIndex) : row[col.accessor]}
+                  {col.render ? (
+                    col.render(row, rowIndex)
+                  ) : (
+                    <>
+                      <p>{row[col.accessor]}</p>
+                      {col.description && (
+                        <small className="text-secondary">
+                          {row[col.description]}
+                        </small>
+                      )}
+                    </>
+                  )}
                 </td>
               ))}
             </tr>
