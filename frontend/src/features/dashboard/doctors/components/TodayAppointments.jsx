@@ -1,8 +1,10 @@
 import React from "react";
 import Table from "../../../../components/table/Table";
 import { useGetPatientQuery } from "../../../patients/patientsApiSlice";
+import { useDispatch } from "react-redux";
+import { openModal } from "../../../../components/modal/modalSlice";
 
-const getAppointmentColumns = () => [
+const getAppointmentColumns = ({ onDetails }) => [
   {
     header: "Name/diagnosis",
     accessor: "name",
@@ -17,7 +19,7 @@ const getAppointmentColumns = () => [
     render: (row) => {
       return (
         <span
-          onClick={""}
+          onClick={() => onDetails(row)}
           className="border border-gray-300 px-2 py-2 rounded cursor-pointer hover:bg-gray-300"
         >
           {row.slotTime ? (
@@ -31,6 +33,14 @@ const getAppointmentColumns = () => [
       );
     },
   },
+  // {
+  //   header: "Details",
+  //   render: (row) => (
+  //     <span className="flex gap-5">
+  //       <Eye onClick={() => onDetails(row)} className="cursor-pointer" />
+  //     </span>
+  //   ),
+  // },
 ];
 
 const todayData = [
@@ -63,11 +73,32 @@ const TodayAppointments = () => {
   console.log(data, "Today appointment");
   const patients = data?.patients;
 
-  const columnData = getAppointmentColumns();
+  const dispatch = useDispatch();
+
+  const handleDetailsModalOpen = (row) => {
+    dispatch(
+      openModal({
+        modalType: "DETAILS_PATIENT",
+        modalProps: { patientId: row._id },
+      })
+    );
+    console.log("DETAILS CLICKED", row);
+  };
+
+  const columnData = getAppointmentColumns({
+    onDetails: handleDetailsModalOpen,
+  });
+
   return (
     <div className="bg-white rounded-xl shadow p-4 w-full">
       <h1 className="text-lg font-semibold">Today Appointments</h1>
-      <Table columns={columnData} data={todayData} />
+      <Table
+        columns={columnData}
+        data={todayData}
+        className="bg-gray-300 text-gray-600"
+        layoutStyle="mt-6 shadow-md"
+        columnStyle="px-4 py-3"
+      />
     </div>
   );
 };

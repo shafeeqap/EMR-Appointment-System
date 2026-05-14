@@ -143,7 +143,13 @@ const Booking = () => {
           <p>{search ? "No results found" : "No appointments available"}</p>
         </div>
       ) : (
-        <Table columns={columns} data={appointments} />
+        <Table
+          columns={columns}
+          data={appointments}
+          className="bg-gray-300 text-gray-600"
+          layoutStyle="mt-6 shadow-md"
+          columnStyle="px-4 py-3"
+        />
       )}
 
       {data.totalPages > 1 && (

@@ -1,13 +1,20 @@
 import React from "react";
+import clsx from "clsx";
 
-const Table = ({ columns = [], data = [] }) => {
+const Table = ({
+  columns = [],
+  data = [],
+  className,
+  layoutStyle,
+  columnStyle,
+}) => {
   return (
-    <div className="overflow-x-auto mt-6 bg-white shadow-md rounded-lg">
+    <div className={clsx(layoutStyle, "overflow-x-auto bg-white rounded-lg")}>
       <table className="min-w-full text-sm text-left text-gray-700">
-        <thead className="bg-gray-300 text-xs uppercase tracking-wider text-gray-600">
+        <thead className={clsx(className, "text-xs uppercase tracking-wider")}>
           <tr>
             {columns.map((col, index) => (
-              <th key={index} className="px-4 py-3">
+              <th key={index} className={columnStyle}>
                 {col.header}
               </th>
             ))}
