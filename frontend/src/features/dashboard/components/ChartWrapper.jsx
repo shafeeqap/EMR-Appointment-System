@@ -6,7 +6,7 @@ const ChartWrapper = ({ title, isLoading, error, data, children }) => {
     <div className="bg-white rounded-xl shadow p-4 w-full">
       {/* Header */}
       <div className="mb-3">
-        <h2 className="text-lg font-semibold">{title}</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-5">{title}</h2>
       </div>
 
       {/* Content */}

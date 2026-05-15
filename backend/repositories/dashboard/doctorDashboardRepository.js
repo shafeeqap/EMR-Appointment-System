@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { Patient } from "../../models/Patient.js";
 import Appointment from "../../models/Appointment.js";
 
 export const getDoctorDashboardRepo = async (doctorId) => {
@@ -21,15 +20,16 @@ export const getDoctorDashboardRepo = async (doctorId) => {
 
   const [
     totalPatients,
-    todaysAppointments,
-    todaysPatients,
-    todaysCompleted,
+    todaysTotalAppointments,
+    todaysArrivedAppointments,
+    todaysTotalCompleted,
     appointmentsByDay,
+    todaysAppointments,
   ] = await Promise.all([
     // Total patients
     Appointment.distinct("patientId", {
       doctorId: new mongoose.Types.ObjectId(doctorId),
-    }),
+    }).then((patients) => patients.length),
 
     // Today's total appointments
     Appointment.countDocuments({
@@ -84,13 +84,65 @@ export const getDoctorDashboardRepo = async (doctorId) => {
         },
       },
     ]),
+
+    // Today's Appointment List
+    Appointment.aggregate([
+      {
+        $match: {
+          doctorId: new mongoose.Types.ObjectId(doctorId),
+
+          status: {
+            $in: ["arrived", "ongoing", "waiting", "completed"],
+          },
+
+          date: { $gte: startOfDay, $lte: endOfDay },
+        },
+      },
+
+      {
+        $sort: {
+          date: 1,
+          slotTime: 1,
+        },
+      },
+
+      // Join Patient
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patientId",
+          foreignField: "_id",
+          as: "patient",
+        },
+      },
+      { $unwind: "$patient" },
+
+      {
+        $project: {
+          _id: 1,
+          status: 1,
+          date: 1,
+          slotTime: 1,
+          tokenNumber: 1,
+          notes: 1,
+
+          patientObjectId: "$patient._id",
+          patientId: "$patient.patientId",
+          name: "$patient.name",
+          mobile: "$patient.mobile",
+          age: "$patient.age",
+          gender: "$patient.gender"
+        },
+      },
+    ]),
   ]);
 
   return {
     totalPatients,
+    todaysTotalAppointments,
+    todaysArrivedAppointments,
+    todaysTotalCompleted,
     todaysAppointments,
-    todaysPatients,
-    todaysCompleted,
 
     appointmentsByDay,
   };

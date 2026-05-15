@@ -43,10 +43,11 @@ export const getDoctorDashboardServices = async (params) => {
 
   return {
     stats: {
-      totalPatients: data.totalPatients.length,
-      todaysAppointments: data.todaysAppointments,
-      todaysPatients: data.todaysPatients,
-      todaysCompleted: data.todaysCompleted,
+      totalPatients: data.totalPatients,
+      todaysAppointments: data.todaysTotalAppointments,
+      todaysPatients: data.todaysArrivedAppointments,
+      todaysCompleted: data.todaysTotalCompleted,
+      todaysAppointmentsList: data.todaysAppointments,
     },
 
     charts: {

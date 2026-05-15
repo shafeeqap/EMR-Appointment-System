@@ -19,7 +19,7 @@ const Button = ({
 
   const variants = {
     primary: "bg-primary text-white hover:bg-primaryHover",
-    secondary: "bg-gray-300 text-black hover:bg-gray-400",
+    secondary: "border border-gray-300 text-black hover:bg-gray-200",
     danger: "bg-red-500 text-white hover:bg-red-600",
 
     slotAvailable: "bg-primary text-white hover:bg-primaryHover",

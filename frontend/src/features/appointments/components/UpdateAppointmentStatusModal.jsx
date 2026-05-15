@@ -15,7 +15,8 @@ import SuccessFeedback from "../../../components/successFedback/SuccessFeedback"
 
 const TRANSITIONS = {
   booked: ["arrived", "cancelled", "no_show"],
-  arrived: ["completed"],
+  arrived: ["ongoing"],
+  ongoing: ["completed"],
   completed: [],
   cancelled: [],
   no_show: [],

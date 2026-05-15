@@ -114,13 +114,7 @@ const Users = () => {
           <p>{search ? "No results found" : "No users available"}</p>
         </div>
       ) : (
-        <Table
-          columns={columns}
-          data={users}
-          className="bg-gray-300 text-gray-600"
-          layoutStyle="mt-6 shadow-md"
-          columnStyle="px-4 py-3"
-        />
+        <Table columns={columns} data={users} />
       )}
 
       {data.totalPages > 1 && (

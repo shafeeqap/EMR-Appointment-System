@@ -112,13 +112,7 @@ const Doctors = () => {
           <p>{search ? "No results found" : "No doctors available"}</p>
         </div>
       ) : (
-        <Table
-          columns={columns}
-          data={doctors}
-          className="bg-gray-300 text-gray-600"
-          layoutStyle="mt-6 shadow-md"
-          columnStyle="px-4 py-3"
-        />
+        <Table columns={columns} data={doctors} />
       )}
 
       {data.totalPages > 1 && (

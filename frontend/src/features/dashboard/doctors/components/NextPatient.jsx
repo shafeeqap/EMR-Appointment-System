@@ -1,91 +1,60 @@
 import React from "react";
-import Table from "../../../../components/table/Table";
-const columns1 = [
-  {
-    header: "Name",
-    accessor: "name",
-    description: "notes",
-  },
-  {
-    header: "Age",
-    accessor: "age",
-  },
-  {
-    header: "Patient ID",
-    accessor: "patientId",
-  },
-];
-const columns2 = [
-  {
-    header: "D.O.B",
-    accessor: "dob",
-  },
-  {
-    header: "Sex",
-    accessor: "sex",
-  },
-  {
-    header: "Weight",
-    accessor: "weight",
-  },
-];
-const columns3 = [
-  {
-    header: "Last Appoint",
-    accessor: "lastAppoint",
-  },
-  {
-    header: "Height",
-    accessor: "height",
-  },
-  {
-    header: "Reg, Date",
-    accessor: "regDate",
-  },
-];
-
-const data1 = [
-  {
-    id: 1,
-    name: "Muhammed",
-    notes: "Report",
-    age: 55,
-    patientId: "PAT 2026/009",
-  },
-];
-const data2 = [
-  {
-    id: 1,
-    dob: "22-01-1990",
-    sex: "Male",
-    weight: "69 kg",
-  },
-];
-const data3 = [
-  {
-    id: 1,
-    lastAppoint: "22-01-1990",
-    height: "169 cm",
-    regDate: "22-05-1989",
-  },
-];
+import Info from "./Info";
+import { Button } from "../../../../components/ui";
 
 const NextPatient = () => {
   return (
     <div className="overflow-x-auto rounded-xl bg-white shadow p-4 w-full">
-      <h1 className="text-lg font-semibold">Next Patient Details</h1>
+      <h2 className="text-lg font-semibold text-gray-800 mb-5">
+        Next Patient Details
+      </h2>
 
-      <Table
-        columns={columns1}
-        data={data1}
-        className="bg-gray-300 text-gray-600"
-        layoutStyle="mt-6"
-        columnStyle="px-4 py-3"
-      />
+      <div className="flex items-start gap-4">
+        {/* Avatar */}
+        <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-lg">
+          M
+        </div>
 
-      <Table columns={columns2} data={data2} columnStyle="px-4" />
+        {/* Main Info */}
+        <div className="flex-1">
+          <div className="flex items-center justify-between">
+            <div className="text-start">
+              <h3 className="text-lg font-semibold text-gray-900">Muhammed</h3>
 
-      <Table columns={columns3} data={data3} columnStyle="px-4" />
+              <p className="text-sm text-gray-500">General Consultation</p>
+            </div>
+
+            <span className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-lg">
+              PAT 2026/009
+            </span>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-5">
+            <Info label="Age" value="55" />
+            <Info label="Gender" value="Male" />
+            <Info label="Weight" value="69 kg" />
+            <Info label="Height" value="169 cm" />
+          </div>
+
+          {/* Additional Info */}
+          <div className="grid grid-cols-2 gap-4 mt-5">
+            <Info label="Date of Birth" value="22-01-1990" />
+            <Info label="Last Appointment" value="22-01-1990" />
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-3 mt-6">
+            <Button className="px-4 py-2 rounded-lg bg-black text-white text-sm">
+              View Details
+            </Button>
+
+            <Button variant="secondary">
+              Reschedule
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
