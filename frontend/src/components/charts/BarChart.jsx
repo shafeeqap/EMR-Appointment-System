@@ -9,7 +9,6 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { RechartsDevtools } from "@recharts/devtools";
 
 const BarChartComponent = ({ data, xKey, bars }) => {
   return (
@@ -33,7 +32,6 @@ const BarChartComponent = ({ data, xKey, bars }) => {
             key={index}
             dataKey={bar.dataKey}
             fill={bar.color}
-            // activeBar={{ fill: "pink", stroke: "blue" }}
             radius={[10, 10, 0, 0]}
           />
         ))}

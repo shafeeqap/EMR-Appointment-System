@@ -28,7 +28,7 @@ export const authenticateUserService = async (data, ip, deviceInfo) => {
   }
 
   const isMatch = await compareHash(password, user.password);
-  console.log(isMatch, "PASSWORD MATCH RESULT");
+ 
   
   if (!isMatch) {
     await logAction({

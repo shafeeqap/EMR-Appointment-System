@@ -104,31 +104,34 @@ const Booking = () => {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row justify-between ">
-        <div className="flex flex-col md:flex-row items-center gap-4">
+      <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0">
+        <div className="flex flex-col md:items-center md:flex-row md:space-x-5 space-y-3 md:space-y-0 sm:w-1/2">
           <FilterSearch
             value={search}
             onChange={setSearch}
-            className="w-[250px] sm:w-52"
+            className="w-full"
           />
 
           <FilterOption
             status={filter}
             onChange={setFilter}
             options={appointmentOptions}
-            className="w-[250px] sm:w-52"
+            className="w-full"
           />
         </div>
 
-        <div className="flex flex-col items-end md:flex-row md:items-center gap-4">
+        <div className="flex flex-col sm:items-end md:flex-row md:space-x-5 space-y-3 md:space-y-0">
           <InputField
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-[15.5rem] sm:w-[260px]"
+            className=" sm:w-72 md:w-80"
           />
-          <div>
-            <Button onClick={handleAddModalOpen}>
+          <div className="h-10">
+            <Button
+              onClick={handleAddModalOpen}
+              className="w-full h-full flex justify-center items-center"
+            >
               <Plus size={20} />
             </Button>
           </div>

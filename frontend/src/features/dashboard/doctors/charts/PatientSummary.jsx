@@ -3,13 +3,12 @@ import { PieChart } from "../../../../components/charts";
 
 // #region Sample data
 const data = [
-  { name: "Group A", value: 400 },
-  { name: "Group B", value: 300 },
-  { name: "Group C", value: 300 },
-  { name: "Group D", value: 200 },
+  { name: "New Patients", value: 50 },
+  { name: "Old Patients", value: 200 },
+  { name: "Total Patients", value: 250 },
 ];
 // #endregion
-const RevenueOverview = () => {
+const PatientSummary = () => {
   return (
     <div className="w-full h-[300px]">
       <PieChart data={data} />
@@ -17,4 +16,4 @@ const RevenueOverview = () => {
   );
 };
 
-export default React.memo(RevenueOverview);
+export default React.memo(PatientSummary);

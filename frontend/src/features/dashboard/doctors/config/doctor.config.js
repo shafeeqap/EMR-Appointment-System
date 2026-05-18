@@ -1,30 +1,35 @@
-import { CalendarCheck, CalendarDays, Activity } from "lucide-react";
+import { CalendarCheck, CalendarDays, Activity, HeartHandshake } from "lucide-react";
 
 export const statusCardItems = [
   {
     id: 1,
     title: "Total Patients",
-    key: "patients",
+    key: "totalPatients",
     icon: Activity,
-    value: 500,
   },
   {
     id: 2,
-    title: "Total Appointments",
-    key: "appointments",
+    title: "Today's Appointments",
+    key: "todaysAppointments",
     icon: CalendarDays,
-    value: 450,
   },
   {
     id: 3,
-    title: "Total Reports",
-    key: "appointments",
+    title: "Today's Patients",
+    key: "todaysPatients",
+    icon: HeartHandshake ,
+    // value: 350,
+  },
+  {
+    id: 4,
+    title: "Total Completed",
+    key: "todaysCompleted",
     icon: CalendarCheck,
-    value: 350,
+    // value: 350,
   },
 ];
 
-export const data = [
+export const appointmentTimelineData = [
   {
     name: "Jan",
     uv: 4000,
@@ -97,4 +102,16 @@ export const data = [
   //   pv: 4370,
   //   amt: 2190,
   // },
+];
+
+export const statusData = [
+  { name: "Appointments", value: 400 },
+  { name: "completed", value: 300 },
+  { name: "Canceled", value: 100 },
+];
+
+export const statusOptions = [
+  { label: "All", value: "" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
 ];

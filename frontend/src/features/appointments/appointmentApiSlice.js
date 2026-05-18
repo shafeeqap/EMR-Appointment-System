@@ -54,7 +54,16 @@ const appointmentApiSlice = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { status },
       }),
-      invalidatesTags: ["Appointment"],
+      invalidatesTags: ["Appointment", "Dashboard"],
+    }),
+
+    startConsultation: builder.mutation({
+      query: ({ appointmentId, doctorId, date }) => ({
+        url: `/appointments/start-consultation`,
+        method: "PATCH",
+        body: { appointmentId, doctorId, date },
+      }),
+      invalidatesTags: ["Appointment", "Dashboard"],
     }),
   }),
 });
@@ -67,4 +76,5 @@ export const {
   useUpdateAppointmentMutation,
   useDeleteAppointmentMutation,
   useUpdateAppointmentStatusMutation,
+  useStartConsultationMutation,
 } = appointmentApiSlice;

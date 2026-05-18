@@ -4,30 +4,30 @@ export const statusCardItems = [
   {
     id: 1,
     title: "Total User",
-    key: "users",
+    key: "totalUsers",
     icon: Users,
-    value: 500,
+    // value: 500,
   },
   {
     id: 2,
     title: "Total Patients",
-    key: "patients",
+    key: "totalPatients",
     icon: Activity,
-    value: 500,
+    // value: 500,
   },
   {
     id: 3,
     title: "Total Doctors",
-    key: "doctors",
+    key: "totalDoctors",
     icon: Stethoscope,
-    value: 50,
+    // value: 50,
   },
   {
     id: 4,
     title: "Total Appointments",
-    key: "appointments",
+    key: "totalAppointments",
     icon: CalendarCheck,
-    value: 450,
+    // value: 450,
   },
 ];
 
@@ -139,4 +139,11 @@ export const superAdminData = [
   //   pv: 4370,
   //   amt: 2190,
   // },
+];
+
+export const statusData = [
+  { name: "Appointments" },
+  { name: "completed" },
+  { name: "Canceled" },
+  { name: "No show" },
 ];

@@ -3,7 +3,7 @@ import { apiSlice } from "../../../app/apiSlice";
 export const doctorApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getDoctors: builder.query({
-      query: ({ page = 1, limit = 5, search="", status="" }) =>
+      query: ({ page = 1, limit = 5, search = "", status = "" }) =>
         `/doctors?page=${page}&limit=${limit}&search=${search}&status=${status}`,
 
       providesTags: ["Doctor"],
@@ -59,6 +59,12 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ["Doctor"],
     }),
+
+    getDoctorDashboardData: builder.query({
+      query: ({ id }) => `/dcotor/dashboard/${id}`,
+
+      providesTags: ["Dashboard"],
+    }),
   }),
 });
 
@@ -70,4 +76,5 @@ export const {
   useUpdateDoctorMutation,
   useUpdateDoctorStatusMutation,
   useDeleteDoctorMutation,
+  useGetDoctorDashboardDataQuery,
 } = doctorApiSlice;
