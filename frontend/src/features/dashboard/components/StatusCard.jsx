@@ -1,12 +1,11 @@
 import React from "react";
 import clsx from "clsx";
 
+const StatusCard = ({ statusCardItems, data }) => {
+  const stats = data?.data?.stats;
 
-const StatusCard = ({statusCardItems, role}) => {
-  console.log(role, 'Role in status card...');
-  
   return (
-    <div className={clsx("bg-white  min-h-28 grid grid-cols-1", role==="super_admin" ? "sm:grid-cols-4" : "sm:grid-cols-3", "px-4 py-2 border shadow")}>
+    <div className="bg-white min-h-28 grid grid-cols-1 sm:grid-cols-4 px-4 py-2 border shadow">
       {statusCardItems.map((item, index) => {
         const Icon = item.icon;
 
@@ -20,8 +19,12 @@ const StatusCard = ({statusCardItems, role}) => {
           >
             {/* Icon */}
             <Icon size={30} className="text-icon" />
-            <p className="text-textPrimary text-sm">{item.title}</p>
-            <h2 className="text-lg font-bold">{item.value}</h2>
+            <div className="w-full">
+              <p className="text-textPrimary text-sm truncate text-center">
+                {item.title}
+              </p>
+            </div>
+            <h2 className="text-lg font-bold">{stats?.[item.key] || 0}</h2>
           </div>
         );
       })}

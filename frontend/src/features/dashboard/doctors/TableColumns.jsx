@@ -1,6 +1,7 @@
 import { Trash2, PenLine } from "lucide-react";
 import { formatWorkingHours } from "../../../utils/formatHours";
 import { getDuration } from "../../../utils/calculateDuration";
+import { STATUS_UI } from "../../appointments/components";
 
 export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
   {
@@ -60,7 +61,8 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
   {
     header: "Status",
     render: (row) => (
-      <span onClick={() => onUpdateStatus(row)}
+      <span
+        onClick={() => onUpdateStatus(row)}
         className={`max-w-16 px-2 py-1 text-xs font-medium cursor-pointer text-center rounded uppercase text-white ${
           row.isActive ? "bg-green-700" : "bg-red-700"
         }`}
@@ -81,5 +83,60 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
         />
       </span>
     ),
+  },
+];
+
+// Get today appointment columns
+export const getTodayAppointmentColumns = ({ onDetails, onUpdateStatus }) => [
+  {
+    header: "Name/diagnosis",
+    accessor: "name",
+    description: "notes",
+  },
+  {
+    header: "Age",
+    accessor: "age",
+  },
+  {
+    header: "Appointment Type",
+    render: (row) => {
+      const statusConfig = STATUS_UI[row.status];
+      const isFinalState = ["completed", "cancelled", "no_show"].includes(
+        row.status
+      );
+
+      return (
+        <button
+          onClick={() => onUpdateStatus(row)}
+          disabled={isFinalState}
+          className=" disabled:cursor-not-allowed"
+        >
+          <span
+            className={`max-w-16 px-2 py-1 text-xs font-medium text-center rounded cursor-pointer uppercase ${statusConfig?.className}`}
+          >
+            {statusConfig?.label}
+          </span>
+        </button>
+      );
+    },
+  },
+  {
+    header: "Time",
+    render: (row) => {
+      return (
+        <div
+          onClick={() => onDetails(row)}
+          className="border border-gray-300 px-1 py-2 text-center rounded cursor-pointer hover:bg-gray-300"
+        >
+          {row.slotTime ? (
+            row.slotTime
+          ) : (
+            <span onClick={""} className="border border-gray-300">
+              {row.status}
+            </span>
+          )}
+        </div>
+      );
+    },
   },
 ];

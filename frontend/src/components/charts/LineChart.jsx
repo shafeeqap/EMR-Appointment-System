@@ -9,9 +9,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { RechartsDevtools } from "@recharts/devtools";
 
-const LineChartComponent = ({ data = [] }) => {
+const LineChartComponent = ({ data = [], xKey, lines }) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart
@@ -24,7 +23,7 @@ const LineChartComponent = ({ data = [] }) => {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border-3)" />
-        <XAxis dataKey="name" stroke="var(--color-text-3)" />
+        <XAxis dataKey={xKey} stroke="var(--color-text-3)" />
         <YAxis width="auto" stroke="var(--color-text-3)" />
         <Tooltip
           cursor={{
@@ -36,26 +35,19 @@ const LineChartComponent = ({ data = [] }) => {
           }}
         />
         <Legend />
-        
-        <Line
-          type="monotone"
-          dataKey="pv"
-          stroke="var(--color-chart-1)"
-          dot={{
-            fill: "var(--color-surface-base)",
-          }}
-          activeDot={{ r: 8, stroke: "var(--color-surface-base)" }}
-        />
-        <Line
-          type="monotone"
-          dataKey="uv"
-          stroke="var(--color-chart-2)"
-          dot={{
-            fill: "var(--color-surface-base)",
-          }}
-          activeDot={{ stroke: "var(--color-surface-base)" }}
-        />
-        {/* <RechartsDevtools /> */}
+
+        {lines.map((line, index) => (
+          <Line
+            key={index}
+            type="monotone"
+            dataKey={line.dataKey}
+            stroke={line.stroke}
+            dot={{
+              fill: line.stroke,
+            }}
+            activeDot={{ r: 8, stroke: line.stroke }}
+          />
+        ))}
       </LineChart>
     </ResponsiveContainer>
   );

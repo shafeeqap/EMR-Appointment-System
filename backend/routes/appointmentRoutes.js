@@ -8,6 +8,7 @@ import {
   getAvailableSlots,
   updateAppointments,
   updateAppointmentStatus,
+  startConsultation,
 } from "../controllers/appointmentController.js";
 import { validate } from "../middleware/validationMiddleware.js";
 import {
@@ -36,5 +37,6 @@ router.put(
 );
 router.patch("/:id/status", protect, updateAppointmentStatus);
 router.delete("/:id", protect, deleteAppointment);
+router.patch("/start-consultation", protect, startConsultation);
 
 export const appointmentRoutes = router;

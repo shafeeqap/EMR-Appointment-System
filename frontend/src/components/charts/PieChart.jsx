@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from "recharts";
 
-const COLORS = ["#2065ba", "#351a73", "#4caf50", "#ff9800"];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A020F0"];
 
 const PieChartComponent = ({ isAnimationActive = true, data = [] }) => {
   return (

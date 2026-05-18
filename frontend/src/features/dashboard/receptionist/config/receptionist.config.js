@@ -1,18 +1,18 @@
-import { Stethoscope, CalendarCheck, Activity } from "lucide-react";
+import { Stethoscope, CalendarCheck, CheckLine } from "lucide-react";
 
 export const statusCardItems = [
   {
     id: 1,
     title: "Today's Appointments",
-    key: "appointments",
+    key: "todaysAppointments",
     icon: CalendarCheck,
     value: 150,
   },
   {
     id: 2,
     title: "Checked-in Patients",
-    key: "patients",
-    icon: Activity,
+    key: "checkedInPatients",
+    icon: CheckLine,
     value: 100,
   },
   {

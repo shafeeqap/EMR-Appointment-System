@@ -229,3 +229,7 @@ export const findAppointmentOne = async (filter) => {
 export const countAppointmentDocuments = async (filter) => {
   return Appointment.countDocuments(filter);
 };
+
+export const getAppointmentDistinctValue = async (field, query, option) => {
+  return Appointment.distinct(field, query, option);
+};

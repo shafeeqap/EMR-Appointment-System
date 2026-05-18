@@ -33,7 +33,7 @@ const SlotGrid = ({
           {/* Status Colors */}
           <StatusColors />
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 py-5 px-5 bg-white border border-gray-300 rounded h-52 overflow-y-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 py-5 px-5 bg-white border border-gray-300 rounded h-52 overflow-y-auto">
             {allSlots?.map((slot) => {
               const isBooked = bookedSlots.includes(slot);
               const isSelected = selectedSlot === slot;

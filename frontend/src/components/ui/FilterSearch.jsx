@@ -3,7 +3,7 @@ import InputField from "./InputField";
 
 const FilterSearch = ({ value, onChange, className }) => {
   return (
-    <div className={className}>
+    <div className={`m-auto ${className}`}>
       <InputField
         placeholder="Search..."
         value={value}
