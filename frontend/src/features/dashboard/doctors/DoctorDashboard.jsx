@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { getFullName } from "../../../utils/userHelpers";
 import { statusCardItems } from "./config/doctor.config";
@@ -16,6 +16,8 @@ const statusPriority = {
 };
 
 const DoctorDashboard = () => {
+  const [nextPatient, setNextPatient] = useState(null);
+  
   const { user } = useSelector((state) => state.auth);
   const fullName = getFullName(user);
 
