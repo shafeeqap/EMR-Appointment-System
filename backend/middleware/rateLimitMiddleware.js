@@ -10,4 +10,5 @@ export const otpLimiter = rateLimit({
 export const verifyLimiter = rateLimit({
   windowMs: 10 * 60 * 1000,
   max: 5,
+  message: "Too many verification attempts. Try again later."
 });

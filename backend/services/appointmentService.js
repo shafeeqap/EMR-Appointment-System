@@ -1,4 +1,3 @@
-import { Doctor } from "../models/Doctor.js";
 import {
   createAppointmentRepo,
   findAppointmentById,
@@ -8,10 +7,12 @@ import {
   getAppointment,
   getAppointmentById,
 } from "../repositories/appointmentRepository.js";
-import { findDoctorById } from "../repositories/doctorRepository.js";
+import {
+  findDoctorById,
+  findDoctorOne,
+} from "../repositories/doctorRepository.js";
 import { AppError } from "../utils/AppError.js";
 import { logAction } from "../utils/auditLogger.js";
-import { formattedDate } from "../utils/formattedDate.js";
 import { generateAppointmentToken } from "../utils/generateAppointmentToken.js";
 import { generateAvailableSlots } from "./slotService.js";
 
@@ -19,12 +20,12 @@ import { generateAvailableSlots } from "./slotService.js";
 export const createAppointmentService = async (data, user) => {
   const { doctorId, patientId, date, slotTime, notes } = data;
 
+  const now = new Date();
+
   const appointmentDateTime = new Date(date);
   const [hours, minutes] = slotTime.split(":");
 
   appointmentDateTime.setHours(hours, minutes, 0, 0);
-
-  const now = new Date();
 
   if (appointmentDateTime < now) {
     throw new AppError("Past slot not allowed", 405);
@@ -47,9 +48,10 @@ export const createAppointmentService = async (data, user) => {
   }
 
   const existingAppointment = await findAppointmentOne({
+    patientId,
     doctorId,
     date,
-    slotTime,
+    // slotTime,
     status: "booked",
   });
 
@@ -94,13 +96,11 @@ export const getAppointmentsService = async (query, user) => {
   const search = query.search?.trim();
   const status = query.status;
   const date = query.date;
-  
-  console.log(date, 'Date...');
 
   let doctorId = null;
 
   if (user.role === "doctor") {
-    const doctor = await Doctor.findOne({ userId: user.id });
+    const doctor = await findDoctorOne({ userId: user.id });
 
     if (!doctor) {
       throw new AppError("Doctor profile not found for the user", 404);
@@ -122,8 +122,6 @@ export const getAppointmentsService = async (query, user) => {
   if (allowedStatuses.includes(status)) {
     filter.status = status;
   }
-
-  // console.log(doctor._id, "Doctor ID in service...");
 
   const { appointments, total } = await getAppointment({
     doctorId,
@@ -156,6 +154,8 @@ export const getAppointmentByIdService = async (params) => {
 export const updateAppointmentStatusService = async (params, data, user) => {
   const id = params.id;
   const { status } = data;
+  // console.log(id, "ID");
+  // console.log(status, "Status");
 
   const appointment = await findAppointmentById(id);
 
@@ -185,9 +185,6 @@ export const updateAppointmentStatusService = async (params, data, user) => {
 export const updateAppointmentService = async (params, data, user) => {
   const id = params.id;
   const { date, doctorId, slotTime, notes } = data;
-
-  console.log(id, "ID in update service...");
-  console.log(data, "Data in update service...");
 
   const appointment = await findAppointmentById(id);
 
@@ -244,7 +241,7 @@ export const updateAppointmentService = async (params, data, user) => {
   return updatedAppointment;
 };
 
-// =============> Update appointments service <=============
+// =============> Delete appointments service <=============
 export const deleteAppointmentService = async (params, user) => {
   const id = params.id;
 
@@ -268,4 +265,62 @@ export const deleteAppointmentService = async (params, user) => {
       notes: appointment.notes,
     },
   });
+};
+
+// =============> Start consultation service <=============
+export const startConsultationService = async (body, user) => {
+  const { appointmentId, doctorId, date } = body;
+
+  console.log(date, "Date...");
+
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const doctor = await findDoctorOne({ _id: doctorId });
+
+  if (!doctor) {
+    throw new AppError("Doctor not found", 404);
+  }
+
+  // 1. Update current appointment
+  const currentAppointment = await findAppointmentByIdAndUpdate(
+    appointmentId,
+    { status: "ongoing" },
+    { returnDocument: "after", runValidators: true }
+  );
+
+  await logAction({
+    userId: user.id,
+    role: user.role,
+    action: "UPDATE_APPOINTMENT",
+    entity: "Appointment",
+    entityId: appointmentId,
+    metadata: {
+      patientId: currentAppointment.patientId,
+      doctorId: currentAppointment.doctorId,
+      status: currentAppointment.status,
+    },
+  });
+
+  // 2. Find next scheduled appointment
+  const nextAppointment = await findAppointmentOne(
+    {
+      doctorId,
+      status: "arrived",
+      date: { $gte: startOfDay, $lte: endOfDay },
+    },
+    { sort: { slotTime: 1 } }
+  );
+  console.log(nextAppointment, "Next...");
+
+  // 3. Update next patient status
+  if (nextAppointment) {
+    nextAppointment.status = "waiting";
+    await nextAppointment.save();
+  }
+
+  return { currentAppointment, nextAppointment };
 };

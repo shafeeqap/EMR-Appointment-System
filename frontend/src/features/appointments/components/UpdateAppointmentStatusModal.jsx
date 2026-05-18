@@ -15,7 +15,8 @@ import SuccessFeedback from "../../../components/successFedback/SuccessFeedback"
 
 const TRANSITIONS = {
   booked: ["arrived", "cancelled", "no_show"],
-  arrived: ["completed"],
+  arrived: ["ongoing"],
+  ongoing: ["completed"],
   completed: [],
   cancelled: [],
   no_show: [],
@@ -102,7 +103,7 @@ const UpdateAppointmentStatusModal = () => {
           <>
             This action cannot be undone. Please confirm that you want to
             proceed. Do you really want to update {""}
-            <span className="text-red-600">{appointment?.patient?.name}'s</span>
+            <span className="text-red-600">{appointment?.patient?.name || appointment?.name}'s</span>
             {""} appointment status?
           </>
         )}

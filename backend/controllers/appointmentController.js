@@ -6,6 +6,7 @@ import {
   updateAppointmentService,
   deleteAppointmentService,
   getAppointmentByIdService,
+  startConsultationService,
 } from "../services/appointmentService.js";
 
 // =============> Create a new appointment <=============
@@ -110,6 +111,21 @@ export const deleteAppointment = async (req, res, next) => {
     await deleteAppointmentService(req.params, req.user);
 
     res.status(200).json({ message: "Appointment deleted successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// =============> Start Consultation <=============
+export const startConsultation = async (req, res, next) => {
+  try {
+    const data = await startConsultationService(req.body, req.user);
+    console.log(data, "Appointment...");
+
+    res.status(200).json({
+      message: "Appointment updated successfully",
+      data,
+    });
   } catch (error) {
     next(error);
   }
