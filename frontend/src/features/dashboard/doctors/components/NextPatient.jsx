@@ -2,7 +2,9 @@ import React from "react";
 import Info from "./Info";
 import { Button } from "../../../../components/ui";
 
-const NextPatient = () => {
+const NextPatient = ({nextData}) => {
+  // console.log(nextData, 'Next patient...');
+  
   return (
     <div className="overflow-x-auto rounded-xl bg-white shadow p-4 w-full">
       <h2 className="text-lg font-semibold text-gray-800 mb-5">
@@ -12,27 +14,27 @@ const NextPatient = () => {
       <div className="flex items-start gap-4">
         {/* Avatar */}
         <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-lg">
-          M
+          {nextData?.name?.split('')[0]}
         </div>
 
         {/* Main Info */}
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <div className="text-start">
-              <h3 className="text-lg font-semibold text-gray-900">Muhammed</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{nextData?.name}</h3>
 
-              <p className="text-sm text-gray-500">General Consultation</p>
+              <p className="text-sm text-gray-500">{nextData?.notes}</p>
             </div>
 
             <span className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-lg">
-              PAT 2026/009
+              {nextData?.patientId}
             </span>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-5">
-            <Info label="Age" value="55" />
-            <Info label="Gender" value="Male" />
+            <Info label="Age" value={nextData?.age} />
+            <Info label="Gender" value={nextData?.gender} />
             <Info label="Weight" value="69 kg" />
             <Info label="Height" value="169 cm" />
           </div>

@@ -103,7 +103,7 @@ const UpdateAppointmentStatusModal = () => {
           <>
             This action cannot be undone. Please confirm that you want to
             proceed. Do you really want to update {""}
-            <span className="text-red-600">{appointment?.patient?.name}'s</span>
+            <span className="text-red-600">{appointment?.patient?.name || appointment?.name}'s</span>
             {""} appointment status?
           </>
         )}

@@ -8,17 +8,29 @@ import { useGetDoctorDashboardDataQuery } from "./doctorsApiSlice";
 import TodayAppointments from "./components/TodayAppointments";
 import NextPatient from "./components/NextPatient";
 
+const statusPriority = {
+  ongoing: 1,
+  waiting: 2,
+  arrived: 3,
+  completed: 4,
+};
+
 const DoctorDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const fullName = getFullName(user);
 
   const { data } = useGetDoctorDashboardDataQuery({ id: user._id });
-  console.log(data, "Dashboard data...");
+  // console.log(data, "Dashboard data...");
 
   const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
   const todaysAppointmentsList =
     data?.data?.stats?.todaysAppointmentsList || [];
-  console.log(todaysAppointmentsList, "todaysAppointmentsList");
+
+  const sortedAppointments = [...todaysAppointmentsList].sort((a, b) => {
+    return statusPriority[a.status] - statusPriority[b.status];
+  });
+
+  const nextData = sortedAppointments[1];
 
   return (
     <>
@@ -40,9 +52,9 @@ const DoctorDashboard = () => {
           <DailyAppointmentsTimelineChart data={appointmentsByDay} />
         </ChartWrapper>
 
-        <TodayAppointments data={todaysAppointmentsList} />
+        <TodayAppointments data={sortedAppointments} />
 
-        <NextPatient />
+        <NextPatient nextData={nextData} />
       </div>
     </>
   );

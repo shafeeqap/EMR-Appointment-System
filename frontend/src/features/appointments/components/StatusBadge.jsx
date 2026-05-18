@@ -7,6 +7,14 @@ export const STATUS_UI = {
     label: "Arrived",
     className: "bg-blue-100 text-blue-700",
   },
+  ongoing: {
+    label: "On going",
+    className: "bg-orange-100 text-orange-700",
+  },
+  waiting: {
+    label: "Waiting",
+    className: "bg-violet-100 text-violet-700",
+  },
   completed: {
     label: "Completed",
     className: "bg-green-100 text-green-700",

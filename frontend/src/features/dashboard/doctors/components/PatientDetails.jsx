@@ -3,32 +3,33 @@ import Info from "./Info";
 import { Button } from "../../../../components/ui";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../../../../components/modal/modalSlice";
-import { useUpdateAppointmentStatusMutation } from "../../../appointments/appointmentApiSlice";
+import { useStartConsultationMutation } from "../../../appointments/appointmentApiSlice";
 import { handleApiError } from "../../../../utils/handleApiError";
-import { toast } from "react-toastify";
 
 const PatientDetails = () => {
-  const { appointmentData } = useSelector((state) => state.modal.modalProps || {});
+  const { appointmentData } = useSelector(
+    (state) => state.modal.modalProps || {}
+  );
   console.log(appointmentData, "Patient Data...");
+
 
   const dispatch = useDispatch();
 
-  const [updateAppointmentStatus, { isLoading }] =
-    useUpdateAppointmentStatusMutation();
+  const [startConsultation] = useStartConsultationMutation();
 
-  const updatetStatus = async() => {
+  const handleStartConsultation = async () => {
     // if (!status || status === currentStatus) {
     //   toast.info("No changes detected");
     //   return;
     // }
 
-
     try {
-      const res = await updateAppointmentStatus({
-        id: appointmentData._id,
-        status: "ongoint",
+      const res = await startConsultation({
+        appointmentId: appointmentData._id,
+        doctorId: appointmentData.doctorId,
+        date: appointmentData.date,
       }).unwrap();
-      console.log(res, "Appointment status updated successfully");
+      console.log(res, "Start doctor consultation...");
 
       // dispatch(
       //   setSuccessFeedback({
@@ -41,27 +42,25 @@ const PatientDetails = () => {
       //   dispatch(resetSuccessFeedback());
       // }, 1500);
 
-      dispatch(closeModal())
+      dispatch(closeModal());
     } catch (error) {
       console.error(error);
       handleApiError(error);
     }
   };
 
-  
-
   return (
     <div className="bg-white rounded-2xl p-6 w-full max-w-lg">
       <div className="flex justify-between space-x-2 px-3 py-2 rounded-lg">
         {/* Avatar */}
         <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-lg">
-          M
+          {appointmentData?.name?.split("")[0]}
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-start">
             <h3 className="text-lg font-semibold text-gray-900">
-              {appointmentData.name}
+              {appointmentData?.name}
             </h3>
 
             <p className="text-sm text-gray-800">{appointmentData.notes}</p>
@@ -86,7 +85,7 @@ const PatientDetails = () => {
           Close
         </Button>
 
-        <Button onClick={() => updatetStatus}>Start Consultation</Button>
+        <Button onClick={handleStartConsultation}>Start Consultation</Button>
       </div>
     </div>
   );

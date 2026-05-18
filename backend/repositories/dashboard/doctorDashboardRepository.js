@@ -125,13 +125,14 @@ export const getDoctorDashboardRepo = async (doctorId) => {
           slotTime: 1,
           tokenNumber: 1,
           notes: 1,
+          doctorId: 1,
 
           patientObjectId: "$patient._id",
           patientId: "$patient.patientId",
           name: "$patient.name",
           mobile: "$patient.mobile",
           age: "$patient.age",
-          gender: "$patient.gender"
+          gender: "$patient.gender",
         },
       },
     ]),

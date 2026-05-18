@@ -30,7 +30,7 @@ export const getDoctorDashboardServices = async (params) => {
   }
 
   const data = await getDoctorDashboardRepo(doctor._id);
-  console.log(data, "Data...");
+  // console.log(data, "Data...");
 
   const formattedAppointmentsByDays = data.appointmentsByDay.map((item) => ({
     name: DAYS[new Date(item._id.date).getDay()],

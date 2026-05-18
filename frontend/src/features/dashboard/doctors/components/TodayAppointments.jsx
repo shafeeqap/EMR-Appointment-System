@@ -4,10 +4,12 @@ import { useDispatch } from "react-redux";
 import { openModal } from "../../../../components/modal/modalSlice";
 import { getTodayAppointmentColumns } from "../TableColumns";
 
-const TodayAppointments = ({ data }) => {
-  console.log(data, "Today appointment");
 
+const TodayAppointments = ({ data }) => {
+  // console.log(data, "Today appointment");
+  
   const dispatch = useDispatch();
+
 
   const handleDetailsModalOpen = (row) => {
     dispatch(
@@ -28,7 +30,6 @@ const TodayAppointments = ({ data }) => {
     );
     console.log("UPDATE APPOINTMENT STATUS CLICKED", row);
   };
-
 
   const columnData = getTodayAppointmentColumns({
     onDetails: handleDetailsModalOpen,
