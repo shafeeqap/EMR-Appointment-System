@@ -1,30 +1,21 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { getFullName } from "../../../utils/userHelpers";
-import { statusCardItems } from "./config/doctor.config";
+import { statusCardItems, statusPriority } from "./config/doctor.config";
 import { StatusCard, ChartWrapper, ProfileCard } from "../components/index";
 import DailyAppointmentsTimelineChart from "./charts/DailyAppointmentsTimelineChart";
 import { useGetDoctorDashboardDataQuery } from "./doctorsApiSlice";
 import TodayAppointments from "./components/TodayAppointments";
 import NextPatient from "./components/NextPatient";
 
-const statusPriority = {
-  ongoing: 1,
-  waiting: 2,
-  arrived: 3,
-  completed: 4,
-};
-
 const DoctorDashboard = () => {
-  const [nextPatient, setNextPatient] = useState(null);
-  
   const { user } = useSelector((state) => state.auth);
   const fullName = getFullName(user);
 
   const { data } = useGetDoctorDashboardDataQuery({ id: user._id });
-  // console.log(data, "Dashboard data...");
 
   const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
+
   const todaysAppointmentsList =
     data?.data?.stats?.todaysAppointmentsList || [];
 
@@ -32,7 +23,10 @@ const DoctorDashboard = () => {
     return statusPriority[a.status] - statusPriority[b.status];
   });
 
-  const nextData = sortedAppointments[1];
+  const nextPatient =
+    sortedAppointments.find(
+      (appointment) => appointment.status === "waiting"
+    ) || null;
 
   return (
     <>
@@ -56,7 +50,7 @@ const DoctorDashboard = () => {
 
         <TodayAppointments data={sortedAppointments} />
 
-        <NextPatient nextData={nextData} />
+        <NextPatient nextData={nextPatient} />
       </div>
     </>
   );

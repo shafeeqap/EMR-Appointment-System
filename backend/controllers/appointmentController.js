@@ -123,7 +123,7 @@ export const startConsultation = async (req, res, next) => {
     console.log(data, "Appointment...");
 
     res.status(200).json({
-      message: "Appointment updated successfully",
+      message: "Start doctor consultation",
       data,
     });
   } catch (error) {
