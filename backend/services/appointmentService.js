@@ -52,7 +52,7 @@ export const createAppointmentService = async (data, user) => {
     doctorId,
     date,
     // slotTime,
-    status: "booked",
+    // status: "booked",
   });
 
   if (existingAppointment) {
