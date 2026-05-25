@@ -52,9 +52,7 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
     header: "Appointment Type",
     render: (row) => {
       const statusConfig = STATUS_UI[row.status];
-      const isFinalState = ["completed", "cancelled", "no_show"].includes(
-        row.status
-      );
+      const isFinalState = !["booked"].includes(row.status);
 
       return (
         <button

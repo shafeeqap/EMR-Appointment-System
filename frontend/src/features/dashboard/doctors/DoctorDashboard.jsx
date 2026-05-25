@@ -15,6 +15,8 @@ const DoctorDashboard = () => {
   const { data } = useGetDoctorDashboardDataQuery({ id: user._id });
 
   const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
+  console.log(appointmentsByDay, 'Appointments By Day...');
+  
 
   const todaysAppointmentsList =
     data?.data?.stats?.todaysAppointmentsList || [];

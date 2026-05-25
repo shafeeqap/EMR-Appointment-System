@@ -2,6 +2,8 @@ export const appointmentOptions = [
   { label: "All", value: "" },
   { label: "Booked", value: "booked" },
   { label: "Arrived", value: "arrived" },
+  { label: "On Going", value: "ongoing" },
+  { label: "Waiting", value: "waiting" },
   { label: "Completed", value: "completed" },
   { label: "Cancelled", value: "cancelled" },
   { label: "No Show", value: "no_show" },

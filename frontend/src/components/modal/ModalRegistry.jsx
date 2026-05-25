@@ -13,6 +13,12 @@ import {
   UpdateDoctorStatusModal,
 } from "../../features/dashboard/doctors/components";
 import {
+  UpdateDepartmentStatusModal,
+  AddDepartmentModal,
+  EditDepartmentModal,
+  DeleteDepartmentModal,
+} from "../../features/departments/components";
+import {
   AddPatientModal,
   DeletePatientModal,
   DetailsPatientModal,
@@ -45,6 +51,12 @@ export const MODAL_COMPONENTS = {
   DELETE_APPOINTMENT: DeleteAppointmentModal,
   DETAILS_APPOINTMENT: AppointmentDetailsModal,
   UPDATE_APPOINTMENT_STATUS: UpdateAppointmentStatusModal,
+
+  // Department Modals
+  ADD_DEPARTMENT: AddDepartmentModal,
+  EDIT_DEPARTMENT: EditDepartmentModal,
+  DELETE_DEPARTMENT: DeleteDepartmentModal,
+  UPDATE_DEPARTMENT_STATUS: UpdateDepartmentStatusModal,
 
   // User Modals
   ADD_USER: AddUserModal,

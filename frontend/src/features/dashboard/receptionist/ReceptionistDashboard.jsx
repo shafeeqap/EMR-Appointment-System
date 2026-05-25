@@ -8,16 +8,21 @@ import {
 } from "./config/receptionist.config.js";
 import TodayAppointment from "./charts/TodayAppointment.jsx";
 import DoctorAvailability from "./charts/DoctorAvailability.jsx";
+import { useGetReceptionistDashboardQuery } from "./receptionistApiSlice.js";
 
 const ReceptionistDashboard = () => {
   const { user } = useSelector((state) => state.auth);
+
+  const { data } = useGetReceptionistDashboardQuery({ id: user._id });
+  console.log(data, "Receptionist Dashboard Data...");
+  
 
   const fullName = getFullName(user);
 
   return (
     <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
       <ProfileCard fullName={fullName} />
-      <StatusCard statusCardItems={statusCardItems} />
+      <StatusCard statusCardItems={statusCardItems} data={data} />
 
       <div className="text-center mt-5 w-full">
         <ChartWrapper title="Appointment Status" data={"3"}>

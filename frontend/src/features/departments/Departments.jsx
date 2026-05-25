@@ -1,52 +1,39 @@
-import React, { useEffect, useState } from "react";
-import { useGetPatientQuery } from "./patientsApiSlice";
-import {
-  Button,
-  FilterOption,
-  FilterSearch,
-  Loader,
-  Pagination,
-} from "../../components/ui";
-import ErrorMessage from "../../components/ErrorMessage";
-import Table from "../../components/table/Table";
-import { getColumns } from "./TableColumns";
-import { useDispatch } from "react-redux";
-import { openModal } from "../../components/modal/modalSlice";
-import { Plus } from "lucide-react";
+import React, { useState } from 'react'
+import { Button, FilterSearch, Loader, Pagination } from '../../components/ui';
+import Table from '../../components/table/Table';
+import { getColumns } from './TableColumns';
+import ErrorMessage from '../../components/ErrorMessage';
+import { Plus } from 'lucide-react';
+import { useDispatch } from 'react-redux';
+import { openModal } from '../../components/modal/modalSlice';
+import { useGetDepartmentsQuery } from './departmentApiSlice';
 
-const Patients = () => {
+const Departments = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  
+
   const dispatch = useDispatch();
 
-  const { data, isLoading, error } = useGetPatientQuery({
+  const { data, isLoading, error } = useGetDepartmentsQuery({
     page,
     limit: 5,
     search,
   });
 
-
-  const patients = data?.patients || [];
-
-  console.log(patients, "Patients...");
-
-  useEffect(() => {
-    if (data && page > data.totalPages) {
-      setPage(data.totalPages);
-    }
-  }, [search, data, page]);
+  const departments = data?.departments || [];
+  console.log("DEPARTMENTS DATA", departments);
+  
 
   const handleAddModalOpen = (row) => {
-    dispatch(openModal({ modalType: "ADD_PATIENT", modalProps: {} }));
-    console.log("ADD PATIENT CLICKED", row);
+    dispatch(openModal({ modalType: "ADD_DEPARTMENT", modalProps: {} }));
+    console.log("ADD DEPARTMENT CLICKED", row);
   };
 
   const handleEditModalOpen = (row) => {
     dispatch(
       openModal({
-        modalType: "EDIT_PATIENT",
-        modalProps: { patientId: row._id },
+        modalType: "EDIT_DEPARTMENT",
+        modalProps: { departmentId: row._id },
       })
     );
     console.log("EDIT CLICKED", row);
@@ -55,26 +42,27 @@ const Patients = () => {
   const handleDeleteModalOpen = (row) => {
     dispatch(
       openModal({
-        modalType: "DELETE_PATIENT",
-        modalProps: { patientData: row },
+        modalType: "DELETE_DEPARTMENT",
+        modalProps: { departmentData: row },
       })
     );
     console.log("DELETE CLICKED", row);
   };
-  const handleDetailsModalOpen = (row) => {
+
+  const handleStatusModalOpen = (row) => {
     dispatch(
       openModal({
-        modalType: "DETAILS_PATIENT",
-        modalProps: { patientId: row._id },
+        modalType: "UPDATE_DEPARTMENT_STATUS",
+        modalProps: { departmentData: row },
       })
     );
-    console.log("DETAILS CLICKED", row);
   };
+
 
   const columns = getColumns({
     onEdit: handleEditModalOpen,
     onDelete: handleDeleteModalOpen,
-    onDetails: handleDetailsModalOpen,
+    onUpdateStatus: handleStatusModalOpen,
   });
 
   if (isLoading)
@@ -109,12 +97,12 @@ const Patients = () => {
 
       {/* <FilterOption status={status} setStatus={setStatus} /> */}
 
-      {patients.length === 0 ? (
+      {departments.length === 0 ? (
         <div className="flex justify-center items-center bg-gray-100 mt-5 rounded min-h-20">
-          <p>{search ? "No results found" : "No patients available"}</p>
+          <p>{search ? "No results found" : "No departments available"}</p>
         </div>
       ) : (
-        <Table columns={columns} data={patients} />
+        <Table columns={columns} data={departments} />
       )}
 
       {data.totalPages > 1 && (
@@ -128,4 +116,6 @@ const Patients = () => {
   );
 };
 
-export default Patients;
+
+
+export default Departments

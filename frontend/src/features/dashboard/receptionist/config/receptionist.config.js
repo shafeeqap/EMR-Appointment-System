@@ -1,4 +1,4 @@
-import { Stethoscope, CalendarCheck, CheckLine } from "lucide-react";
+import { Stethoscope, CalendarCheck, CheckLine, CircleX } from "lucide-react";
 
 export const statusCardItems = [
   {
@@ -6,21 +6,28 @@ export const statusCardItems = [
     title: "Today's Appointments",
     key: "todaysAppointments",
     icon: CalendarCheck,
-    value: 150,
+    // value: 150,
   },
   {
     id: 2,
     title: "Checked-in Patients",
     key: "checkedInPatients",
     icon: CheckLine,
-    value: 100,
+    // value: 100,
   },
   {
     id: 3,
+    title: "Cancelled Appointments",
+    key: "cancelledAppointments",
+    icon: CircleX,
+    // value: 100,
+  },
+  {
+    id: 4,
     title: "Doctor Availability",
-    key: "doctors",
+    key: "totalDoctors",
     icon: Stethoscope,
-    value: 50,
+    // value: 50,
   },
 ];
 

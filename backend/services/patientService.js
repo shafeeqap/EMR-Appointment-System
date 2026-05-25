@@ -97,15 +97,15 @@ export const getPatientService = async (query, user) => {
     }
 
     doctorId = doctor._id;
+
+    const patientIds = await getAppointmentDistinctValue("patientId", {
+      doctorId,
+    });
+
+    filter._id = {
+      $in: patientIds,
+    };
   }
-
-  const patientIds = await getAppointmentDistinctValue("patientId", {
-    doctorId,
-  });
-
-  filter._id = {
-    $in: patientIds,
-  };
 
   if (search) {
     const isNumeric = /^\d+$/.test(search);
@@ -205,11 +205,12 @@ export const deletePatientService = async (params, user) => {
   if (!deletedPatient) {
     throw new AppError("Patient not found", 404);
   }
+
   await logAction({
     userId: user.id,
     role: user.role,
     action: "DELETE_PATIENT",
-    entity: "patient",
+    entity: "Patient",
     entityId: deletedPatient._id,
     metadata: {
       name: deletedPatient.name,

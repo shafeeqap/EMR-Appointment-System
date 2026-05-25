@@ -15,6 +15,7 @@ const PatientDetails = () => {
   const { appointmentData } = useSelector(
     (state) => state.modal.modalProps || {}
   );
+  console.log(appointmentData);
 
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
 
@@ -98,7 +99,10 @@ const PatientDetails = () => {
               Close
             </Button>
 
-            <Button onClick={handleStartConsultation}>
+            <Button
+              disabled={appointmentData?.status === "ongoing"}
+              onClick={handleStartConsultation}
+            >
               Start Consultation
             </Button>
           </div>
