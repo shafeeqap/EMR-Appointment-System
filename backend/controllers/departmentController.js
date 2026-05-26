@@ -4,6 +4,7 @@ import {
   getDepartmentByIdService,
   getDepartmentsService,
   updateDepartmentService,
+  updateDepartmentStatusService,
 } from "../services/departmentService.js";
 
 // ================> create department controller <=============
@@ -57,6 +58,24 @@ export const updateDepartment = async (req, res, next) => {
     const updatedDepartment = await updateDepartmentService(
       req.params,
       req.validatedData,
+      req.user
+    );
+
+    res.status(200).json({
+      message: "Department updated successfully",
+      department: updatedDepartment,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ==============> update department status controller <=============
+export const updateDepartmentStatus = async (req, res, next) => {
+  try {
+    const updatedDepartment = await updateDepartmentStatusService(
+      req.params,
+      req.body,
       req.user
     );
 

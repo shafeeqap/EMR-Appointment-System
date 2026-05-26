@@ -32,6 +32,15 @@ const departmentApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: ["Department"],
     }),
 
+    updateDepartmentStatus: builder.mutation({
+      query: ({ id, status }) => ({
+        url: `/departments/${id}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Department"],
+    }),
+
     deleteDepartment: builder.mutation({
       query: (id) => ({
         url: `/departments/${id}`,
@@ -47,5 +56,6 @@ export const {
   useCreateDepartmentMutation,
   useGetDepartmentByIdQuery,
   useUpdateDepartmentMutation,
+  useUpdateDepartmentStatusMutation,
   useDeleteDepartmentMutation,
 } = departmentApiSlice;

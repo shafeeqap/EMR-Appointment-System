@@ -115,6 +115,35 @@ export const updateDepartmentService = async (params, data, user) => {
   return updatedDepartment;
 };
 
+// =============> update department status service <=============
+export const updateDepartmentStatusService = async (params, data, user) => {
+  const id = params.id;
+  const { status } = data;
+
+  const department = await findDepartmentById(id);
+  if (!department) {
+    throw new AppError("Department not found", 404);
+  }
+
+  department.isActive = status;
+  await department.save();
+
+  await logAction({
+    userId: user.id,
+    role: user.role,
+    action: "UPDATE_DEPARTMENT_STATUS",
+    entity: "Department",
+    entityId: department._id,
+    metadata: {
+      departmentId: department._id,
+      previousStatus: department.status,
+      updatedStatus: status,
+    },
+  });
+
+  return department;
+};
+
 // =============> delete department service <=============
 export const deleteDepartmentService = async (params, user) => {
   const departmentId = params.id;

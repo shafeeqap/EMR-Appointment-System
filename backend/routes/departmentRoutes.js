@@ -12,6 +12,7 @@ import {
   getDepartmentById,
   getDepartments,
   updateDepartment,
+  updateDepartmentStatus,
 } from "../controllers/departmentController.js";
 
 const router = express.Router();
@@ -32,6 +33,12 @@ router.put(
   validate(updateDepartmentSchema),
   updateDepartment
 );
-router.delete("/:id", protect, authorize("admin"), deleteDepartment);
+router.patch(
+  "/:id/status",
+  protect,
+  authorize("super_admin"),
+  updateDepartmentStatus
+);
+router.delete("/:id", protect, authorize("super_admin"), deleteDepartment);
 
 export const departmentRoutes = router;
