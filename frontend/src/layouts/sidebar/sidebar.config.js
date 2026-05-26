@@ -41,7 +41,7 @@ export const sidebarItems = [
     id: 5,
     icons: CalendarDays,
     name: "Doctor Schedules",
-    path: "shedules",
+    path: "/shedules",
     roles: ["super_admin", "doctor", "receptionist"],
   },
   {

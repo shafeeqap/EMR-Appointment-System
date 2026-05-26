@@ -29,31 +29,26 @@ const Users = () => {
 
   const dispatch = useDispatch();
 
-  console.log(data, "User data...");
-
   const users = data?.users || [];
 
   useEffect(() => {
     setPage(1);
   }, [search, status]);
 
-  const handleAddModalOpen = (row) => {
+  const handleAddModalOpen = () => {
     dispatch(openModal({ modalType: "ADD_USER", modalProps: {} }));
-    console.log("ADD USER CLICKED", row);
   };
 
   const handleEditModalOpen = (row) => {
     dispatch(
       openModal({ modalType: "EDIT_USER", modalProps: { userId: row._id } })
     );
-    console.log("EDIT CLICKED", row);
   };
 
   const handleDeleteModalOpen = (row) => {
     dispatch(
       openModal({ modalType: "DELETE_USER", modalProps: { userData: row } })
     );
-    console.log("DELETE CLICKED", row);
   };
 
   const handleStatusModalOpen = (row) => {
@@ -63,7 +58,6 @@ const Users = () => {
         modalProps: { userId: row._id },
       })
     );
-    console.log("UPDATE USER STATUS CLICKED", row);
   };
 
   const columns = getColumns({

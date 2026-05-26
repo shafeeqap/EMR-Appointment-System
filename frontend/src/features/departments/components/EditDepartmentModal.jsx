@@ -27,7 +27,7 @@ const EditDepartmentModal = () => {
 
   const { data: departmentData, isLoading } =
     useGetDepartmentByIdQuery(departmentId);
-  console.log("DEPARTMENT DATA", departmentData);
+  
 
   const [updateDepartment, { isLoading: loading, error }] =
     useUpdateDepartmentMutation();

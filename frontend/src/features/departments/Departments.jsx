@@ -1,12 +1,12 @@
-import React, { useState } from 'react'
-import { Button, FilterSearch, Loader, Pagination } from '../../components/ui';
-import Table from '../../components/table/Table';
-import { getColumns } from './TableColumns';
-import ErrorMessage from '../../components/ErrorMessage';
-import { Plus } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import { openModal } from '../../components/modal/modalSlice';
-import { useGetDepartmentsQuery } from './departmentApiSlice';
+import React, { useState } from "react";
+import { Button, FilterSearch, Loader, Pagination } from "../../components/ui";
+import Table from "../../components/table/Table";
+import { getColumns } from "./TableColumns";
+import ErrorMessage from "../../components/ErrorMessage";
+import { Plus } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { openModal } from "../../components/modal/modalSlice";
+import { useGetDepartmentsQuery } from "./departmentApiSlice";
 
 const Departments = () => {
   const [page, setPage] = useState(1);
@@ -21,8 +21,6 @@ const Departments = () => {
   });
 
   const departments = data?.departments || [];
-  console.log("DEPARTMENTS DATA", departments);
-  
 
   const handleAddModalOpen = (row) => {
     dispatch(openModal({ modalType: "ADD_DEPARTMENT", modalProps: {} }));
@@ -36,7 +34,6 @@ const Departments = () => {
         modalProps: { departmentId: row._id },
       })
     );
-    console.log("EDIT CLICKED", row);
   };
 
   const handleDeleteModalOpen = (row) => {
@@ -46,7 +43,6 @@ const Departments = () => {
         modalProps: { departmentData: row },
       })
     );
-    console.log("DELETE CLICKED", row);
   };
 
   const handleStatusModalOpen = (row) => {
@@ -57,7 +53,6 @@ const Departments = () => {
       })
     );
   };
-
 
   const columns = getColumns({
     onEdit: handleEditModalOpen,
@@ -116,6 +111,4 @@ const Departments = () => {
   );
 };
 
-
-
-export default Departments
+export default Departments;

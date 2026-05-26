@@ -32,14 +32,12 @@ const AddDepartmentModal = () => {
   const onSubmit = async (data) => {
     try {
       const res = await createDepartment(data).unwrap();
-      console.log(res, "CREATE DEPARTMENT RESPONSE");
 
       dispatch(
         setSuccessFeedback({
           message: res.message || "Department created successfully",
         })
       );
-      // toast.success(res.message || "Department created successfully");
 
       setTimeout(() => {
         dispatch(closeModal());

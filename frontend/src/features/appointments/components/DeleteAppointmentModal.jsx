@@ -35,7 +35,7 @@ const DeleteAppointmentModal = () => {
       <Trash2 strokeWidth={1.25} size={60} className="text-red-600" />
       <h1 className="text-2xl">Are you sure?</h1>
       <p className="text-textSecondary text-center">
-        Do you really want to delete{" "}
+        Are you sure you want to delete{" "}
         <span className="text-red-600">{patient?.name}'s</span> records? This
         process cannot be undone.
       </p>

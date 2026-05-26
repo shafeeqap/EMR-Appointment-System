@@ -20,11 +20,6 @@ const DetailsPatientModal = () => {
   const patient = patientData?.patient || [];
   const appointment = patientData?.appointments || [];
 
-  console.log(patient, "Patient in component...");
-  console.log(appointment, "Appointments in component...");
-  
-  
-
   if (isLoading) {
     <Loader />;
   }
@@ -74,7 +69,10 @@ const DetailsPatientModal = () => {
                       <span className="text-red-600 ml-1">{appt.slotTime}</span>
                     </p>
                     <p>
-                      Slot:<span className="text-primary ml-1">{appt.tokenNumber}</span>
+                      Slot:
+                      <span className="text-primary ml-1">
+                        {appt.tokenNumber}
+                      </span>
                     </p>
                     <p className="uppercase ">
                       Status:

@@ -24,8 +24,6 @@ const DeleteDepartmentModal = () => {
     try {
       const res = await deleteDepartment(departmentData._id).unwrap();
 
-      // toast.success(res.message || "Department deleted successfully");
-
       dispatch(
         setSuccessFeedback({
           message: res.message || "Department deleted successfully",
@@ -56,9 +54,9 @@ const DeleteDepartmentModal = () => {
           message || "Department has been deleted successfully."
         ) : (
           <>
-            Do you really want to delete{" "}
-            <span className="text-red-600">{departmentData?.name}'s</span>{" "}
-            records? This process cannot be undone.
+            Are you sure you want to delete{" "}
+            <span className="text-red-600">{departmentData?.name}</span>{" "}
+            department? This action cannot be undone.
           </>
         )}
       </p>

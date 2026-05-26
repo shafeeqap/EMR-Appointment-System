@@ -11,7 +11,7 @@ const DeleteUserModal = () => {
   const { userData } = useSelector((state) => state.modal.modalProps || {});
   console.log(userData, "User data...");
 
-  const fullName = getFullName(userData)
+  const fullName = getFullName(userData);
   const [deleteUser] = useDeleteUserMutation();
 
   const dispatch = useDispatch();
@@ -33,9 +33,9 @@ const DeleteUserModal = () => {
       <Trash2 strokeWidth={1.25} size={60} className="text-red-600" />
       <h1 className="text-2xl">Are you sure?</h1>
       <p className="text-textSecondary text-center">
-        Do you really want to delete{" "}
-        <span className="text-red-600">{fullName}'s</span> records?
-        This process cannot be undone.
+        Are you sure you want to delete{" "}
+        <span className="text-red-600">{fullName}'s</span> records? This process
+        cannot be undone.
       </p>
 
       <div className="flex justify-between w-full gap-2 mt-5">
