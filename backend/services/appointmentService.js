@@ -114,6 +114,8 @@ export const getAppointmentsService = async (query, user) => {
   const allowedStatuses = [
     "booked",
     "arrived",
+    "ongoing",
+    "waiting",
     "cancelled",
     "completed",
     "no_show",

@@ -19,7 +19,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
   if (result?.error?.status === 401 && !args.url?.includes("refresh-token")) {
-    
     console.log("Access token expired, trying refresh...");
 
     const refreshResult = await baseQuery(
@@ -31,8 +30,8 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       extraOptions
     );
 
-    // console.log(refreshResult, "Refresh result...");
     
+
     if (refreshResult?.data) {
       const currentUser = api.getState()?.auth.user;
 
@@ -54,6 +53,13 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
 export const apiSlice = createApi({
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User", "Appointment", "Doctor", "Patient", "Dashboard"],
+  tagTypes: [
+    "User",
+    "Appointment",
+    "Doctor",
+    "Patient",
+    "Dashboard",
+    "Department",
+  ],
   endpoints: (builder) => ({}),
 });

@@ -18,17 +18,15 @@ const Patients = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
 
+  const dispatch = useDispatch();
+
   const { data, isLoading, error } = useGetPatientQuery({
     page,
     limit: 5,
     search,
   });
 
-  const dispatch = useDispatch();
-
   const patients = data?.patients || [];
-
-  console.log(patients, "Patients...");
 
   useEffect(() => {
     if (data && page > data.totalPages) {
@@ -36,9 +34,8 @@ const Patients = () => {
     }
   }, [search, data, page]);
 
-  const handleAddModalOpen = (row) => {
+  const handleAddModalOpen = () => {
     dispatch(openModal({ modalType: "ADD_PATIENT", modalProps: {} }));
-    console.log("ADD PATIENT CLICKED", row);
   };
 
   const handleEditModalOpen = (row) => {
@@ -48,7 +45,6 @@ const Patients = () => {
         modalProps: { patientId: row._id },
       })
     );
-    console.log("EDIT CLICKED", row);
   };
 
   const handleDeleteModalOpen = (row) => {
@@ -58,7 +54,6 @@ const Patients = () => {
         modalProps: { patientData: row },
       })
     );
-    console.log("DELETE CLICKED", row);
   };
   const handleDetailsModalOpen = (row) => {
     dispatch(
@@ -67,7 +62,6 @@ const Patients = () => {
         modalProps: { patientId: row._id },
       })
     );
-    console.log("DETAILS CLICKED", row);
   };
 
   const columns = getColumns({

@@ -1,5 +1,5 @@
 import { Trash2, PenLine } from "lucide-react";
-import { formatWorkingHours } from "../../../utils/formatHours";
+import { formatTime, formatWorkingHours } from "../../../utils/formatHours";
 import { getDuration } from "../../../utils/calculateDuration";
 import { STATUS_UI } from "../../appointments/components";
 
@@ -101,7 +101,7 @@ export const getTodayAppointmentColumns = ({ onDetails, onUpdateStatus }) => [
     header: "Appointment Type",
     render: (row) => {
       const statusConfig = STATUS_UI[row.status];
-      const isFinalState = ["completed", "cancelled", "no_show"].includes(
+      const isFinalState = ["arrived", "waiting", "completed"].includes(
         row.status
       );
 
@@ -126,10 +126,10 @@ export const getTodayAppointmentColumns = ({ onDetails, onUpdateStatus }) => [
       return (
         <div
           onClick={() => onDetails(row)}
-          className="border border-gray-300 px-1 py-2 text-center rounded cursor-pointer hover:bg-gray-300"
+          className="border border-gray-300 w-20 py-2 text-center rounded cursor-pointer hover:bg-gray-300"
         >
           {row.slotTime ? (
-            row.slotTime
+            formatTime(row.slotTime)
           ) : (
             <span onClick={""} className="border border-gray-300">
               {row.status}

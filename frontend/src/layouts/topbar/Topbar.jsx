@@ -1,13 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Bell, Settings, UserRound } from "lucide-react";
 import { getFullName, getUserRole } from "../../utils/userHelpers";
 import IconButton from "../../features/dashboard/components/IconButton";
 import DropdownMenu from "../../components/dropdownMenu/DropdownMenu";
+import { useLocation } from "react-router-dom";
+import { sidebarItems } from "../sidebar/sidebar.config";
 
 const Topbar = () => {
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
+  const location = useLocation();
+
+  const currentMenu = sidebarItems.find(
+    (item) => item.path === location.pathname
+  );
 
   const dropdownRef = useRef(null);
 
@@ -34,11 +41,11 @@ const Topbar = () => {
     };
   }, []);
 
-  // console.log(dropdownOpen, "dropdownOpen");
-
   return (
     <div className="bg-white shadow pl-20 p-4 flex justify-between items-center">
-      <h1 className="font-semibold text-lg">Dashboard</h1>
+      <h1 className="font-semibold text-lg">
+        {currentMenu?.name || "Dashboard"}
+      </h1>
 
       <div className="flex gap-2 items-center ">
         <IconButton>

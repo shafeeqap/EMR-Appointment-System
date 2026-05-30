@@ -5,6 +5,7 @@ import {
   CalendarCheck,
   Hospital,
   Users,
+  GitFork,
 } from "lucide-react";
 
 export const sidebarItems = [
@@ -24,27 +25,34 @@ export const sidebarItems = [
   },
   {
     id: 3,
+    icons: GitFork,
+    name: "Departments",
+    path: "/departments",
+    roles: ["super_admin"],
+  },
+  {
+    id: 4,
     icons: Hospital,
     name: "Patients",
     path: "/patient",
     roles: ["super_admin", "doctor", "receptionist"],
   },
   {
-    id: 4,
+    id: 5,
     icons: CalendarDays,
     name: "Doctor Schedules",
-    path: "shedules",
+    path: "/shedules",
     roles: ["super_admin", "doctor", "receptionist"],
   },
   {
-    id: 5,
+    id: 6,
     icons: CalendarCheck,
     name: "Patient Appointments",
     path: "/appointments",
     roles: ["super_admin", "doctor", "receptionist"],
   },
   {
-    id: 6,
+    id: 7,
     icons: Users,
     name: "Users",
     path: "/users",

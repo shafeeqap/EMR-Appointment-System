@@ -94,7 +94,15 @@ export const getAppointment = async ({
 
   const baseMatch = {
     status: {
-      $in: ["booked", "arrived", "completed", "cancelled", "no_show"],
+      $in: [
+        "booked",
+        "arrived",
+        "ongoing",
+        "waiting",
+        "completed",
+        "cancelled",
+        "no_show",
+      ],
     },
   };
 

@@ -46,7 +46,7 @@ const Scheduler = () => {
   };
 
   const onSubmit = async (formData) => {
-    // console.log(formData, "FORM DATA");
+    
 
     if (!selectedSlot) {
       setError("slot", {

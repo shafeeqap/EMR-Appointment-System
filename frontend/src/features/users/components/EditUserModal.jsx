@@ -9,9 +9,17 @@ import { closeModal } from "../../../components/modal/modalSlice";
 import { toast } from "react-toastify";
 import { handleApiError } from "../../../utils/handleApiError";
 import isEqual from "lodash/isEqual";
+import {
+  resetSuccessFeedback,
+  setSuccessFeedback,
+} from "../../../components/successFedback/successFeedbackSlice";
+import SuccessFeedback from "../../../components/successFedback/SuccessFeedback";
+import OptionField from "../../../components/ui/OptionField";
+import { roleOptions } from "../statusOptions";
 
 const EditUserModal = () => {
   const { userId } = useSelector((state) => state.modal.modalProps || {});
+  const { isSuccess, message } = useSelector((state) => state.successFeedback);
 
   const { data: userData, isLoading } = useGetUserByIdQuery(userId);
 
@@ -61,9 +69,18 @@ const EditUserModal = () => {
     try {
       const res = await updateUser({ id: userId, ...data }).unwrap();
 
-      toast.success(res.message || "User updated successfully");
+      // toast.success(res.message || "User updated successfully");
 
-      dispatch(closeModal());
+      dispatch(
+        setSuccessFeedback({
+          message: res.message || "User updated successfully",
+        })
+      );
+
+      setTimeout(() => {
+        dispatch(closeModal());
+        dispatch(resetSuccessFeedback());
+      }, 1500);
     } catch (error) {
       console.error("Error updating user:", error);
       handleApiError(error, form.setError);
@@ -71,88 +88,91 @@ const EditUserModal = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 sm:w-96 md:w-[700px]">
-      <h2 className="text-xl font-semibold mb-4">Update User</h2>
-
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-1  md:grid-cols-2 gap-5">
-          <div className="mb-4">
-            <InputField
-              label="First Name"
-              type="text"
-              {...form.register("firstName")}
-              error={form.formState.errors.firstName?.message}
-              placeholder="Enter first name"
-              className="focus:ring focus:border-primary mb-4"
-            />
-
-            <InputField
-              label="Last Name"
-              type="text"
-              {...form.register("lastName")}
-              error={form.formState.errors.lastName?.message}
-              placeholder="Enter last name"
-              className="focus:ring focus:border-primary mb-4"
-            />
-
-            <InputField
-              label="Mobile"
-              type="text"
-              {...form.register("mobile")}
-              maxLength={10}
-              error={form.formState.errors.mobile?.message}
-              placeholder="Enter mobile"
-              className="focus:ring focus:border-primary"
-            />
+    <>
+      {isSuccess && (
+        <>
+          <SuccessFeedback />
+          <div className="mt-4 w-full text-center">
+            <h1 className="text-lg font-semibold py-3">Updated!</h1>
+            {message || "User updated successfully"}
           </div>
+        </>
+      )}
+      <div className="bg-white rounded-lg p-6 sm:w-96 md:w-[700px]">
+        {!isSuccess && (
+          <>
+            <h2 className="text-xl font-semibold mb-4">Update User</h2>
 
-          <div className="mb-4">
-            <InputField
-              label="Email"
-              type="email"
-              {...form.register("email")}
-              error={form.formState.errors.email?.message}
-              placeholder="Enter email"
-              className="focus:ring focus:border-primary mb-4"
-            />
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="grid grid-cols-1  md:grid-cols-2 gap-5">
+                <div className="mb-4">
+                  <InputField
+                    label="First Name"
+                    type="text"
+                    {...form.register("firstName")}
+                    error={form.formState.errors.firstName?.message}
+                    placeholder="Enter first name"
+                    className="focus:ring focus:border-primary mb-4"
+                  />
 
-            <div className="flex flex-col">
-              <label htmlFor="" className="mb-2">
-                Select Role
-              </label>
-              <select
-                // value={form.role}
-                {...form.register("role")}
-                // onChange={(e) => form.setRole(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none bg-white"
-              >
-                <option value="">Select role</option>
-                <option value="admin">Admin</option>
-                <option value="doctor">Doctor</option>
-                <option value="receptionist">Receptionist</option>
-              </select>
-              {form.errors?.role && (
-                <p className="text-red-500 text-sm">{form.errors?.role}</p>
-              )}
-            </div>
-          </div>
-        </div>
+                  <InputField
+                    label="Last Name"
+                    type="text"
+                    {...form.register("lastName")}
+                    error={form.formState.errors.lastName?.message}
+                    placeholder="Enter last name"
+                    className="focus:ring focus:border-primary mb-4"
+                  />
 
-        <div className="flex justify-end">
-          <Button
-            onClick={() => dispatch(closeModal())}
-            type="button"
-            variant="secondary"
-            className="mr-2 px-4 py-2 transition duration-200"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary">
-            {isLoading ? <Loader /> : "Update"}
-          </Button>
-        </div>
-      </form>
-    </div>
+                  <InputField
+                    label="Mobile"
+                    type="text"
+                    {...form.register("mobile")}
+                    maxLength={10}
+                    error={form.formState.errors.mobile?.message}
+                    placeholder="Enter mobile"
+                    className="focus:ring focus:border-primary"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <InputField
+                    label="Email"
+                    type="email"
+                    {...form.register("email")}
+                    error={form.formState.errors.email?.message}
+                    placeholder="Enter email"
+                    className="focus:ring focus:border-primary mb-4"
+                  />
+
+                  <div className="flex flex-col">
+                    <OptionField
+                      options={roleOptions}
+                      {...form.register("role")}
+                      error={form.formState.errors.role?.message}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => dispatch(closeModal())}
+                  type="button"
+                  variant="secondary"
+                  className="mr-2 px-4 py-2 transition duration-200"
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary">
+                  {isLoading ? <Loader /> : "Update"}
+                </Button>
+              </div>
+            </form>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
