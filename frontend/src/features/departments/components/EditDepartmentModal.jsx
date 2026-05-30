@@ -95,7 +95,7 @@ const EditDepartmentModal = () => {
           <SuccessFeedback />
           <div className="mt-4 w-full text-center">
             <h1 className="text-lg font-semibold py-3">Updated!</h1>
-            {message || "Department created successfully"}
+            {message || "Department updated successfully"}
           </div>
         </>
       )}

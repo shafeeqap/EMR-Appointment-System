@@ -84,7 +84,6 @@ const CreateAppointmentModal = () => {
           message: res.message || "Appointment created successfully",
         })
       );
-      // toast.success(res.message || "Appointment created successfully");
 
       setTimeout(() => {
         dispatch(closeModal());
@@ -115,7 +114,9 @@ const CreateAppointmentModal = () => {
 
       {!isSuccess && (
         <>
-          <h1 className="mb-4 text-xl py-3 font-semibold">Create appointment</h1>
+          <h1 className="mb-4 text-xl py-3 font-semibold">
+            Create appointment
+          </h1>
 
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
