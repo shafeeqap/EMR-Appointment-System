@@ -29,8 +29,6 @@ const Doctors = () => {
 
   const dispatch = useDispatch();
 
-  console.log(data, "Doctors data...");
-
   const doctors = data?.doctors || [];
 
   useEffect(() => {

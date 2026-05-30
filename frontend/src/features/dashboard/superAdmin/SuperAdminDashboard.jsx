@@ -10,10 +10,8 @@ import PatientStatus from "./charts/PatientStatus.jsx";
 
 const SuperAdminDashboard = () => {
   const { user } = useSelector((state) => state.auth);
-  console.log(user, "User on admin...");
 
   const { data } = useGetAdminDashboardDataQuery();
-  console.log(data, "data...");
 
   const appointmentsByMonth = data?.data?.charts?.appointmentsByMonth;
 

@@ -31,7 +31,6 @@ const Booking = () => {
   });
 
   const appointments = data?.appointments || [];
-  console.log(appointments, "Appointments...");
 
   const dispatch = useDispatch();
 
@@ -41,9 +40,8 @@ const Booking = () => {
     setPage(1);
   }, [search, filter]);
 
-  const handleAddModalOpen = (row) => {
+  const handleAddModalOpen = () => {
     dispatch(openModal({ modalType: "ADD_APPOINTMENT", modalProps: {} }));
-    console.log("ADD APPOINTMENT CLICKED", row);
   };
 
   const handleEditModalOpen = (row) => {
@@ -53,7 +51,6 @@ const Booking = () => {
         modalProps: { appointmentId: row._id },
       })
     );
-    console.log("EDIT CLICKED", row);
   };
 
   const handleDeleteModalOpen = (row) => {
@@ -63,7 +60,6 @@ const Booking = () => {
         modalProps: { appointmentData: row },
       })
     );
-    console.log("DELETE CLICKED", row);
   };
 
   const handleDetailsModalOpen = (row) => {
@@ -73,7 +69,6 @@ const Booking = () => {
         modalProps: { appointmentId: row._id },
       })
     );
-    console.log("DETAILS CLICKED", row);
   };
 
   const handleStatusModalOpen = (row) => {
@@ -83,7 +78,6 @@ const Booking = () => {
         modalProps: { appointment: row },
       })
     );
-    console.log("UPDATE APPOINTMENT STATUS CLICKED", row);
   };
 
   const columns = getColumns({

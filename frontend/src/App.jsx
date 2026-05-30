@@ -15,6 +15,8 @@ import Scheduler from "./features/appointments/Scheduler";
 import GlobalModal from "./components/modal/GlobalModal";
 import Users from "./features/users/Users";
 import NotFound from "./pages/NotFound";
+import Departments from "./features/departments/Departments";
+
 
 function App() {
   const isLoading = useAuthRestore();
@@ -39,6 +41,7 @@ function App() {
                 element={<ProtectedRoute allowedRoles={["super_admin"]} />}
               >
                 <Route path="/doctors" element={<Doctors />} />
+                <Route path="/departments" element={<Departments />} />
               </Route>
 
               <Route

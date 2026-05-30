@@ -120,7 +120,6 @@ export const deleteAppointment = async (req, res, next) => {
 export const startConsultation = async (req, res, next) => {
   try {
     const data = await startConsultationService(req.body, req.user);
-    console.log(data, "Appointment...");
 
     res.status(200).json({
       message: "Start doctor consultation",

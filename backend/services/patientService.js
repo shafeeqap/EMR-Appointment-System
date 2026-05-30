@@ -19,7 +19,7 @@ import { generatePatientID } from "../utils/generatePatientID.js";
 
 // ===========> Create Patient Service <===========
 export const createPatientService = async (data, user) => {
-  const { name, age, mobile } = data;
+  const { name, gender, age, mobile } = data;
 
   const existPatient = await findOnePatient({ mobile });
 
@@ -31,6 +31,7 @@ export const createPatientService = async (data, user) => {
 
   const patient = await createPatientRepo({
     name,
+    gender,
     age,
     mobile,
     patientId,
@@ -97,15 +98,15 @@ export const getPatientService = async (query, user) => {
     }
 
     doctorId = doctor._id;
+
+    const patientIds = await getAppointmentDistinctValue("patientId", {
+      doctorId,
+    });
+
+    filter._id = {
+      $in: patientIds,
+    };
   }
-
-  const patientIds = await getAppointmentDistinctValue("patientId", {
-    doctorId,
-  });
-
-  filter._id = {
-    $in: patientIds,
-  };
 
   if (search) {
     const isNumeric = /^\d+$/.test(search);
@@ -160,7 +161,7 @@ export const getPatientByIdService = async (params) => {
 // ===========> Update Patient Service <===========
 export const updatePatientService = async (params, data, user) => {
   const id = params.id;
-  const { name, age, mobile } = data;
+  const { name, gender, age, mobile } = data;
 
   const patient = await findPatientById(id);
 
@@ -170,7 +171,7 @@ export const updatePatientService = async (params, data, user) => {
 
   const updatedPatient = await findPatientByIdAndUpdate(
     id,
-    { name, age, mobile },
+    { name, gender, age, mobile },
     { returnDocument: "after" }
   );
 
@@ -184,10 +185,12 @@ export const updatePatientService = async (params, data, user) => {
       patientId: patient._id,
       previousData: {
         name: patient.name,
+        gender: patient.gender,
         mobile: patient.mobile,
       },
       updatedData: {
         name,
+        gender,
         mobile,
       },
     },
@@ -205,11 +208,12 @@ export const deletePatientService = async (params, user) => {
   if (!deletedPatient) {
     throw new AppError("Patient not found", 404);
   }
+
   await logAction({
     userId: user.id,
     role: user.role,
     action: "DELETE_PATIENT",
-    entity: "patient",
+    entity: "Patient",
     entityId: deletedPatient._id,
     metadata: {
       name: deletedPatient.name,

@@ -12,6 +12,8 @@ import { notFound } from "./middleware/notFoundMiddleware.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 import { adminDashboardRoutes } from "./routes/adminDashboardRoutes.js";
 import { doctordashboardRoutes } from "./routes/doctorDashboardRoutes.js";
+import { receptionistdashboardRoutes } from "./routes/receptionistDashboardRoutes.js";
+import { departmentRoutes } from "./routes/departmentRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -35,11 +37,12 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/doctors", doctorRoutes);
+app.use("/api/departments", departmentRoutes);
 app.use("/api/patients", patientRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/admin/dashboard", adminDashboardRoutes);
 app.use("/api/dcotor/dashboard", doctordashboardRoutes);
-// app.use("/api/receptionist/dashboard", dashboardRoutes);
+app.use("/api/receptionist/dashboard", receptionistdashboardRoutes);
 
 // 404 handler
 app.use(notFound);

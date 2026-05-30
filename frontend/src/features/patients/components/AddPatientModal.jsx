@@ -1,16 +1,23 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../../../components/modal/modalSlice";
 import { addPatientSchema } from "../../../validator/addPatientValidator";
 import { Button, InputField, Loader } from "../../../components/ui";
 import { handleApiError } from "../../../utils/handleApiError";
-import { toast } from "react-toastify";
 import { useCreatePatientMutation } from "../patientsApiSlice";
+import {
+  resetSuccessFeedback,
+  setSuccessFeedback,
+} from "../../../components/successFedback/successFeedbackSlice";
+import SuccessFeedback from "../../../components/successFedback/SuccessFeedback";
+import RadioField from "../../../components/ui/RadioField";
 
 const AddPatientModal = () => {
   const [createPatient, { isLoading }] = useCreatePatientMutation();
+  const { isSuccess, message } = useSelector((state) => state.successFeedback);
+
   const dispatch = useDispatch();
 
   const {
@@ -27,9 +34,16 @@ const AddPatientModal = () => {
     try {
       const res = await createPatient(data).unwrap();
 
-      toast.success(res.message || "Patient created successfully");
+      dispatch(
+        setSuccessFeedback({
+          message: res.message || "Patient created successfully",
+        })
+      );
 
-      dispatch(closeModal());
+      setTimeout(() => {
+        dispatch(closeModal());
+        dispatch(resetSuccessFeedback());
+      }, 1500);
     } catch (error) {
       console.error("Error creating patient:", error);
       handleApiError(error, setError);
@@ -37,56 +51,78 @@ const AddPatientModal = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg p-6 sm:w-96">
-      <h2 className="text-xl font-semibold mb-4">Add Patient</h2>
+    <>
+      {isSuccess && (
+        <>
+          <SuccessFeedback />
+          <div className="mt-4 w-full text-center">
+            <h1 className="text-lg font-semibold py-3">Created!</h1>
+            {message || "Patient created successfully"}
+          </div>
+        </>
+      )}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="mb-4">
-          <InputField
-            label="Patient name"
-            type="text"
-            {...register("name")}
-            error={errors.name}
-            placeholder="Enter patient name"
-            className="focus:ring focus:border-primary"
-          />
-        </div>
-        <div className="mb-4">
-          <InputField
-            label="Age"
-            type="number"
-            {...register("age")}
-            error={errors.age}
-            placeholder="Enter patient age"
-            className="focus:ring focus:border-primary"
-          />
-        </div>
-        <div className="mb-4">
-          <InputField
-            label="Mobile"
-            type="text"
-            {...register("mobile")}
-            maxLength={10}
-            error={errors.mobile}
-            placeholder="Enter mobile number"
-            className="focus:ring focus:border-primary"
-          />
-        </div>
-        <div className="flex justify-end">
-          <Button
-            onClick={() => dispatch(closeModal())}
-            type="button"
-            variant="secondary"
-            className="mr-2 px-4 py-2 transition duration-200"
-          >
-            Cancel
-          </Button>
-          <Button type="submit" variant="primary">
-            {isLoading ? <Loader/> : "Add"}
-          </Button>
-        </div>
-      </form>
-    </div>
+      <div className="bg-white rounded-lg p-6 sm:w-96">
+        {!isSuccess && (
+          <>
+            <h2 className="text-xl font-semibold mb-4">Add Patient</h2>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="mb-4">
+                <InputField
+                  label="Patient name"
+                  type="text"
+                  {...register("name")}
+                  error={errors.name}
+                  placeholder="Enter patient name"
+                  className="focus:ring focus:border-primary"
+                />
+              </div>
+
+              {/* Gender */}
+              <div className="mb-4">
+                <RadioField {...register("gender")} error={errors.gender} />
+              </div>
+
+              <div className="mb-4">
+                <InputField
+                  label="Age"
+                  type="number"
+                  {...register("age")}
+                  error={errors.age}
+                  placeholder="Enter patient age"
+                  className="focus:ring focus:border-primary"
+                />
+              </div>
+              <div className="mb-4">
+                <InputField
+                  label="Mobile"
+                  type="text"
+                  {...register("mobile")}
+                  maxLength={10}
+                  error={errors.mobile}
+                  placeholder="Enter mobile number"
+                  className="focus:ring focus:border-primary"
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => dispatch(closeModal())}
+                  type="button"
+                  variant="secondary"
+                  className="mr-2 px-4 py-2 transition duration-200"
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary">
+                  {isLoading ? <Loader /> : "Add"}
+                </Button>
+              </div>
+            </form>
+          </>
+        )}
+      </div>
+    </>
   );
 };
 
