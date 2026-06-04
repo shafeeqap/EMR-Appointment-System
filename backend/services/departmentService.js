@@ -46,6 +46,9 @@ export const getDepartmentsService = async (query, user) => {
   const limit = Number(query.limit) || 5;
   const skip = (page - 1) * limit;
   const search = query.search?.trim();
+  
+  console.log(search, 'Search...');
+  
 
   const filter = {};
 

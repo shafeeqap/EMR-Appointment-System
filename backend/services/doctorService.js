@@ -1,3 +1,4 @@
+import { findDepartmentById } from "../repositories/departmentRepository.js";
 import {
   countDoctorDocuments,
   createDoctorRepo,
@@ -14,12 +15,18 @@ import { logAction } from "../utils/auditLogger.js";
 
 // =============> create doctor service <=============
 export const createDoctorService = async (data, user) => {
-  const { userId, department, workingHours, slotDuration, breakTimes } = data;
+  const { userId, departmentId, workingHours, slotDuration, breakTimes } = data;
 
   const userData = await findUserById(userId);
 
   if (!userData) {
     throw new AppError("User not found", 404);
+  }
+
+  const departmentData = await findDepartmentById(departmentId);
+
+  if (!departmentData) {
+    throw new AppError("Department not found", 404);
   }
 
   if (userData.role !== "doctor") {
@@ -33,11 +40,11 @@ export const createDoctorService = async (data, user) => {
   }
 
   const doctor = await createDoctorRepo({
-    userId,
+    userId: userData._id,
     firstName: userData.firstName,
     lastName: userData.lastName,
     email: userData.email,
-    department,
+    departmentId: departmentData._id,
     workingHours,
     slotDuration,
     breakTimes,

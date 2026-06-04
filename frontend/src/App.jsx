@@ -16,7 +16,7 @@ import GlobalModal from "./components/modal/GlobalModal";
 import Users from "./features/users/Users";
 import NotFound from "./pages/NotFound";
 import Departments from "./features/departments/Departments";
-
+import Profile from "./pages/Profile";
 
 function App() {
   const isLoading = useAuthRestore();
@@ -55,6 +55,7 @@ function App() {
                 <Route path="/appointments" element={<Booking />} />
                 <Route path="/shedules" element={<Scheduler />} />
                 <Route path="/users" element={<Users />} />
+                <Route path="/profile" element={<Profile />} />
               </Route>
             </Route>
           </Route>

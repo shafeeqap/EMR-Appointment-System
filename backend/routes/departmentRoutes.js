@@ -25,6 +25,7 @@ router.post(
   validate(createDepartmentSchema),
   createDepartment
 );
+// router.get("/search", protect, searchDepartments);
 router.get("/:id", protect, getDepartmentById);
 router.put(
   "/:id",

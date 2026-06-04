@@ -14,19 +14,37 @@ import { handleApiError } from "../../../../utils/handleApiError";
 import { toast } from "react-toastify";
 import { useSearchUsersQuery } from "../../../users/userApiSlice";
 import { getFullName } from "../../../../utils/userHelpers";
+import { useGetDepartmentsQuery } from "../../../departments/departmentApiSlice.js";
 
 const AddDoctorModal = () => {
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedDept, setSelectedDept] = useState(null);
   const [search, setSearch] = useState("");
+  const [searchDept, setSearchDept] = useState("");
   const [breakTime, setBreakTime] = useState(false);
-  
-  const [createDoctor, { isLoading }] = useCreateDoctorMutation();
+
+  const page = 1;
+
   const dispatch = useDispatch();
+
+  const [createDoctor, { isLoading }] = useCreateDoctorMutation();
 
   const { data: users = [] } = useSearchUsersQuery(search, {
     refetchOnMountOrArgChange: false,
     skip: search.length < 2,
   });
+
+  const { data, error } = useGetDepartmentsQuery({
+    page,
+    limit: 100,
+    search: searchDept,
+  });
+
+  const departments = data?.departments || []
+
+  console.log(users, "Users...");
+  console.log(departments, "Dept...");
+  console.log(selectedDept, "selected Dept...");
 
   const {
     register,
@@ -48,7 +66,7 @@ const AddDoctorModal = () => {
     const payload = {
       userId: selectedUser._id,
 
-      department: data.department,
+      departmentId: selectedDept._id,
 
       workingHours: {
         start: data.workingStart,
@@ -140,14 +158,39 @@ const AddDoctorModal = () => {
           </div>
         )}
 
+        {/* Departments */}
         <div className="mb-4">
-          <InputField
-            label="Specialization/Department"
-            type="text"
-            {...register("department")}
-            error={errors.department}
-            placeholder="Enter specialization or department"
-            className="focus:ring focus:border-primary"
+          <Controller
+            name="department"
+            control={control}
+            render={({ field }) => (
+              <AutocompleteInput
+                label="Specialization/Department"
+                value={field.value ?? ""}
+                placeholder="Enter specialization or department"
+                onChange={(val) => {
+                  field.onChange(val);
+                  setSearchDept(val);
+                  setSelectedDept(null);
+                }}
+                onSelect={(dept) => {
+                  field.onChange(dept.name);
+                  setSearchDept(dept.name);
+                  setSelectedDept(dept);
+                }}
+                fetchItems={async () => departments}
+                renderItem={(dept) => {
+                  return (
+                    <div className="text-sm border-b py-2">
+                      <p>{dept?.name}</p>
+                      {/* <p className="text-gray-500 text-xs">{user.email}</p>
+                      <p className="text-gray-500 text-xs">{user.mobile}</p> */}
+                    </div>
+                  );
+                }}
+                error={errors?.department}
+              />
+            )}
           />
         </div>
 
