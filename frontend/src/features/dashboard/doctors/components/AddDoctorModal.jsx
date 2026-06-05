@@ -19,32 +19,26 @@ import { useGetDepartmentsQuery } from "../../../departments/departmentApiSlice.
 const AddDoctorModal = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedDept, setSelectedDept] = useState(null);
-  const [search, setSearch] = useState("");
+  const [searchUser, setSearchUser] = useState("");
   const [searchDept, setSearchDept] = useState("");
   const [breakTime, setBreakTime] = useState(false);
-
-  const page = 1;
 
   const dispatch = useDispatch();
 
   const [createDoctor, { isLoading }] = useCreateDoctorMutation();
 
-  const { data: users = [] } = useSearchUsersQuery(search, {
+  const { data: users = [] } = useSearchUsersQuery(searchUser, {
     refetchOnMountOrArgChange: false,
-    skip: search.length < 2,
+    skip: searchUser.length < 2,
   });
 
-  const { data, error } = useGetDepartmentsQuery({
-    page,
+  const { data } = useGetDepartmentsQuery({
+    page: 1,
     limit: 100,
     search: searchDept,
   });
 
-  const departments = data?.departments || []
-
-  console.log(users, "Users...");
-  console.log(departments, "Dept...");
-  console.log(selectedDept, "selected Dept...");
+  const departments = data?.departments || [];
 
   const {
     register,
@@ -114,14 +108,14 @@ const AddDoctorModal = () => {
                 placeholder="Type to search for users..."
                 onChange={(val) => {
                   field.onChange(val);
-                  setSearch(val);
+                  setSearchUser(val);
                   setSelectedUser(null);
                 }}
                 onSelect={(user) => {
                   const fullName = getFullName(user);
 
                   field.onChange(fullName);
-                  setSearch(fullName);
+                  setSearchUser(fullName);
                   setSelectedUser(user);
                 }}
                 fetchItems={async () => users}
@@ -183,8 +177,6 @@ const AddDoctorModal = () => {
                   return (
                     <div className="text-sm border-b py-2">
                       <p>{dept?.name}</p>
-                      {/* <p className="text-gray-500 text-xs">{user.email}</p>
-                      <p className="text-gray-500 text-xs">{user.mobile}</p> */}
                     </div>
                   );
                 }}

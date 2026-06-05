@@ -130,10 +130,7 @@ export const getDoctorByIdServices = async (doctorId) => {
     throw new AppError("Doctor id is required", 400);
   }
 
-  const doctor = await findDoctorById(doctorId).populate(
-    "userId",
-    "firstName lastName"
-  );
+  const doctor = await findDoctorById(doctorId);
   if (!doctor) {
     throw new AppError("Doctor not found", 404);
   }
@@ -145,7 +142,7 @@ export const getDoctorByIdServices = async (doctorId) => {
 export const updateDoctorService = async (params, data, user) => {
   const doctorId = params.id;
 
-  const { department, workingHours, slotDuration, breakTimes } = data;
+  const { departmentId, workingHours, slotDuration, breakTimes } = data;
 
   const doctor = await findDoctorById(doctorId);
   if (!doctor) {
@@ -158,7 +155,7 @@ export const updateDoctorService = async (params, data, user) => {
       firstName: doctor.firstName,
       lastName: doctor.lastName,
       email: doctor.email,
-      department,
+      departmentId,
       workingHours,
       slotDuration,
       breakTimes,
@@ -178,7 +175,7 @@ export const updateDoctorService = async (params, data, user) => {
         firstName: doctor.firstName,
         lastName: doctor.lastName,
         email: doctor.email,
-        department: doctor.department,
+        department: doctor.departmentId,
         workingHours: doctor.workingHours,
         slotDuration: doctor.slotDuration,
         breakTime: doctor.breakTimes,
@@ -187,7 +184,7 @@ export const updateDoctorService = async (params, data, user) => {
         firstName: updatedData.firstName,
         lastName: updatedData.lastName,
         email: updatedData.email,
-        department,
+        departmentId: updatedData.departmentId,
         workingHours,
         slotDuration,
         breakTimes,
@@ -245,7 +242,7 @@ export const deleteDoctorService = async (params, user) => {
     metadata: {
       firstName: deletedDoctor.firstName,
       lastName: deletedDoctor.lastName,
-      department: deletedDoctor.department,
+      department: deletedDoctor.departmentId,
       workingHours: deletedDoctor.workingHours,
       slotDuration: deletedDoctor.slotDuration,
       breakTimes: deletedDoctor.breakTimes,

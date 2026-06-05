@@ -41,9 +41,6 @@ export const createDoctorSchema = z.object({
 
 // update doctor validation
 export const updateDoctorSchema = z.object({
-  // firstName: z.string().min(2, "First name too short"),
-  // lastName: z.string().min(1, "Last name required"),
-  // email: z.email("Invalid email"),
   departmentId: z.string(),
   workingHours: z
     .object({
