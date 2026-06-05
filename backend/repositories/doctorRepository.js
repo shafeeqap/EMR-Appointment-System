@@ -9,7 +9,8 @@ export const findDoctors = async (filter, skip, limit) => {
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 })
-    .populate("userId", "firstName lastName");
+    .populate("userId", "firstName lastName")
+    .populate("departmentId", "name");
 };
 
 export const findDoctorsBySearchQuery = (query) => {
@@ -17,7 +18,9 @@ export const findDoctorsBySearchQuery = (query) => {
 };
 
 export const findDoctorById = (id) => {
-  return Doctor.findById(id);
+  return Doctor.findById(id)
+    .populate("userId", "firstName lastName")
+    .populate("departmentId", "name");
 };
 export const findDoctorOne = async (id) => {
   return Doctor.findOne(id);

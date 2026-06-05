@@ -14,19 +14,31 @@ import { handleApiError } from "../../../../utils/handleApiError";
 import { toast } from "react-toastify";
 import { useSearchUsersQuery } from "../../../users/userApiSlice";
 import { getFullName } from "../../../../utils/userHelpers";
+import { useGetDepartmentsQuery } from "../../../departments/departmentApiSlice.js";
 
 const AddDoctorModal = () => {
   const [selectedUser, setSelectedUser] = useState(null);
-  const [search, setSearch] = useState("");
+  const [selectedDept, setSelectedDept] = useState(null);
+  const [searchUser, setSearchUser] = useState("");
+  const [searchDept, setSearchDept] = useState("");
   const [breakTime, setBreakTime] = useState(false);
-  
-  const [createDoctor, { isLoading }] = useCreateDoctorMutation();
+
   const dispatch = useDispatch();
 
-  const { data: users = [] } = useSearchUsersQuery(search, {
+  const [createDoctor, { isLoading }] = useCreateDoctorMutation();
+
+  const { data: users = [] } = useSearchUsersQuery(searchUser, {
     refetchOnMountOrArgChange: false,
-    skip: search.length < 2,
+    skip: searchUser.length < 2,
   });
+
+  const { data } = useGetDepartmentsQuery({
+    page: 1,
+    limit: 100,
+    search: searchDept,
+  });
+
+  const departments = data?.departments || [];
 
   const {
     register,
@@ -48,7 +60,7 @@ const AddDoctorModal = () => {
     const payload = {
       userId: selectedUser._id,
 
-      department: data.department,
+      departmentId: selectedDept._id,
 
       workingHours: {
         start: data.workingStart,
@@ -96,14 +108,14 @@ const AddDoctorModal = () => {
                 placeholder="Type to search for users..."
                 onChange={(val) => {
                   field.onChange(val);
-                  setSearch(val);
+                  setSearchUser(val);
                   setSelectedUser(null);
                 }}
                 onSelect={(user) => {
                   const fullName = getFullName(user);
 
                   field.onChange(fullName);
-                  setSearch(fullName);
+                  setSearchUser(fullName);
                   setSelectedUser(user);
                 }}
                 fetchItems={async () => users}
@@ -140,14 +152,37 @@ const AddDoctorModal = () => {
           </div>
         )}
 
+        {/* Departments */}
         <div className="mb-4">
-          <InputField
-            label="Specialization/Department"
-            type="text"
-            {...register("department")}
-            error={errors.department}
-            placeholder="Enter specialization or department"
-            className="focus:ring focus:border-primary"
+          <Controller
+            name="department"
+            control={control}
+            render={({ field }) => (
+              <AutocompleteInput
+                label="Specialization/Department"
+                value={field.value ?? ""}
+                placeholder="Enter specialization or department"
+                onChange={(val) => {
+                  field.onChange(val);
+                  setSearchDept(val);
+                  setSelectedDept(null);
+                }}
+                onSelect={(dept) => {
+                  field.onChange(dept.name);
+                  setSearchDept(dept.name);
+                  setSelectedDept(dept);
+                }}
+                fetchItems={async () => departments}
+                renderItem={(dept) => {
+                  return (
+                    <div className="text-sm border-b py-2">
+                      <p>{dept?.name}</p>
+                    </div>
+                  );
+                }}
+                error={errors?.department}
+              />
+            )}
           />
         </div>
 

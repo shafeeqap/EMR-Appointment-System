@@ -19,6 +19,7 @@ const Doctors = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+  const dispatch = useDispatch();
 
   const { data, isLoading, error } = useGetDoctorsQuery({
     page,
@@ -26,8 +27,6 @@ const Doctors = () => {
     search,
     status,
   });
-
-  const dispatch = useDispatch();
 
   const doctors = data?.doctors || [];
 

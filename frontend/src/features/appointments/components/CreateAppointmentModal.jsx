@@ -58,8 +58,6 @@ const CreateAppointmentModal = () => {
   };
 
   const onSubmit = async (formData) => {
-    // console.log(formData, "FORM DATA");
-
     if (!selectedSlot) {
       setError("slot", {
         type: "manual",
