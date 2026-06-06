@@ -5,14 +5,14 @@ import { getFullName } from "../../../utils/userHelpers";
 import { useSearchDoctorQuery } from "../../dashboard/doctors/doctorsApiSlice";
 
 const AppointmentForm = () => {
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = useFormContext();
   const [search, setSearch] = useState("");
 
   const today = new Date().toISOString().split("T")[0];
+
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   const { data: doctors = [] } = useSearchDoctorQuery(search, {
     refetchOnMountOrArgChange: false,
@@ -20,57 +20,47 @@ const AppointmentForm = () => {
   });
 
   return (
-    <div className="bg-white border border-gray-300 px-5 py-5 rounded w-full">
+    <div className="bg-white border border-gray-300 px-5 py-5 space-y-4 rounded w-full">
       <h1 className="font-semibold text-lg uppercase">Select Doctor & Time</h1>
 
-      <div className="flex flex-col gap-3 sm:flex-row justify-between py-5">
-        {/* Department */}
-        <InputField
-          label="Department"
-          type="text"
-          {...register("department")}
-          error={errors.department}
-          placeholder="Enter department"
-          className="focus:ring focus:border-primary"
-        />
+      {/* Search doctor Input */}
+      <Controller
+        name="doctor"
+        control={control}
+        render={({ field }) => (
+          <AutocompleteInput
+            label="Doctor Name or Department"
+            placeholder="Search doctor name or department..."
+            value={
+              field.value
+                ? `${field.value.firstName} ${field.value.lastName}`
+                : search
+            }
+            onChange={(val) => {
+              setSearch(val);
+              field.onChange(null);
+            }}
+            onSelect={(doctor) => {
+              field.onChange(doctor);
+              setSearch("");
+            }}
+            fetchItems={async () => doctors}
+            renderItem={(doctor) => {
+              const fullName = getFullName(doctor);
 
-        {/* Search doctor Input */}
-        <Controller
-          name="doctor"
-          control={control}
-          render={({ field }) => (
-            <AutocompleteInput
-              label="Doctor"
-              placeholder="Enter doctor name"
-              value={
-                field.value
-                  ? `${field.value.firstName} ${field.value.lastName}`
-                  : search
-              }
-              onChange={(val) => {
-                setSearch(val);
-                field.onChange(null);
-              }}
-              onSelect={(doctor) => {
-                field.onChange(doctor);
-                setSearch("");
-              }}
-              fetchItems={async () => doctors}
-              renderItem={(doctor) => {
-                const fullName = getFullName(doctor);
-
-                return (
-                  <div className="text-sm border-b py-2">
-                    <p>{fullName}</p>
-                    <p className="text-gray-500 text-xs">{doctor.department}</p>
-                  </div>
-                );
-              }}
-              error={errors?.doctor}
-            />
-          )}
-        />
-      </div>
+              return (
+                <div className="text-sm border-b py-2">
+                  <p>{fullName}</p>
+                  <p className="text-gray-500 text-xs">
+                    {doctor?.departmentId?.name}
+                  </p>
+                </div>
+              );
+            }}
+            error={errors?.doctor}
+          />
+        )}
+      />
 
       {/*Appointment Date Field */}
       <Controller

@@ -1,12 +1,14 @@
-import { findDepartmentById } from "../repositories/departmentRepository.js";
 import {
-  countDoctorDocuments,
+  findDepartmentById,
+  findDepartments,
+} from "../repositories/departmentRepository.js";
+import {
   createDoctorRepo,
   findDoctorByEmail,
   findDoctorById,
   findDoctorByIdAndDelete,
   findDoctorByIdAndUpdate,
-  findDoctors,
+  getDoctors,
   findDoctorsBySearchQuery,
 } from "../repositories/doctorRepository.js";
 import { findUserById } from "../repositories/userRepository.js";
@@ -70,20 +72,25 @@ export const createDoctorService = async (data, user) => {
 // =============> search doctors by search query service <=============
 export const searchDoctorService = async (query) => {
   const { search } = query;
+  const searchQuery = {};
 
   if (!search) {
     throw new AppError("Search query is required", 400);
   }
 
-  const searchQuery = search
-    ? {
-        $or: [
-          { firstName: { $regex: `^${search}`, $options: "i" } },
-          { lastName: { $regex: `^${search}`, $options: "i" } },
-          { department: { $regex: `^${search}`, $options: "i" } },
-        ],
-      }
-    : {};
+  if (search.trim()) {
+    const departments = await findDepartments({
+      name: { $regex: search, $options: "i" },
+    });
+
+    const departmentIds = departments.map((dept) => dept._id);
+
+    searchQuery.$or = [
+      { firstName: { $regex: `^${search}`, $options: "i" } },
+      { lastName: { $regex: `^${search}`, $options: "i" } },
+      { departmentId: { $in: departmentIds } },
+    ];
+  }
 
   const doctors = await findDoctorsBySearchQuery(searchQuery);
 
@@ -98,26 +105,12 @@ export const getDoctorsServices = async (query) => {
   const search = query.search?.trim();
   const status = query.status;
 
-  const filter = {};
-
-  if (search) {
-    filter.$or = [
-      { firstName: { $regex: `^${search}`, $options: "i" } },
-      { lastName: { $regex: `^${search}`, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
-      { department: { $regex: search, $options: "i" } },
-    ];
-  }
-
-  if (status === "active") {
-    filter.isActive = true;
-  } else if (status === "inactive") {
-    filter.isActive = false;
-  }
-
-  const total = await countDoctorDocuments(filter);
-
-  const doctors = await findDoctors(filter, skip, limit);
+  const { doctors, total } = await getDoctors({
+    search,
+    status,
+    skip,
+    limit,
+  });
 
   const totalPages = Math.ceil(total / limit);
 

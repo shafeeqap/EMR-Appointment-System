@@ -22,7 +22,7 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
   },
   {
     header: "Department",
-    render: (row) => row?.departmentId?.name,
+    render: (row) => row?.department?.name,
   },
   {
     header: "Working Hours",
