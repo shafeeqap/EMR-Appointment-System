@@ -6,6 +6,8 @@ import {
   Hospital,
   Users,
   GitFork,
+  FileCog,
+  FileUser,
 } from "lucide-react";
 
 export const sidebarItems = [
@@ -53,6 +55,20 @@ export const sidebarItems = [
   },
   {
     id: 7,
+    icons: FileUser,
+    name: "Leave Request",
+    path: "/leaveRequest",
+    roles: ["admin", "doctor", "receptionist"],
+  },
+  {
+    id: 8,
+    icons: FileCog,
+    name: "Leave Management",
+    path: "/leaveManagement",
+    roles: ["super_admin"],
+  },
+  {
+    id: 9,
     icons: Users,
     name: "Users",
     path: "/users",

@@ -2,10 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { getFullName } from "../../../utils/userHelpers";
 import { ChartWrapper, ProfileCard, StatusCard } from "../components/index.js";
-import {
-  receptionistData,
-  statusCardItems,
-} from "./config/receptionist.config.js";
+import { statusCardItems } from "./config/receptionist.config.js";
 import TodayAppointmentDistribution from "./charts/TodayAppointmentDistribution.jsx";
 import DoctorWorkload from "./charts/DoctorWorkload.jsx";
 import { useGetReceptionistDashboardQuery } from "./receptionistApiSlice.js";
@@ -16,15 +13,12 @@ const ReceptionistDashboard = () => {
   const fullName = getFullName(user);
 
   const { data } = useGetReceptionistDashboardQuery({ id: user._id });
-  console.log(data, 'Receptionist data...');
-  
+  console.log(data, "Receptionist data...");
 
   const deptAppointmentDistribution =
     data?.data?.charts?.departmentAppointmentDistribution || [];
 
-const doctorWorkload = data?.data?.charts?.doctorWorkload || [];
-
-
+  const doctorWorkload = data?.data?.charts?.doctorWorkload || [];
 
   return (
     <div className="grid gap-3 grid-cols-1 md:grid-cols-2">

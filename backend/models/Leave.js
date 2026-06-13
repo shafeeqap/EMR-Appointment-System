@@ -28,6 +28,18 @@ const leaveSchema = new mongoose.Schema(
       trim: true,
     },
 
+    leaveType: {
+      type: String,
+      enum: ["full-day", "half-day"],
+      required: true,
+    },
+
+    leaveCategory: {
+      type: String,
+      enum: ["paid", "unpaid", "annual", "sick", "emergency"],
+      required: true,
+    },
+
     status: {
       type: String,
       enum: ["pending", "approved", "rejected"],

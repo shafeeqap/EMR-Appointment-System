@@ -112,7 +112,7 @@ const UpdateAppointmentStatusModal = () => {
       {!isSuccess && (
         <div className="mb-4 w-full">
           <FilterOption
-            status={status}
+            value={status}
             onChange={setStatus}
             options={filteredOptions}
             disabled={filteredOptions.length === 0}

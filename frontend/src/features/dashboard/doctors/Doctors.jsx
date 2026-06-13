@@ -88,7 +88,7 @@ const Doctors = () => {
           />
 
           <FilterOption
-            status={status}
+            value={status}
             onChange={setStatus}
             options={statusOptions}
             className="w-full"
