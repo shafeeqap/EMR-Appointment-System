@@ -25,7 +25,7 @@ export const statusCardItems = [
   {
     id: 4,
     title: "Doctor Availability",
-    key: "totalDoctors",
+    key: "doctorsAvailable",
     icon: Stethoscope,
     // value: 50,
   },

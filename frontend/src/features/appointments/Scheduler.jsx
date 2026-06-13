@@ -46,8 +46,6 @@ const Scheduler = () => {
   };
 
   const onSubmit = async (formData) => {
-    
-
     if (!selectedSlot) {
       setError("slot", {
         type: "manual",
@@ -59,6 +57,7 @@ const Scheduler = () => {
     const payload = {
       doctorId: formData.doctor?._id,
       patientId: formData.patient?._id,
+      departmentId: doctor?.departmentId?._id,
       date: formData.date,
       slotTime: selectedSlot,
       notes: formData.notes,

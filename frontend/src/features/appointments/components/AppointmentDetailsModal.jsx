@@ -26,6 +26,10 @@ const AppointmentDetailsModal = () => {
   const appointment = appointments?.appointments;
   const patient = appointments?.appointments?.patient;
   const doctor = appointments?.appointments?.doctor;
+  console.log(doctor, "Doctor in details modal");
+  console.log(appointment, "Appointment in details modal");
+  
+  
 
   const statusConfig = STATUS_UI[appointment?.status];
 
@@ -104,7 +108,7 @@ const AppointmentDetailsModal = () => {
               <strong>Doctor:</strong> {getFullName(doctor)}
             </p>
             <p>
-              <strong>Department:</strong> {doctor?.department}
+              <strong>Department:</strong> {appointment?.department?.name}
             </p>
           </div>
         </fieldset>

@@ -6,18 +6,25 @@ import {
   receptionistData,
   statusCardItems,
 } from "./config/receptionist.config.js";
-import TodayAppointment from "./charts/TodayAppointment.jsx";
-import DoctorAvailability from "./charts/DoctorAvailability.jsx";
+import TodayAppointmentDistribution from "./charts/TodayAppointmentDistribution.jsx";
+import DoctorWorkload from "./charts/DoctorWorkload.jsx";
 import { useGetReceptionistDashboardQuery } from "./receptionistApiSlice.js";
 
 const ReceptionistDashboard = () => {
   const { user } = useSelector((state) => state.auth);
 
+  const fullName = getFullName(user);
+
   const { data } = useGetReceptionistDashboardQuery({ id: user._id });
-  console.log(data, "Receptionist Dashboard Data...");
+  console.log(data, 'Receptionist data...');
   
 
-  const fullName = getFullName(user);
+  const deptAppointmentDistribution =
+    data?.data?.charts?.departmentAppointmentDistribution || [];
+
+const doctorWorkload = data?.data?.charts?.doctorWorkload || [];
+
+
 
   return (
     <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
@@ -25,14 +32,14 @@ const ReceptionistDashboard = () => {
       <StatusCard statusCardItems={statusCardItems} data={data} />
 
       <div className="text-center mt-5 w-full">
-        <ChartWrapper title="Appointment Status" data={"3"}>
-          <TodayAppointment />
+        <ChartWrapper title="Department Appointment Distribution" data={"3"}>
+          <TodayAppointmentDistribution data={deptAppointmentDistribution} />
         </ChartWrapper>
       </div>
 
       <div className="text-center mt-5 w-full">
-        <ChartWrapper title="Doctor Availability" data={"5"}>
-          <DoctorAvailability data={receptionistData} />
+        <ChartWrapper title="Doctor Workload" data={"5"}>
+          <DoctorWorkload data={doctorWorkload} />
         </ChartWrapper>
       </div>
     </div>

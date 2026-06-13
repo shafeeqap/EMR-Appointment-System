@@ -7,6 +7,11 @@ const appointmentSchema = new mongoose.Schema(
       ref: "Doctor",
       required: true,
     },
+    departmentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
+      required: true,
+    },
     patientId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Patient",

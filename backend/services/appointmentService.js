@@ -18,7 +18,7 @@ import { generateAvailableSlots } from "./slotService.js";
 
 // =============> create appointments service <=============
 export const createAppointmentService = async (data, user) => {
-  const { doctorId, patientId, date, slotTime, notes } = data;
+  const { doctorId, departmentId, patientId, date, slotTime, notes } = data;
 
   const now = new Date();
 
@@ -64,6 +64,7 @@ export const createAppointmentService = async (data, user) => {
   const appointment = await createAppointmentRepo({
     doctorId,
     patientId,
+    departmentId,
     date,
     slotTime,
     tokenNumber,

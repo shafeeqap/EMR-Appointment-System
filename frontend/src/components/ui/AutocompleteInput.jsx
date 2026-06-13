@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { InputField } from ".";
-import useDebouncedSearch from "../../hooks/useUserSearch";
+import useDebouncedSearch from "../../hooks/useDebouncedSearch";
 
 const AutocompleteInput = ({
   label,
