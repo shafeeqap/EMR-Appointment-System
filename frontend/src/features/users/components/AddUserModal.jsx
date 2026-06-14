@@ -2,7 +2,12 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addUserSchema } from "../../../validator/addUserValidator.js";
-import { Button, InputField, Loader } from "../../../components/ui";
+import {
+  Button,
+  FilterOption,
+  InputField,
+  Loader,
+} from "../../../components/ui";
 import { useCreateUserMutation } from "../userApiSlice.js";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../../../components/modal/modalSlice.js";
@@ -14,9 +19,9 @@ import {
   setSuccessFeedback,
 } from "../../../components/successFedback/successFeedbackSlice.js";
 import SuccessFeedback from "../../../components/successFedback/SuccessFeedback.jsx";
+import { roleOptions } from "../statusOptions.js";
 
 const AddUserModal = () => {
-  const [role, setRole] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
@@ -137,23 +142,13 @@ const AddUserModal = () => {
                   </div>
 
                   <div className="flex flex-col">
-                    <label htmlFor="" className="mb-2">
-                      Select Role
-                    </label>
-                    <select
-                      value={role}
+                    <FilterOption
+                      label="Select Role"
+                      options={roleOptions}
                       {...register("role")}
-                      onChange={(e) => setRole(e.target.value)}
-                      className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none bg-white"
-                    >
-                      <option value="">Select role</option>
-                      <option value="admin">Admin</option>
-                      <option value="doctor">Doctor</option>
-                      <option value="receptionist">Receptionist</option>
-                    </select>
-                    {errors?.role && (
-                      <p className="text-red-500 text-sm">{errors?.role}</p>
-                    )}
+                      error={errors.role}
+                      className="focus:ring focus:border-primary"
+                    />
                   </div>
                 </div>
               </div>

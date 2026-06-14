@@ -1,24 +1,26 @@
 import React from "react";
 
 const FilterOption = ({
-  id,
   error,
   label,
   value,
-  onChange = () => {},
+  onChange,
   options = [],
   className,
   ...props
 }) => {
+  const handleChange = (e) => {
+    if (onChange) {
+      onChange(e);
+    }
+  };
+
   return (
     <>
-      <label htmlFor={id} className="block mb-2 text-gray-700">
-        {label}
-      </label>
+      <label className="block mb-2 text-gray-700">{label}</label>
       <select
-        id={id}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={handleChange}
         className={`border border-gray-300 px-3 py-2.5 rounded bg-white ${className}`}
         {...props}
       >

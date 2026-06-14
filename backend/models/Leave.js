@@ -51,9 +51,13 @@ const leaveSchema = new mongoose.Schema(
       ref: "super_admin",
     },
 
-    approvedAt: Date,
+    approvedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+export const Leave = mongoose.model("Leave", leaveSchema);

@@ -14,6 +14,7 @@ import { adminDashboardRoutes } from "./routes/adminDashboardRoutes.js";
 import { doctordashboardRoutes } from "./routes/doctorDashboardRoutes.js";
 import { receptionistdashboardRoutes } from "./routes/receptionistDashboardRoutes.js";
 import { departmentRoutes } from "./routes/departmentRoutes.js";
+import { leaveRoutes } from "./routes/leaveRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -43,6 +44,7 @@ app.use("/api/appointments", appointmentRoutes);
 app.use("/api/admin/dashboard", adminDashboardRoutes);
 app.use("/api/dcotor/dashboard", doctordashboardRoutes);
 app.use("/api/receptionist/dashboard", receptionistdashboardRoutes);
+app.use("/api/leaves", leaveRoutes);
 
 // 404 handler
 app.use(notFound);

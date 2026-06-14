@@ -19,6 +19,10 @@ const Doctors = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
+
+  console.log(status, "status");
+  
+
   const dispatch = useDispatch();
 
   const { data, isLoading, error } = useGetDoctorsQuery({
@@ -89,7 +93,7 @@ const Doctors = () => {
 
           <FilterOption
             value={status}
-            onChange={setStatus}
+            onChange={(e) => setStatus(e.target.value)}
             options={statusOptions}
             className="w-full"
           />

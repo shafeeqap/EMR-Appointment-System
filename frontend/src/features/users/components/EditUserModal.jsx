@@ -73,8 +73,6 @@ const EditUserModal = () => {
     try {
       const res = await updateUser({ id: userId, ...data }).unwrap();
 
-      // toast.success(res.message || "User updated successfully");
-
       dispatch(
         setSuccessFeedback({
           message: res.message || "User updated successfully",

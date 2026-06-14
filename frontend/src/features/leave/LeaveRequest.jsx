@@ -1,54 +1,86 @@
-import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Button, FilterOption, InputField, Loader } from "../../components/ui";
-import { useDispatch } from "react-redux";
+import {
+  Button,
+  FilterOption,
+  InputField,
+  Loader,
+  Pagination,
+} from "../../components/ui";
 import { leaveRequestSchema } from "../../validator/leaveRequest";
 import { leaveCategoryOption, leaveTypeOption } from "./optionValue";
-
+import { handleApiError } from "../../utils/handleApiError";
+import { useApplyLeaveMutation, useGetLeavesQuery } from "./leaveApiSlice";
+import { toast } from "react-toastify";
+import LeaveCard from "./LeaveCard";
+import ErrorMessage from "../../components/ErrorMessage";
 
 const LeaveRequest = () => {
-  const [leaveType, setLeaveType] = useState("");
-  const [leaveCategory, setLeaveCategory] = useState("");
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const [applyLeave, { isLoading }] = useApplyLeaveMutation();
 
-  console.log(leaveType, leaveCategory);
-  
-  const dispatch = useDispatch();
+  const { data: leaveData, error } = useGetLeavesQuery({
+    page,
+    limit: 3,
+    search,
+  });
+
+  console.log(leaveData, "Fetched leave data");
+
+  const leaves = leaveData?.leaves?.leaves || [];
 
   const {
     register,
     handleSubmit,
     setError,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(leaveRequestSchema),
-    defaultValues: { name: "" },
   });
 
-  const isLoading = false; // Replace with actual loading state from API call
+  const onSubmit = async (formData) => {
+    const payload = {
+      startDate: formData.startDate,
+      endDate: formData.endDate,
+      reason: formData.reason,
+      leaveType: formData.leaveType,
+      leaveCategory: formData.leaveCategory,
+    };
 
-  const onSubmit = async (data) => {
     try {
-      //   const res = await createPatient(data).unwrap();
-      //   dispatch(
-      //     setSuccessFeedback({
-      //       message: res.message || "Patient created successfully",
-      //     })
-      //   );
-      //   setTimeout(() => {
-      //     dispatch(closeModal());
-      //     dispatch(resetSuccessFeedback());
-      //   }, 1500);
+      const res = await applyLeave(payload).unwrap();
+      console.log(res, "Leave applied successfully");
+      toast.success(res.message || "Leave applied successfully");
+      reset();
     } catch (error) {
-      console.error("Error creating patient:", error);
-      //   handleApiError(error, setError);
+      console.error("Error creating leave:", error);
+      handleApiError(error, setError);
     }
   };
 
+  if (isLoading)
+    return (
+      <div>
+        <Loader />
+      </div>
+    );
+
+  if (error) return <ErrorMessage />;
+
   return (
     <div className="grid gap-3 grid-cols-1 md:grid-cols-2">
-      <div className="bg-white p-4 rounded">
-        <h2 className="text-xl font-semibold mb-4">Leave Request</h2>
+      <div className="bg-white p-5 rounded">
+        <h2 className="text-xl font-semibold">Leave Request</h2>
+        <p className="text-gray-600 mb-2">
+          Use the form below to submit a new leave request. Please provide all
+          the necessary details for processing your request.
+        </p>
+
+        {/* Border line */}
+        <div className="border mb-4" />
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
@@ -56,7 +88,7 @@ const LeaveRequest = () => {
               label="Start Date"
               type="date"
               {...register("startDate")}
-              error={errors.name}
+              error={errors.startDate}
               placeholder="Enter Start Date"
               className="focus:ring focus:border-primary"
             />
@@ -67,7 +99,7 @@ const LeaveRequest = () => {
               label="End Date"
               type="date"
               {...register("endDate")}
-              error={errors.age}
+              error={errors.endDate}
               placeholder="Enter End Date"
               className="focus:ring focus:border-primary"
             />
@@ -77,8 +109,7 @@ const LeaveRequest = () => {
               label="Reason"
               type="text"
               {...register("reason")}
-              maxLength={10}
-              error={errors.mobile}
+              error={errors.reason}
               placeholder="Enter reason"
               className="focus:ring focus:border-primary"
             />
@@ -86,28 +117,25 @@ const LeaveRequest = () => {
           <div className="mb-4 flex flex-col">
             <FilterOption
               label="Leave Type"
-              value={leaveType}
-              onChange={setLeaveType}
               options={leaveTypeOption}
               error={errors.leaveType}
+              {...register("leaveType")}
               className="focus:ring focus:border-primary"
             />
           </div>
           <div className="mb-4 flex flex-col">
             <FilterOption
               label="Leave Category"
-              value={leaveCategory}
-              onChange={setLeaveCategory}
               options={leaveCategoryOption}
-              error={errors.mobile}
-              placeholder="Enter mobile number"
+              error={errors.leaveCategory}
+              {...register("leaveCategory")}
               className="focus:ring focus:border-primary"
             />
           </div>
           <div className="">
             <Button
-              onClick={"() => dispatch(closeModal())"}
               type="button"
+              onClick={() => reset()}
               variant="secondary"
               className="mr-2 px-4 py-2 transition duration-200"
             >
@@ -119,7 +147,76 @@ const LeaveRequest = () => {
           </div>
         </form>
       </div>
-      <div className="bg-white p-4 rounded">List</div>
+
+      {/* Leave History */}
+      <div className="bg-white p-4 rounded">
+        <h2 className="text-xl font-semibold">Leave Request History</h2>
+        <p className="text-gray-600 mb-2">
+          View your past leave requests and their statuses here.
+        </p>
+
+        {/* Border line */}
+        <div className="border mb-4" />
+
+        {/* Navigation */}
+        <menu className="bg-gray-200 rounded">
+          <div className="flex justify-between items-center px-3 py-2">
+            <Button variant="primary" className="w-32">
+              All
+            </Button>
+            <Button variant="secondary" className="w-32">
+              Annual
+            </Button>
+            <Button variant="secondary" className="w-32">
+              Sick
+            </Button>
+          </div>
+        </menu>
+
+        {/* Display past leave */}
+        {leaves.length === 0 ? (
+          <div>
+            <p className="text-gray-600 mt-4 p-5">
+              No leave requests found. Your leave history will appear here once
+              you submit a request.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Leave Card */}
+            {leaves.map((leave) => {
+              const formatDate = (date) =>
+                new Date(date).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                });
+
+              return (
+                <LeaveCard
+                  key={leave._id}
+                  month={new Date(leave.startDate).toLocaleString("default", {
+                    month: "long",
+                  })}
+                  leaveCategory={leave.leaveCategory}
+                  leavePeriod={`${formatDate(leave.startDate)} - ${formatDate(
+                    leave.endDate
+                  )}`}
+                  leaveType={leave.leaveType}
+                  status={leave.status}
+                />
+              );
+            })}
+          </>
+        )}
+
+        {leaveData?.leaves?.totalPages > 1 && (
+          <Pagination
+            page={page}
+            setPage={setPage}
+            totalPages={leaveData?.leaves?.totalPages || 1}
+          />
+        )}
+      </div>
     </div>
   );
 };

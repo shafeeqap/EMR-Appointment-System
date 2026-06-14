@@ -87,7 +87,7 @@ const Users = () => {
 
           <FilterOption
             value={status}
-            onChange={setStatus}
+            onChange={(e) => setStatus(e.target.value)}
             options={statusOptions}
             className="w-full"
           />
