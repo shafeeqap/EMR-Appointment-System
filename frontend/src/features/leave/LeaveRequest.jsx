@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import {
   Button,
   FilterOption,
+  FilterSearch,
   InputField,
   Loader,
   Pagination,
@@ -13,21 +14,28 @@ import { leaveCategoryOption, leaveTypeOption } from "./optionValue";
 import { handleApiError } from "../../utils/handleApiError";
 import { useApplyLeaveMutation, useGetLeavesQuery } from "./leaveApiSlice";
 import { toast } from "react-toastify";
-import LeaveCard from "./LeaveCard";
 import ErrorMessage from "../../components/ErrorMessage";
+import { formatDate } from "../../utils/formatDate";
+import { categories } from "./config/leave.config";
+import { LeaveCard } from "./components";
 
 const LeaveRequest = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+
+  console.log(search, "Current search value");
+
   const [applyLeave, { isLoading }] = useApplyLeaveMutation();
 
   const { data: leaveData, error } = useGetLeavesQuery({
     page,
     limit: 3,
     search,
+    category,
   });
 
-  console.log(leaveData, "Fetched leave data");
+  // console.log(leaveData, "Fetched leave data");
 
   const leaves = leaveData?.leaves?.leaves || [];
 
@@ -40,6 +48,11 @@ const LeaveRequest = () => {
   } = useForm({
     resolver: zodResolver(leaveRequestSchema),
   });
+
+  const handleFilterChange = (value) => {
+    setCategory(value);
+    setPage(1);
+  };
 
   const onSubmit = async (formData) => {
     const payload = {
@@ -132,7 +145,7 @@ const LeaveRequest = () => {
               className="focus:ring focus:border-primary"
             />
           </div>
-          <div className="">
+          <div className="space-y-2">
             <Button
               type="button"
               onClick={() => reset()}
@@ -159,19 +172,24 @@ const LeaveRequest = () => {
         <div className="border mb-4" />
 
         {/* Navigation */}
-        <menu className="bg-gray-200 rounded">
-          <div className="flex justify-between items-center px-3 py-2">
-            <Button variant="primary" className="w-32">
-              All
-            </Button>
-            <Button variant="secondary" className="w-32">
-              Annual
-            </Button>
-            <Button variant="secondary" className="w-32">
-              Sick
-            </Button>
+        <menu className="sm:bg-gray-200 rounded">
+          <div className="grid grid-cols-3 sm:grid-cols-4 sm:py-2 sm:px-2 gap-2">
+            {categories.map((cat) => (
+              <Button
+                key={cat.id}
+                onClick={() => handleFilterChange(cat.value)}
+                variant={category === cat.value ? "primary" : "secondary"}
+                className="w-full transition duration-200 text-center"
+              >
+                {cat.label}
+              </Button>
+            ))}
           </div>
         </menu>
+
+        <div className="mt-4">
+          <FilterSearch value={search} onChange={setSearch} />
+        </div>
 
         {/* Display past leave */}
         {leaves.length === 0 ? (
@@ -185,15 +203,10 @@ const LeaveRequest = () => {
           <>
             {/* Leave Card */}
             {leaves.map((leave) => {
-              const formatDate = (date) =>
-                new Date(date).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                });
-
               return (
                 <LeaveCard
                   key={leave._id}
+                  leaveId={leave._id}
                   month={new Date(leave.startDate).toLocaleString("default", {
                     month: "long",
                   })}
@@ -202,6 +215,7 @@ const LeaveRequest = () => {
                     leave.endDate
                   )}`}
                   leaveType={leave.leaveType}
+                  reason={leave.reason}
                   status={leave.status}
                 />
               );

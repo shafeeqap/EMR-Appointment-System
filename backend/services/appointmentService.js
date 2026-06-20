@@ -157,8 +157,6 @@ export const getAppointmentByIdService = async (params) => {
 export const updateAppointmentStatusService = async (params, data, user) => {
   const id = params.id;
   const { status } = data;
-  // console.log(id, "ID");
-  // console.log(status, "Status");
 
   const appointment = await findAppointmentById(id);
 

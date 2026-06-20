@@ -1,5 +1,6 @@
 import {
   createLeaveRepo,
+  findLeaveById,
   findLeaves,
   findOneLeave,
 } from "../repositories/leaveRepository.js";
@@ -7,6 +8,7 @@ import { findUserById } from "../repositories/userRepository.js";
 import { AppError } from "../utils/AppError.js";
 import { logAction } from "../utils/auditLogger.js";
 
+// ===========> Apply leave service <===========>
 export const applyLeaveService = async (data, user) => {
   const { startDate, endDate, reason, leaveType, leaveCategory } = data;
 
@@ -69,12 +71,18 @@ export const applyLeaveService = async (data, user) => {
   return leave;
 };
 
-
+// ===========> Get leaves service <===========>
 export const getLeavesService = async (query) => {
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 5;
   const search = query.search?.trim();
   const status = query.status;
+  const category = query.category;
+
+  // console.log(search, "Search query in service");
+  // console.log(category, "Category query in service");
+  
+  
 
   const filter = {};
 
@@ -86,7 +94,90 @@ export const getLeavesService = async (query) => {
     ];
   }
 
+  if (category) {
+    filter.leaveCategory = category;
+  }
+
   const leaves = await findLeaves(filter, { page, limit, status });
 
   return leaves;
+};
+
+// ===========> Cancel leave service <===========>
+export const cancelLeaveService = async (params, user) => {
+  const leaveId = params.id;
+
+  const leave = await findOneLeave({ _id: leaveId });
+
+  if (!leave) {
+    throw new AppError("Leave not found", 404);
+  }
+
+  if (leave.employeeId.toString() !== user.id.toString()) {
+    throw new AppError("You are not authorized to cancel this leave", 403);
+  }
+
+  if (leave.status !== "pending") {
+    throw new AppError("Only pending leaves can be cancelled", 400);
+  }
+
+  leave.status = "cancelled";
+  await leave.save();
+
+  await logAction({
+    userId: user.id,
+    role: user.role,
+    action: "CANCEL_LEAVE",
+    entity: "Leave",
+    entityId: leave._id,
+    metadata: {
+      employeeId: leave.employeeId,
+      employeeType: leave.employeeType,
+      startDate: leave.startDate,
+      endDate: leave.endDate,
+    },
+  });
+
+  return leave;
+};
+
+// ===========> Get leave by ID service <===========>
+export const getLeaveByIdService = async (params) => {
+  const leaveId = params.id;
+
+  const leave = await findOneLeave({ _id: leaveId });
+
+  if (!leave) {
+    throw new AppError("Leave not found", 404);
+  }
+
+  return leave;
+};
+
+// ===========> Update leave status service <===========>
+export const updateLeaveStatusService = async (params, body, user) => {
+  const id = params.id;
+  const { status } = body;
+
+  const leave = await findLeaveById(id);
+  if (!leave) {
+    throw new AppError("Leave not found", 404);
+  }
+
+  leave.status = status;
+  await leave.save();
+
+  await logAction({
+    userId: user.id,
+    role: user.role,
+    action: "UPDATE_LEAVE_STATUS",
+    entity: "Leave",
+    entityId: leave._id,
+    metadata: {
+      oldStatus: leave.status,
+      newStatus: status,
+    },
+  });
+
+  return leave;
 };

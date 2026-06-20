@@ -3,8 +3,8 @@ import { apiSlice } from "../../app/apiSlice";
 const leaveApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getLeaves: builder.query({
-      query: ({ page = 1, limit = 3, search }) =>
-        `/leaves?page=${page}&limit=${limit}&search=${search}`,
+      query: ({ page = 1, limit = 3, status, search, category }) =>
+        `/leaves?page=${page}&limit=${limit}&status=${status}&search=${search}&category=${category}`,
       providesTags: ["Leave"],
     }),
 
@@ -44,7 +44,7 @@ const leaveApiSlice = apiSlice.injectEndpoints({
 export const {
   useGetLeavesQuery,
   useApplyLeaveMutation,
+  useGetLeaveByIdQuery,
   useUpdateLeaveStatusMutation,
   useCancelLeaveMutation,
-  useGetLeaveByIdQuery,
 } = leaveApiSlice;

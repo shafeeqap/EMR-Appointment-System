@@ -1,7 +1,12 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
 import { authorize } from "../middleware/roleMiddleware.js";
-import { applyLeave, getLeaves } from "../controllers/leaveController.js";
+import {
+  applyLeave,
+  cancelLeave,
+  getLeaveById,
+  getLeaves,
+} from "../controllers/leaveController.js";
 import { validate } from "../middleware/validationMiddleware.js";
 import { leaveValidatorSchema } from "../validators/leaveValidator.js";
 
@@ -23,20 +28,20 @@ router.get(
 router.get(
   "/:id",
   protect,
-  authorize(["super_admin", "doctor", "receptionist"]),
-  // getLeaveById
+  // authorize(["super_admin", "doctor", "receptionist"]),
+  getLeaveById
 );
 router.put(
   "/:id/status",
   protect,
-  authorize(["super_admin", "doctor", "receptionist"]),
+  authorize(["super_admin", "doctor", "receptionist"])
   // updateLeaveStatus
 );
 router.put(
   "/:id/cancel",
   protect,
-  authorize(["super_admin", "doctor", "receptionist"]),
-  // cancelLeave
+  // authorize(["super_admin", "doctor", "receptionist"]),
+  cancelLeave
 );
 
 export const leaveRoutes = router;

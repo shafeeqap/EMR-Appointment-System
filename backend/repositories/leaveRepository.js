@@ -12,12 +12,16 @@ export const findLeaves = async (filter, options = {}) => {
   const { page = 1, limit = 3, status } = options;
   const skip = (page - 1) * limit;
 
-  if (status) {
-    filter.status = status;
-  }
+  // if (status) {
+  //   filter.status = status;
+  // }
 
   const [leaves, totalLeaves] = await Promise.all([
-    Leave.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 }),
+    Leave.find(filter)
+      .skip(skip)
+      .limit(limit)
+      .populate("employeeId", "firstName lastName")
+      .sort({ createdAt: -1 }),
 
     Leave.countDocuments(filter),
   ]);
@@ -30,4 +34,8 @@ export const findLeaves = async (filter, options = {}) => {
     totalPages,
     currentPage: page,
   };
+};
+
+export const findLeaveById = async (id) => {
+  return Leave.findById(id);
 };
