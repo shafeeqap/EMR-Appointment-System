@@ -35,7 +35,7 @@ const LeaveRequest = () => {
     category,
   });
 
-  // console.log(leaveData, "Fetched leave data");
+  console.log(leaveData, "Fetched leave data");
 
   const leaves = leaveData?.leaves?.leaves || [];
 

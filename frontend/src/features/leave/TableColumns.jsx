@@ -1,60 +1,87 @@
-import { Trash2, PenLine } from "lucide-react";
+import { Trash2, PenLine, Eye } from "lucide-react";
+import { STATUS_UI } from "../appointments/components";
 
-export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
+export const getColumns = ({ onUpdateStatus, onDetails }) => [
   {
     header: "SL",
     render: (_, index) => index + 1,
   },
   {
     header: "First Name",
-    accessor: "firstName",
+    render: (row) => row?.employee?.firstName,
   },
   {
     header: "Last Name",
-    accessor: "lastName",
+    render: (row) => row?.employee?.lastName,
   },
-  {
-    header: "Email",
-    accessor: "email",
-  },
+  // {
+  //   header: "Email",
+  //   accessor: "email",
+  // },
   {
     header: "Mobile",
-    accessor: "mobile",
+    render: (row) => row?.employee?.mobile,
   },
   {
     header: "Role",
-    accessor: "role",
-  },
-  {
-    header: "Status",
     render: (row) => (
-      <>
-        {row.role !== "super_admin" && (
-          <span
-            onClick={() => onUpdateStatus(row)}
-            className={`max-w-16 py-1 px-2 text-xs font-medium cursor-pointer uppercase rounded text-center text-white ${
-              row.isActive ? "bg-green-700" : "bg-red-700"
-            }`}
-          >
-            {row.isActive ? "Active" : "Inactive"}
-          </span>
-        )}
-      </>
+      <span
+        className={`capitalize ${
+          row.employeeType === "admin" ? "text-red-700 font-bold" : ""
+        }`}
+      >
+        {row.employeeType.replace(/_/g, " ")}
+      </span>
     ),
   },
   {
-    header: "Actions",
+    header: "Leave Type",
+    render: (row) =>
+      row.leaveType
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase()),
+  },
+  {
+    header: "Leave Category",
+    render: (row) =>
+      row.leaveCategory
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase()),
+  },
+  {
+    header: "Start Date",
+    render: (row) => new Date(row.startDate).toISOString().split("T")[0],
+  },
+  {
+    header: "End Date",
+    render: (row) => new Date(row.endDate).toISOString().split("T")[0],
+  },
+  {
+    header: "Status",
+    render: (row) => {
+      const statusConfig = STATUS_UI[row.status];
+      const isFinalState = ["approved"].includes(row.status);
+
+      return (
+        <button
+          onClick={() => onUpdateStatus(row)}
+          disabled={isFinalState}
+          className=" disabled:cursor-not-allowed"
+        >
+          <span
+            className={`max-w-16 px-2 py-1 text-xs font-medium text-center rounded cursor-pointer uppercase ${statusConfig?.className}`}
+          >
+            {statusConfig?.label}
+          </span>
+        </button>
+      );
+    },
+  },
+  {
+    header: "Details",
     render: (row) => (
-      <span className="flex gap-5 ">
-        {row.role !== "super_admin" && (
-          <>
-            <PenLine onClick={() => onEdit(row)} className="cursor-pointer" />
-            <Trash2
-              onClick={() => onDelete(row)}
-              className="text-red-700 cursor-pointer"
-            />
-          </>
-        )}
+      <span className="flex gap-5">
+        <Eye onClick={() => onDetails(row)} className="cursor-pointer" />
       </span>
     ),
   },

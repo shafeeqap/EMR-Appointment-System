@@ -21,26 +21,7 @@ export const getColumns = ({ onEdit, onDelete, onDetails }) => [
     header: "PatientID",
     accessor: "patientId",
   },
-//   {
-//     header: "Working Hours",
-//     render: (row) => formatWorkingHours(row.workingHours),
-//   },
-//   {
-//     header: "Slot Duration",
-//     accessor: "slotDuration",
-//   },
-//   {
-//     header: "Status",
-//     render: (row) => (
-//       <span
-//         className={`px-2 py-1 text-xs font-medium cursor-pointer text-white ${
-//           row.isActive ? "bg-green-700" : "bg-red-700"
-//         }`}
-//       >
-//         {row.isActive ? "Active" : "Inactive"}
-//       </span>
-//     ),
-//   },
+
   {
     header: "Actions",
     render: (row) => (

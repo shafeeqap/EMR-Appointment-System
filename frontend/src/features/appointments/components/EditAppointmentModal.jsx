@@ -70,6 +70,8 @@ const EditAppointmentModal = () => {
   });
 
   const appointment = appointments?.appointments;
+  console.log(appointment, 'Appointment');
+  
 
   const { data } = useGetDoctorsQuery({ page: 1, limit: 100 });
   const doctors = data?.doctors || [];

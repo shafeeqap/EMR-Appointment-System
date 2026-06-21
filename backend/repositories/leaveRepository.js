@@ -8,20 +8,68 @@ export const findOneLeave = async (query) => {
   return Leave.findOne(query);
 };
 
-export const findLeaves = async (filter, options = {}) => {
-  const { page = 1, limit = 3, status } = options;
+export const findLeaves = async (filter, search, options = {}) => {
+  const { page = 1, limit = 3 } = options;
   const skip = (page - 1) * limit;
 
-  // if (status) {
-  //   filter.status = status;
-  // }
+  const pipeline = [
+    {
+      $lookup: {
+        from: "users",
+        localField: "employeeId",
+        foreignField: "_id",
+        as: "employee",
+      },
+    },
+    { $unwind: "$employee" },
+
+    { $match: filter },
+  ];
+
+  if (search) {
+    pipeline.push({
+      $match: {
+        $or: [
+          { reason: { $regex: search, $options: "i" } },
+          { leaveType: { $regex: search, $options: "i" } },
+          { leaveCategory: { $regex: search, $options: "i" } },
+          { status: { $regex: search, $options: "i" } },
+
+          { "employee.firstName": { $regex: search, $options: "i" } },
+          { "employee.lastName": { $regex: search, $options: "i" } },
+          { "employee.mobile": { $regex: search } },
+        ],
+      },
+    });
+  }
+
+  pipeline.push(
+    {
+      $project: {
+        _id: 1,
+        employeeId: 1,
+        employeeType: 1,
+        startDate: 1,
+        endDate: 1,
+        reason: 1,
+        leaveType: 1,
+        leaveCategory: 1,
+        status: 1,
+        createdAt: 1,
+        updatedAt: 1,
+
+        "employee.firstName": 1,
+        "employee.lastName": 1,
+        "employee.mobile": 1,
+      },
+    },
+    { $sort: { createdAt: -1 } },
+    { $skip: skip },
+    { $limit: limit }
+  );
 
   const [leaves, totalLeaves] = await Promise.all([
-    Leave.find(filter)
-      .skip(skip)
-      .limit(limit)
-      .populate("employeeId", "firstName lastName")
-      .sort({ createdAt: -1 }),
+    Leave.aggregate(pipeline),
 
     Leave.countDocuments(filter),
   ]);

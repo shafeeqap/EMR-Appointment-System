@@ -18,7 +18,11 @@ import {
   EditDepartmentModal,
   DeleteDepartmentModal,
 } from "../../features/departments/components";
-import { CancelLeaveRequestModal } from "../../features/leave/components";
+import {
+  CancelLeaveRequestModal,
+  LeaveDetailsModal,
+  UpdateLeaveStatusModal,
+} from "../../features/leave/components";
 import {
   AddPatientModal,
   DeletePatientModal,
@@ -67,4 +71,6 @@ export const MODAL_COMPONENTS = {
 
   // Leave Modals
   CANCEL_LEAVE_REQUEST: CancelLeaveRequestModal,
+  UPDATE_LEAVE_STATUS: UpdateLeaveStatusModal,
+  LEAVE_DETAILS: LeaveDetailsModal,
 };

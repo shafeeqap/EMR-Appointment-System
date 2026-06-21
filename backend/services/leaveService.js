@@ -76,29 +76,22 @@ export const getLeavesService = async (query) => {
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 5;
   const search = query.search?.trim();
-  const status = query.status;
-  const category = query.category;
+  const status = query.status || "";
+  const category = query.category || "";
 
-  // console.log(search, "Search query in service");
-  // console.log(category, "Category query in service");
-  
-  
+  console.log(search, "search query in getLeavesService");
 
   const filter = {};
-
-  if (search) {
-    filter.$or = [
-      { reason: { $regex: search, $options: "i" } },
-      { leaveType: { $regex: search, $options: "i" } },
-      { leaveCategory: { $regex: search, $options: "i" } },
-    ];
-  }
 
   if (category) {
     filter.leaveCategory = category;
   }
 
-  const leaves = await findLeaves(filter, { page, limit, status });
+  if (status) {
+    filter.status = status;
+  }
+
+  const leaves = await findLeaves(filter, search, { page, limit });
 
   return leaves;
 };

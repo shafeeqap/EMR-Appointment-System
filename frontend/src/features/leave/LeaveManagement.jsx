@@ -1,22 +1,32 @@
-import React, { useState } from 'react'
-import { useGetLeavesQuery } from './leaveApiSlice';
-import { getColumns } from './TableColumns';
-import { useDispatch } from 'react-redux';
-import { openModal } from '../../components/modal/modalSlice';
-import { Button, FilterOption, FilterSearch, Loader, Pagination } from '../../components/ui';
-import ErrorMessage from '../../components/ErrorMessage';
-import { Plus } from 'lucide-react';
-import Table from '../../components/table/Table';
+import React, { useState } from "react";
+import { useGetLeavesQuery } from "./leaveApiSlice";
+import { getColumns } from "./TableColumns";
+import { useDispatch } from "react-redux";
+import { openModal } from "../../components/modal/modalSlice";
+import {
+  Button,
+  FilterOption,
+  FilterSearch,
+  Loader,
+  Pagination,
+} from "../../components/ui";
+import ErrorMessage from "../../components/ErrorMessage";
+import { Plus } from "lucide-react";
+import Table from "../../components/table/Table";
+import { statusOptions } from "./statusOption";
 
 const LeaveManagement = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("");
-  // const [category, setCategory] = useState("");
 
   const dispatch = useDispatch();
 
-  const { data: leaveData, isLoading, error } = useGetLeavesQuery({
+  const {
+    data: leaveData,
+    isLoading,
+    error,
+  } = useGetLeavesQuery({
     page,
     limit: 3,
     search,
@@ -25,8 +35,7 @@ const LeaveManagement = () => {
 
   const leaves = leaveData?.leaves?.leaves || [];
 
-console.log(leaves, "Fetched leave data in LeaveManagement");
-
+  console.log(leaves, "Fetched leave data in LeaveManagement");
 
   const handleStatusModalOpen = (row) => {
     dispatch(
@@ -36,12 +45,18 @@ console.log(leaves, "Fetched leave data in LeaveManagement");
       })
     );
   };
-
+  const handleDetailsModalOpen = (row) => {
+    dispatch(
+      openModal({
+        modalType: "LEAVE_DETAILS",
+        modalProps: { leaveId: row._id },
+      })
+    );
+  };
 
   const columns = getColumns({
-    // onEdit: handleEditModalOpen,
-    // onDelete: handleDeleteModalOpen,
     onUpdateStatus: handleStatusModalOpen,
+    onDetails: handleDetailsModalOpen,
   });
 
   if (isLoading)
@@ -54,7 +69,7 @@ console.log(leaves, "Fetched leave data in LeaveManagement");
   if (error) return <ErrorMessage />;
   return (
     <>
-       <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0">
+      <div className="flex flex-col sm:flex-row justify-between space-y-3 sm:space-y-0">
         <div className="flex flex-col md:flex-row items-center md:space-x-5 space-y-3 md:space-y-0 sm:w-1/2">
           <FilterSearch
             value={search}
@@ -62,21 +77,12 @@ console.log(leaves, "Fetched leave data in LeaveManagement");
             className="w-full"
           />
 
-          {/* <FilterOption
+          <FilterOption
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            options={"statusOptions"}
+            options={statusOptions}
             className="w-full"
-          /> */}
-        </div>
-
-        <div className="h-10">
-          <Button
-            // onClick={"handleAddModalOpen"}
-            className="w-full h-full flex justify-center items-center"
-          >
-            <Plus size={20} />
-          </Button>
+          />
         </div>
       </div>
 
@@ -88,15 +94,15 @@ console.log(leaves, "Fetched leave data in LeaveManagement");
         <Table columns={columns} data={leaves} />
       )}
 
-      {leaveData.totalPages > 1 && (
+      {leaveData?.leaves?.totalPages > 1 && (
         <Pagination
           page={page}
           setPage={setPage}
-          totalPages={leaveData?.totalPages || 1}
+          totalPages={leaveData?.leaves?.totalPages || 1}
         />
       )}
     </>
-  )
-}
+  );
+};
 
-export default LeaveManagement
+export default LeaveManagement;
