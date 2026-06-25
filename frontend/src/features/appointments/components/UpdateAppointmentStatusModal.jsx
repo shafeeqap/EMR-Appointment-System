@@ -31,7 +31,9 @@ const UpdateAppointmentStatusModal = () => {
   const [status, setStatus] = useState(appointment?.status || "");
 
   const currentStatus = appointment?.status;
+
   const allowedNext = TRANSITIONS[currentStatus] || [];
+
   const filteredOptions = appointmentUpdateStatus.filter((option) =>
     allowedNext.includes(option.value)
   );
@@ -68,7 +70,7 @@ const UpdateAppointmentStatusModal = () => {
         id: appointment._id,
         status: status,
       }).unwrap();
-      console.log(res, "Appointment status updated successfully");
+      // console.log(res, "Appointment status updated successfully");
 
       dispatch(
         setSuccessFeedback({
@@ -113,7 +115,7 @@ const UpdateAppointmentStatusModal = () => {
         <div className="mb-4 w-full">
           <FilterOption
             value={status}
-            onChange={setStatus}
+            onChange={(e) => setStatus(e.target.value)}
             options={filteredOptions}
             disabled={filteredOptions.length === 0}
             className={

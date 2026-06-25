@@ -4,16 +4,14 @@ import { getColumns } from "./TableColumns";
 import { useDispatch } from "react-redux";
 import { openModal } from "../../components/modal/modalSlice";
 import {
-  Button,
   FilterOption,
   FilterSearch,
   Loader,
   Pagination,
 } from "../../components/ui";
 import ErrorMessage from "../../components/ErrorMessage";
-import { Plus } from "lucide-react";
 import Table from "../../components/table/Table";
-import { statusOptions } from "./statusOption";
+import { statusOptions } from "./config/statusOption";
 
 const LeaveManagement = () => {
   const [page, setPage] = useState(1);
@@ -28,14 +26,12 @@ const LeaveManagement = () => {
     error,
   } = useGetLeavesQuery({
     page,
-    limit: 3,
+    limit: 5,
     search,
     status,
   });
 
   const leaves = leaveData?.leaves?.leaves || [];
-
-  console.log(leaves, "Fetched leave data in LeaveManagement");
 
   const handleStatusModalOpen = (row) => {
     dispatch(

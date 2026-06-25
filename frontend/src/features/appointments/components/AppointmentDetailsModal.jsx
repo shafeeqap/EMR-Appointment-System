@@ -22,16 +22,13 @@ const AppointmentDetailsModal = () => {
   } = useGetAppointmentByIdQuery({
     id: appointmentId,
   });
-  
+
   const appointment = appointments?.appointments;
   const patient = appointments?.appointments?.patient;
   const doctor = appointments?.appointments?.doctor;
-  console.log(doctor, "Doctor in details modal");
-  console.log(appointment, "Appointment in details modal");
-  
-  
 
   const statusConfig = STATUS_UI[appointment?.status];
+  const Icon = statusConfig?.icon;
 
   const handleStatusModalOpen = (row) => {
     dispatch(
@@ -40,7 +37,6 @@ const AppointmentDetailsModal = () => {
         modalProps: { appointment: row },
       })
     );
-    console.log("UPDATE APPOINTMENT STATUS CLICKED", row);
   };
 
   if (isLoading) {
@@ -128,11 +124,14 @@ const AppointmentDetailsModal = () => {
             <p>
               <strong>Status:</strong>
             </p>
-            <span onClick={()=> handleStatusModalOpen(appointment)}
-              className={`px-3 py-1 rounded text-xs font-medium uppercase cursor-pointer
-    ${statusConfig?.className || "bg-gray-500 text-white"}`}
+            <span
+              onClick={() => handleStatusModalOpen(appointment)}
+              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase cursor-pointer ${
+                statusConfig?.className || "bg-gray-500 text-white"
+              }`}
             >
-              {statusConfig?.label || appointment?.status}
+              {Icon && <Icon size={16} />}
+              {statusConfig?.label}
             </span>
           </div>
         </fieldset>

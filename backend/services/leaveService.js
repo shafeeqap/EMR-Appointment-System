@@ -79,8 +79,6 @@ export const getLeavesService = async (query) => {
   const status = query.status || "";
   const category = query.category || "";
 
-  console.log(search, "search query in getLeavesService");
-
   const filter = {};
 
   if (category) {

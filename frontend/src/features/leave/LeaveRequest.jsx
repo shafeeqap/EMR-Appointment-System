@@ -10,7 +10,6 @@ import {
   Pagination,
 } from "../../components/ui";
 import { leaveRequestSchema } from "../../validator/leaveRequest";
-import { leaveCategoryOption, leaveTypeOption } from "./optionValue";
 import { handleApiError } from "../../utils/handleApiError";
 import { useApplyLeaveMutation, useGetLeavesQuery } from "./leaveApiSlice";
 import { toast } from "react-toastify";
@@ -18,13 +17,12 @@ import ErrorMessage from "../../components/ErrorMessage";
 import { formatDate } from "../../utils/formatDate";
 import { categories } from "./config/leave.config";
 import { LeaveCard } from "./components";
+import { leaveCategoryOption, leaveTypeOption } from "./config/optionValue";
 
 const LeaveRequest = () => {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
-
-  console.log(search, "Current search value");
 
   const [applyLeave, { isLoading }] = useApplyLeaveMutation();
 
@@ -34,8 +32,6 @@ const LeaveRequest = () => {
     search,
     category,
   });
-
-  console.log(leaveData, "Fetched leave data");
 
   const leaves = leaveData?.leaves?.leaves || [];
 

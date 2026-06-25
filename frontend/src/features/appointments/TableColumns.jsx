@@ -40,29 +40,31 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
       );
     },
   },
-  // {
-  //   header: "Appointment Time",
-  //   accessor: "slotTime",
-  // },
-  // {
-  //   header: "Token Number",
-  //   accessor: "tokenNumber",
-  // },
   {
     header: "Appointment Type",
     render: (row) => {
-      const statusConfig = STATUS_UI[row.status];
-      const isFinalState = !["booked"].includes(row.status);
+      const statusConfig = STATUS_UI[row?.status];
+      const Icon = statusConfig?.icon;
+
+      const isFinalState = [
+        "completed",
+        "ongoing",
+        "waiting",
+        "cancelled",
+        "completed",
+        "no_show",
+      ].includes(row.status);
 
       return (
         <button
           onClick={() => onUpdateStatus(row)}
           disabled={isFinalState}
-          className=" disabled:cursor-not-allowed"
+          className="cursor-pointer disabled:cursor-not-allowed"
         >
           <span
-            className={`max-w-16 px-2 py-1 text-xs font-medium text-center rounded cursor-pointer uppercase ${statusConfig?.className}`}
+            className={`inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full cursor-pointer uppercase ${statusConfig?.className}`}
           >
+            {Icon && <Icon size={16} />}
             {statusConfig?.label}
           </span>
         </button>
@@ -100,7 +102,7 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
     header: "Details",
     render: (row) => (
       <span className="flex gap-5">
-        <Eye onClick={() => onDetails(row)} className="cursor-pointer" />
+        <Eye onClick={() => onDetails(row)} className="cursor-pointer text-gray-500" />
       </span>
     ),
   },

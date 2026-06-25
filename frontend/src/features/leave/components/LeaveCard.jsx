@@ -24,6 +24,9 @@ const LeaveCard = ({
     );
   };
 
+  const statusConfig = STATUS_UI[status];
+  const Icon = statusConfig?.icon;
+
   return (
     <div className="py-3 px-5">
       <h1 className="text-gray-600 font-semibold text-xl">{month}</h1>
@@ -43,16 +46,17 @@ const LeaveCard = ({
             </div>
           </div>
           <div className="flex flex-col gap-3 justify-center items-center">
-            {STATUS_UI[status] && (
+            {statusConfig && (
               <span
-                className={`text-sm capitalize w-full text-center ${STATUS_UI[status].className} rounded px-2 py-1`}
+                className={`inline-flex items-center gap-2 text-sm capitalize w-full text-center ${statusConfig?.className} rounded-full px-2 py-1`}
               >
-                {STATUS_UI[status].label}
+                {Icon && <Icon size={16} />}
+                {statusConfig?.label}
               </span>
             )}
             {status === "pending" && (
               <CircleX
-                onClick={()=>handleCancelModalOpen(leaveId)}
+                onClick={() => handleCancelModalOpen(leaveId)}
                 title="Cancel Leave Request"
                 className="text-red-600 cursor-pointer"
               />

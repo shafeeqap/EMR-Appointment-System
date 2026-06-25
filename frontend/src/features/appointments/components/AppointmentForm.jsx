@@ -19,6 +19,9 @@ const AppointmentForm = () => {
     skip: search.length < 2,
   });
 
+  console.log(doctors, 'Doctors...');
+  
+
   return (
     <div className="bg-white border border-gray-300 px-5 py-5 space-y-4 rounded w-full">
       <h1 className="font-semibold text-lg uppercase">Select Doctor & Time</h1>

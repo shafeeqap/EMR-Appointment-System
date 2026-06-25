@@ -5,7 +5,7 @@ export const createLeaveRepo = async (leaveData) => {
 };
 
 export const findOneLeave = async (query) => {
-  return Leave.findOne(query);
+  return Leave.findOne(query).populate("employeeId", "firstName lastName");
 };
 
 export const findLeaves = async (filter, search, options = {}) => {
