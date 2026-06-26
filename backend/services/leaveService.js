@@ -138,8 +138,6 @@ export const getLeaveByIdService = async (params) => {
   const leaveId = params.id;
 
   const leave = await findOneLeave({ _id: leaveId });
-  console.log(leave);
-  
 
   if (!leave) {
     throw new AppError("Leave not found", 404);
