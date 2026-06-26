@@ -12,12 +12,28 @@ export const getReceptionistDashboardServices = async (params) => {
   const data = await getReceptionistDashboardRepo();
   console.log(data, "Data...");
 
+  const appointmentsDistribution = data.departmentAppointmentDistribution.map((item) => ({
+    name: item.department,
+    value: item.total,
+  }));
+
+  const doctorWorkload = data.doctorWorkload.map((item) => ({
+    name: item.doctorName,
+    value: item.total,
+    department: item.department,
+  }))
+
   return {
     stats: {
       todaysAppointments: data.todaysAppointments,
       checkedInPatients: data.checkedInPatients,
       cancelledAppointments: data.cancelledAppointments,
-      totalDoctors: data.totalDoctors,
+      doctorsAvailable: data.doctorsAvailable,
+    },
+
+    charts: {
+      departmentAppointmentDistribution: appointmentsDistribution,
+      doctorWorkload: doctorWorkload,
     },
   };
 };

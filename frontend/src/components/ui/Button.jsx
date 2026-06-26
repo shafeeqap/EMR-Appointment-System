@@ -43,7 +43,7 @@ const Button = ({
           variants[variant],
           sizes[size],
           (disabled || isLoading) &&
-            "flex justify-center items-center opacity-50 cursor-not-allowed"
+            "flex justify-center items-center tec opacity-50 cursor-not-allowed"
         )}
         disabled={disabled || isLoading}
         onSelect={onSelect}

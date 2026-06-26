@@ -15,8 +15,6 @@ const DoctorDashboard = () => {
   const { data } = useGetDoctorDashboardDataQuery({ id: user._id });
 
   const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
-  console.log(appointmentsByDay, 'Appointments By Day...');
-  
 
   const todaysAppointmentsList =
     data?.data?.stats?.todaysAppointmentsList || [];
@@ -43,12 +41,12 @@ const DoctorDashboard = () => {
       </div>
 
       <div className="text-center mt-5 w-full grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
-        <ChartWrapper
+        {/* <ChartWrapper
           title="Daily Appointments Timeline"
           data={appointmentsByDay}
         >
           <DailyAppointmentsTimelineChart data={appointmentsByDay} />
-        </ChartWrapper>
+        </ChartWrapper> */}
 
         <TodayAppointments data={sortedAppointments} />
 

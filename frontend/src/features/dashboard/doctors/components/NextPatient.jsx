@@ -27,7 +27,7 @@ const NextPatient = ({ nextData }) => {
                 <p className="text-sm text-gray-500">{nextData?.notes}</p>
               </div>
 
-              <span className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-lg">
+              <span className="text-sm font-medium bg-green-100 text-green-600 px-3 py-1 rounded-full">
                 {nextData?.patientId}
               </span>
             </div>

@@ -4,7 +4,12 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { editUserSchema } from "../../../validator/editUserValidator";
 import { useGetUserByIdQuery, useUpdateUserMutation } from "../userApiSlice";
-import { Button, InputField, Loader } from "../../../components/ui";
+import {
+  Button,
+  FilterOption,
+  InputField,
+  Loader,
+} from "../../../components/ui";
 import { closeModal } from "../../../components/modal/modalSlice";
 import { toast } from "react-toastify";
 import { handleApiError } from "../../../utils/handleApiError";
@@ -14,7 +19,6 @@ import {
   setSuccessFeedback,
 } from "../../../components/successFedback/successFeedbackSlice";
 import SuccessFeedback from "../../../components/successFedback/SuccessFeedback";
-import OptionField from "../../../components/ui/OptionField";
 import { roleOptions } from "../statusOptions";
 
 const EditUserModal = () => {
@@ -68,8 +72,6 @@ const EditUserModal = () => {
 
     try {
       const res = await updateUser({ id: userId, ...data }).unwrap();
-
-      // toast.success(res.message || "User updated successfully");
 
       dispatch(
         setSuccessFeedback({
@@ -146,7 +148,8 @@ const EditUserModal = () => {
                   />
 
                   <div className="flex flex-col">
-                    <OptionField
+                    <FilterOption
+                      label="Select Role"
                       options={roleOptions}
                       {...form.register("role")}
                       error={form.formState.errors.role?.message}

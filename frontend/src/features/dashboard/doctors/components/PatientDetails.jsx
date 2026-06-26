@@ -17,6 +17,8 @@ const PatientDetails = () => {
   );
   console.log(appointmentData);
 
+  const disabledStatus = ["ongoing", "completed"].includes(appointmentData?.status);
+
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
 
   const dispatch = useDispatch();
@@ -100,7 +102,7 @@ const PatientDetails = () => {
             </Button>
 
             <Button
-              disabled={appointmentData?.status === "ongoing"}
+              disabled={disabledStatus}
               onClick={handleStartConsultation}
             >
               Start Consultation

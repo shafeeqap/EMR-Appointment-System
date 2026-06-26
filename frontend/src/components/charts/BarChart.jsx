@@ -10,22 +10,21 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const BarChartComponent = ({ data, xKey, bars }) => {
+const BarChartComponent = ({
+  data,
+  xKey,
+  bars,
+  xAxisProps = {},
+  tooltipContent,
+}) => {
   return (
     <ResponsiveContainer width="100%" height={300}>
-      <BarChart
-        data={data}
-        margin={{
-          top: 5,
-          right: 0,
-          left: 0,
-          bottom: 5,
-        }}
-      >
+      <BarChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey={xKey} />
+        <XAxis dataKey={xKey} {...xAxisProps} />
+
         <YAxis />
-        <Tooltip />
+        <Tooltip content={tooltipContent} />
         <Legend />
         {bars.map((bar, index) => (
           <Bar
@@ -35,7 +34,6 @@ const BarChartComponent = ({ data, xKey, bars }) => {
             radius={[10, 10, 0, 0]}
           />
         ))}
-        {/* <RechartsDevtools /> */}
       </BarChart>
     </ResponsiveContainer>
   );

@@ -96,7 +96,7 @@ const AddDoctorModal = () => {
       <h2 className="text-xl font-semibold mb-4">Add Doctor</h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="w-56 sm:w-fit">
-        {/* Search Input */}
+        {/* Search user */}
         <div className="mb-4">
           <Controller
             name="name"
@@ -152,7 +152,7 @@ const AddDoctorModal = () => {
           </div>
         )}
 
-        {/* Departments */}
+        {/*Search departments */}
         <div className="mb-4">
           <Controller
             name="department"

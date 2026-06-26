@@ -25,6 +25,7 @@ const EditAppointmentModal = () => {
   const { appointmentId } = useSelector(
     (state) => state.modal.modalProps || {}
   );
+
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
 
   const dispatch = useDispatch();
@@ -69,6 +70,8 @@ const EditAppointmentModal = () => {
   });
 
   const appointment = appointments?.appointments;
+  console.log(appointment, 'Appointment');
+  
 
   const { data } = useGetDoctorsQuery({ page: 1, limit: 100 });
   const doctors = data?.doctors || [];
@@ -82,14 +85,14 @@ const EditAppointmentModal = () => {
     const doctor = appointment.doctor;
 
     reset({
-      patient: appointment.patient?.name || "",
+      patient: appointment?.patient?.name || "",
       doctorId: doctor?._id,
-      slotTime: appointment.slotTime,
-      tokenNumber: appointment.tokenNumber,
+      slotTime: appointment?.slotTime,
+      tokenNumber: appointment?.tokenNumber,
       date: appointment?.date
         ? new Date(appointment?.date).toISOString().split("T")[0]
         : "",
-      notes: appointment.notes,
+      notes: appointment?.notes,
     });
   }, [appointment, reset]);
 
@@ -204,7 +207,8 @@ const EditAppointmentModal = () => {
                         value={doc._id}
                         className="text-xs max-w-min sm:text-sm sm:max-w-0"
                       >
-                        {getFullName(doc)} - {doc.department}
+                        {getFullName(doc)} -{" "}
+                        {appointment?.department?.name || "No Department"}
                       </option>
                     ))}
                   </select>

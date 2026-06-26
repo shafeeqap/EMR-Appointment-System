@@ -107,8 +107,8 @@ const Booking = () => {
           />
 
           <FilterOption
-            status={filter}
-            onChange={setFilter}
+            value={filter}
+            onChange={(e)=> setFilter(e.target.value)}
             options={appointmentOptions}
             className="w-full"
           />

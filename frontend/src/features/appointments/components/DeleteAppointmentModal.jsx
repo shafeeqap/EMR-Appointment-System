@@ -26,8 +26,6 @@ const DeleteAppointmentModal = () => {
     try {
       const res = await deleteAppointment(appointmentData._id).unwrap();
 
-      // toast.success(res.message || "Appointment deleted successfully");
-
       dispatch(
         setSuccessFeedback({
           message: res.message || "Appointment deleted successfully",

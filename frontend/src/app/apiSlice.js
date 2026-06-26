@@ -60,6 +60,7 @@ export const apiSlice = createApi({
     "Patient",
     "Dashboard",
     "Department",
+    "Leave",
   ],
   endpoints: (builder) => ({}),
 });

@@ -1,7 +1,7 @@
 import { Trash2, PenLine } from "lucide-react";
 import { formatTime, formatWorkingHours } from "../../../utils/formatHours";
 import { getDuration } from "../../../utils/calculateDuration";
-import { STATUS_UI } from "../../appointments/components";
+import { STATUS_UI } from "../../../components/ui";
 
 export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
   {
@@ -22,7 +22,7 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
   },
   {
     header: "Department",
-    render: (row) => row?.departmentId?.name,
+    render: (row) => row?.department?.name,
   },
   {
     header: "Working Hours",
@@ -101,6 +101,7 @@ export const getTodayAppointmentColumns = ({ onDetails, onUpdateStatus }) => [
     header: "Appointment Type",
     render: (row) => {
       const statusConfig = STATUS_UI[row.status];
+      const Icon = statusConfig?.icon;
       const isFinalState = ["arrived", "waiting", "completed"].includes(
         row.status
       );
@@ -109,11 +110,12 @@ export const getTodayAppointmentColumns = ({ onDetails, onUpdateStatus }) => [
         <button
           onClick={() => onUpdateStatus(row)}
           disabled={isFinalState}
-          className=" disabled:cursor-not-allowed"
+          className="cursor-pointer disabled:cursor-not-allowed"
         >
           <span
-            className={`max-w-16 px-2 py-1 text-xs font-medium text-center rounded cursor-pointer uppercase ${statusConfig?.className}`}
+            className={`inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full cursor-pointer uppercase ${statusConfig?.className}`}
           >
+            {Icon && <Icon size={16} />}
             {statusConfig?.label}
           </span>
         </button>
