@@ -1,7 +1,7 @@
 import { Trash2, PenLine } from "lucide-react";
 import { formatTime, formatWorkingHours } from "../../../utils/formatHours";
 import { getDuration } from "../../../utils/calculateDuration";
-import { STATUS_UI } from "../../appointments/components";
+import { STATUS_UI } from "../../../components/ui";
 
 export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
   {

@@ -1,5 +1,5 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
-import { STATUS_UI } from "../appointments/components";
+import { STATUS_UI } from "../../components/ui";
 
 export const getColumns = ({ onUpdateStatus, onDetails }) => [
   {
@@ -48,13 +48,17 @@ export const getColumns = ({ onUpdateStatus, onDetails }) => [
         .replace(/_/g, " ")
         .replace(/\b\w/g, (char) => char.toUpperCase()),
   },
+  // {
+  //   header: "Start Date",
+  //   render: (row) => new Date(row.startDate).toISOString().split("T")[0],
+  // },
+  // {
+  //   header: "End Date",
+  //   render: (row) => new Date(row.endDate).toISOString().split("T")[0],
+  // },
   {
-    header: "Start Date",
-    render: (row) => new Date(row.startDate).toISOString().split("T")[0],
-  },
-  {
-    header: "End Date",
-    render: (row) => new Date(row.endDate).toISOString().split("T")[0],
+    header: "Total Days",
+    accessor: "totalDays",
   },
   {
     header: "Status",
@@ -85,7 +89,10 @@ export const getColumns = ({ onUpdateStatus, onDetails }) => [
     header: "Details",
     render: (row) => (
       <span className="flex gap-5">
-        <Eye onClick={() => onDetails(row)} className="cursor-pointer text-gray-500" />
+        <Eye
+          onClick={() => onDetails(row)}
+          className="cursor-pointer text-gray-500"
+        />
       </span>
     ),
   },

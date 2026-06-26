@@ -5,7 +5,7 @@ import { getFullName } from "../../../utils/userHelpers";
 import { closeModal, openModal } from "../../../components/modal/modalSlice";
 import { Button, Loader } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
-import { STATUS_UI } from "./StatusBadge";
+import { STATUS_UI } from "../../../components/ui/StatusBadge";
 import { formatTime } from "../../../utils/formatHours";
 
 const AppointmentDetailsModal = () => {

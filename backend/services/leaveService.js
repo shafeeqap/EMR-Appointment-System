@@ -113,6 +113,7 @@ export const cancelLeaveService = async (params, user) => {
   }
 
   leave.status = "cancelled";
+
   await leave.save();
 
   await logAction({
@@ -137,6 +138,8 @@ export const getLeaveByIdService = async (params) => {
   const leaveId = params.id;
 
   const leave = await findOneLeave({ _id: leaveId });
+  console.log(leave);
+  
 
   if (!leave) {
     throw new AppError("Leave not found", 404);
@@ -155,7 +158,15 @@ export const updateLeaveStatusService = async (params, body, user) => {
     throw new AppError("Leave not found", 404);
   }
 
+  const oldStatus = leave.status;
+
   leave.status = status;
+
+  if (status === "approved" || status === "rejected") {
+    leave.approvedBy = user.id;
+    leave.approvedAt = new Date();
+  }
+
   await leave.save();
 
   await logAction({
@@ -165,7 +176,7 @@ export const updateLeaveStatusService = async (params, body, user) => {
     entity: "Leave",
     entityId: leave._id,
     metadata: {
-      oldStatus: leave.status,
+      oldStatus,
       newStatus: status,
     },
   });

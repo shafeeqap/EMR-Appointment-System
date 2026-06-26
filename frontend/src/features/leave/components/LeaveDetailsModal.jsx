@@ -1,10 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetLeaveByIdQuery } from "../leaveApiSlice";
-import { STATUS_UI } from "../../appointments/components";
 import { formatDate } from "../../../utils/formatDate";
 import DetailRow from "./DetailRow";
-import { Button, Loader } from "../../../components/ui";
+import { Button, Loader, STATUS_UI } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
 import {
   CalendarDays,
@@ -26,17 +25,12 @@ const LeaveDetailsModal = () => {
   });
 
   const leave = data?.leave;
-  console.log(leave, "Leave...");
 
-  const month = leave?.startDate
-    ? new Date(leave.startDate).toLocaleString("default", {
-        month: "long",
-      })
-    : "";
-  const leavePeriod = `${formatDate(leave?.startDate)} - ${formatDate(
-    leave?.endDate
-  )}`;
-  const status = leave?.status;
+  const start = new Date(leave?.startDate);
+
+  const end = new Date(leave?.endDate);
+
+  const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
 
   if (isLoading)
     return (
@@ -51,11 +45,17 @@ const LeaveDetailsModal = () => {
   const Icon = statusConfig?.icon;
   const fullName = getFullName(leave?.employeeId);
 
+  const initials = fullName
+    ?.split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
+
   return (
-    <div className="w-[700px]">
+    <div className="md:w-[700px]">
       {/* Header */}
 
-      <div className="flex items-center justify-between border-b py-4">
+      <div className="flex items-center justify-between border-b px-2 py-4">
         <h2 className="text-xl font-semibold">Leave Details</h2>
 
         <button
@@ -69,17 +69,17 @@ const LeaveDetailsModal = () => {
       <div className="p-6 space-y-6">
         {/* Employee */}
 
-        <div className="border rounded-xl p-5 flex justify-between items-start">
-          <div className="flex gap-4">
-            <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-xl font-bold text-indigo-700">
-              PF
+        <div className="border rounded-xl p-5 flex flex-col sm:flex-row gap-5 justify-between sm:items-start">
+          <div className="flex flex-col items-center sm:flex-row gap-4">
+            <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-indigo-100 flex items-center justify-center text-xl md:text-2xl font-bold text-indigo-700">
+              {initials}
             </div>
 
             <div>
               <div className="flex items-center gap-3">
-                <h3 className="text-xl font-semibold">{fullName}</h3>
-                <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
-                  "EMP001"
+                <h3 className="md:text-xl font-semibold">{fullName}</h3>
+                <span className="hidden md:block bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">
+                  EMP001
                 </span>
               </div>
 
@@ -121,10 +121,7 @@ const LeaveDetailsModal = () => {
 
             <DetailRow label="Leave Type" value={leave.leaveType} />
 
-            <DetailRow
-              label="Total Days"
-              value={`${leave.totalDays || "-"} Days`}
-            />
+            <DetailRow label="Total Days" value={`${totalDays || "-"} Days`} />
 
             <DetailRow label="Reason" value={leave.reason} />
           </div>
@@ -141,10 +138,7 @@ const LeaveDetailsModal = () => {
 
             <DetailRow label="End Date" value={formatDate(leave.endDate)} />
 
-            <DetailRow
-              label="Duration"
-              value={`${leave.totalDays || "-"} Days`}
-            />
+            <DetailRow label="Duration" value={`${totalDays || "-"} Days`} />
 
             <DetailRow label="Session" value={leave.leaveType} />
           </div>
@@ -162,12 +156,12 @@ const LeaveDetailsModal = () => {
             <div>
               <DetailRow
                 label="Approver"
-                value={leave.approvedBy?.fullName || "-"}
+                value={getFullName(leave.approvedBy) || "-"}
               />
 
               <DetailRow
                 label="Designation"
-                value={leave.approvedBy?.designation || "-"}
+                value={leave.approvedBy?.role.replace(/_/g, " ") || "-"}
               />
             </div>
 

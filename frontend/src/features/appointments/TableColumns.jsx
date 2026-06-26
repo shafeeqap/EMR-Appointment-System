@@ -1,6 +1,6 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
-import { STATUS_UI } from "./components";
 import { getFullName } from "../../utils/userHelpers";
+import { STATUS_UI } from "../../components/ui";
 
 export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
   {

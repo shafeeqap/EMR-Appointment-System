@@ -9,6 +9,7 @@ import {
   EyeOff,
   RefreshCcw,
   StickyNoteCheck,
+  UserRoundCheck,
 } from "lucide-react";
 
 export const STATUS_UI = {
@@ -20,7 +21,7 @@ export const STATUS_UI = {
   arrived: {
     label: "Arrived",
     className: "bg-blue-100 text-blue-700",
-    icon: StickyNoteCheck,
+    icon: UserRoundCheck,
   },
   ongoing: {
     label: "On going",

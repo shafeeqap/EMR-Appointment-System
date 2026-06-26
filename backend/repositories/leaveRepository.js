@@ -5,7 +5,9 @@ export const createLeaveRepo = async (leaveData) => {
 };
 
 export const findOneLeave = async (query) => {
-  return Leave.findOne(query).populate("employeeId", "firstName lastName");
+  return Leave.findOne(query)
+    .populate("employeeId", "firstName lastName")
+    .populate("approvedBy", "firstName lastName role");
 };
 
 export const findLeaves = async (filter, search, options = {}) => {
@@ -13,6 +15,9 @@ export const findLeaves = async (filter, search, options = {}) => {
   const skip = (page - 1) * limit;
 
   const pipeline = [
+    { $match: filter },
+
+    // Employee lookup
     {
       $lookup: {
         from: "users",
@@ -21,9 +26,8 @@ export const findLeaves = async (filter, search, options = {}) => {
         as: "employee",
       },
     },
-    { $unwind: "$employee" },
 
-    { $match: filter },
+    { $unwind: "$employee" },
   ];
 
   if (search) {
@@ -45,6 +49,23 @@ export const findLeaves = async (filter, search, options = {}) => {
 
   pipeline.push(
     {
+      $addFields: {
+        totalDays: {
+          $add: [
+            {
+              $dateDiff: {
+                startDate: "$startDate",
+                endDate: "$endDate",
+                unit: "day",
+              },
+            },
+            1,
+          ],
+        },
+      },
+    },
+
+    {
       $project: {
         _id: 1,
         employeeId: 1,
@@ -55,6 +76,7 @@ export const findLeaves = async (filter, search, options = {}) => {
         leaveType: 1,
         leaveCategory: 1,
         status: 1,
+        totalDays: 1,
         createdAt: 1,
         updatedAt: 1,
 
@@ -63,16 +85,24 @@ export const findLeaves = async (filter, search, options = {}) => {
         "employee.mobile": 1,
       },
     },
-    { $sort: { createdAt: -1 } },
-    { $skip: skip },
-    { $limit: limit }
+
+    {
+      $facet: {
+        data: [
+          { $sort: { createdAt: -1 } },
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        total: [{ $count: "count" }],
+      },
+    }
   );
 
-  const [leaves, totalLeaves] = await Promise.all([
-    Leave.aggregate(pipeline),
+  const result = await Leave.aggregate(pipeline);
 
-    Leave.countDocuments(filter),
-  ]);
+  const leaves = result[0].data || [];
+
+  const totalLeaves = result[0].total[0]?.count || 0;
 
   const totalPages = Math.ceil(totalLeaves / limit);
 

@@ -1,8 +1,8 @@
 import React from "react";
-import { STATUS_UI } from "../../appointments/components";
 import { CircleX } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { openModal } from "../../../components/modal/modalSlice";
+import { STATUS_UI } from "../../../components/ui";
 
 const LeaveCard = ({
   leaveId,
