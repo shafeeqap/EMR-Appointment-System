@@ -22,13 +22,13 @@ import {
   CancelLeaveRequestModal,
   LeaveDetailsModal,
   UpdateLeaveStatusModal,
-} from "../../features/leave/components";
+} from "../../features/leave/modal";
 import {
   AddPatientModal,
   DeletePatientModal,
   DetailsPatientModal,
   EditPatientModal,
-} from "../../features/patients/components";
+} from "../../features/patients/modal";
 import {
   AddUserModal,
   DeleteUserModal,

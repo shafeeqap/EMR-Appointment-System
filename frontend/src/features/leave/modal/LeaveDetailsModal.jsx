@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetLeaveByIdQuery } from "../leaveApiSlice";
 import { formatDate } from "../../../utils/formatDate";
-import DetailRow from "./DetailRow";
+import DetailRow from "../components/DetailRow";
 import { Button, Loader, STATUS_UI } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
 import {
@@ -85,7 +85,7 @@ const LeaveDetailsModal = () => {
 
               <p className="text-gray-600 capitalize">{leave?.employeeType}</p>
 
-              <p className="text-gray-500 text-sm mt-1">{"Department"}</p>
+              <p className="text-gray-500 text-sm mt-1">Department</p>
             </div>
           </div>
 

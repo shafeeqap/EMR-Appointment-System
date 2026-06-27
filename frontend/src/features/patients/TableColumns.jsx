@@ -1,4 +1,6 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
+import { getFullName } from "../../utils/userHelpers";
+import { STATUS_UI } from "../../components/ui";
 
 export const getColumns = ({ onEdit, onDelete, onDetails }) => [
   {
@@ -42,5 +44,55 @@ export const getColumns = ({ onEdit, onDelete, onDetails }) => [
         <Eye onClick={() => onDetails(row)} className="cursor-pointer" />
       </span>
     ),
+  },
+];
+
+export const getAptHistoryColumns = () => [
+  {
+    header: "SL",
+    render: (_, index) => index + 1,
+  },
+  {
+    header: "Date",
+    render: (row) => {
+      const today = new Date().toISOString().split("T")[0];
+      const date = new Date(row.date).toISOString().split("T")[0];
+
+      return (
+        <span className={`${date >= today ? "text-black font-semibold" : ""}`}>
+          {new Date(row.date).toISOString().split("T")[0]}
+        </span>
+      );
+    },
+  },
+  {
+    header: "Doctor",
+    render: (row) => getFullName(row.doctorId),
+  },
+  {
+    header: "Time",
+    accessor: "slotTime",
+  },
+  {
+    header: "Status",
+    render: (row) => {
+      const statusConfig = STATUS_UI[row?.status];
+      const Icon = statusConfig?.icon;
+
+      return (
+        <button
+          // onClick={() => onUpdateStatus(row)}
+          // disabled={isFinalState}
+          className="cursor-pointer disabled:cursor-not-allowed"
+        >
+          <span
+            className={`inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full cursor-pointer uppercase ${statusConfig?.className}`}
+          >
+            {Icon && <Icon size={16} />}
+            {statusConfig?.label}
+          </span>
+        </button>
+      );
+    }
   },
 ];
