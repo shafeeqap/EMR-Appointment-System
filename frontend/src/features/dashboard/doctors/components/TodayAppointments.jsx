@@ -4,12 +4,8 @@ import { useDispatch } from "react-redux";
 import { openModal } from "../../../../components/modal/modalSlice";
 import { getTodayAppointmentColumns } from "../TableColumns";
 
-
 const TodayAppointments = ({ data }) => {
-  // console.log(data, "Today appointment");
-  
   const dispatch = useDispatch();
-
 
   const handleDetailsModalOpen = (row) => {
     dispatch(
@@ -41,7 +37,11 @@ const TodayAppointments = ({ data }) => {
       <h1 className="text-lg font-semibold text-gray-800 mb-5">
         Today Appointments
       </h1>
-      <Table columns={columnData} data={data} />
+      {data.length === 0 ? (
+        <p>No data available</p>
+      ) : (
+        <Table columns={columnData} data={data} />
+      )}
     </div>
   );
 };

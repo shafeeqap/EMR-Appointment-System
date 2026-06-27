@@ -5,7 +5,7 @@ import { getFullName } from "../../../utils/userHelpers";
 import { closeModal, openModal } from "../../../components/modal/modalSlice";
 import { Button, Loader } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
-import { STATUS_UI } from "./StatusBadge";
+import { STATUS_UI } from "../../../components/ui/StatusBadge";
 import { formatTime } from "../../../utils/formatHours";
 
 const AppointmentDetailsModal = () => {
@@ -22,12 +22,13 @@ const AppointmentDetailsModal = () => {
   } = useGetAppointmentByIdQuery({
     id: appointmentId,
   });
-  
+
   const appointment = appointments?.appointments;
   const patient = appointments?.appointments?.patient;
   const doctor = appointments?.appointments?.doctor;
 
   const statusConfig = STATUS_UI[appointment?.status];
+  const Icon = statusConfig?.icon;
 
   const handleStatusModalOpen = (row) => {
     dispatch(
@@ -36,7 +37,6 @@ const AppointmentDetailsModal = () => {
         modalProps: { appointment: row },
       })
     );
-    console.log("UPDATE APPOINTMENT STATUS CLICKED", row);
   };
 
   if (isLoading) {
@@ -104,7 +104,7 @@ const AppointmentDetailsModal = () => {
               <strong>Doctor:</strong> {getFullName(doctor)}
             </p>
             <p>
-              <strong>Department:</strong> {doctor?.department}
+              <strong>Department:</strong> {appointment?.department?.name}
             </p>
           </div>
         </fieldset>
@@ -124,11 +124,14 @@ const AppointmentDetailsModal = () => {
             <p>
               <strong>Status:</strong>
             </p>
-            <span onClick={()=> handleStatusModalOpen(appointment)}
-              className={`px-3 py-1 rounded text-xs font-medium uppercase cursor-pointer
-    ${statusConfig?.className || "bg-gray-500 text-white"}`}
+            <span
+              onClick={() => handleStatusModalOpen(appointment)}
+              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase cursor-pointer ${
+                statusConfig?.className || "bg-gray-500 text-white"
+              }`}
             >
-              {statusConfig?.label || appointment?.status}
+              {Icon && <Icon size={16} />}
+              {statusConfig?.label}
             </span>
           </div>
         </fieldset>

@@ -8,8 +8,6 @@ import ReceptionistDashboard from "../features/dashboard/receptionist/Receptioni
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
 
-  console.log("user in dashboard:", user);
-
   if (!user) {
     return (
       <div className="p-6">

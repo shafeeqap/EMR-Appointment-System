@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 import Appointment from "../../models/Appointment.js";
 
 export const getDoctorDashboardRepo = async (doctorId) => {
-  console.log(doctorId, "DotorId...");
-
   if (!mongoose.Types.ObjectId.isValid(doctorId)) {
     throw new Error("Invalid doctor ID");
   }
@@ -15,7 +13,7 @@ export const getDoctorDashboardRepo = async (doctorId) => {
   endOfDay.setHours(23, 59, 59, 999);
 
   const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
   sevenDaysAgo.setHours(0, 0, 0, 0);
 
   const [
@@ -34,7 +32,6 @@ export const getDoctorDashboardRepo = async (doctorId) => {
     // Today's total appointments
     Appointment.countDocuments({
       doctorId: new mongoose.Types.ObjectId(doctorId),
-      // status: "booked",
       date: { $gte: startOfDay, $lte: endOfDay },
     }),
 
@@ -52,7 +49,7 @@ export const getDoctorDashboardRepo = async (doctorId) => {
       date: { $gte: startOfDay, $lte: endOfDay },
     }),
 
-    // appointment by day
+    // appointment by day (char)
     Appointment.aggregate([
       {
         $match: {

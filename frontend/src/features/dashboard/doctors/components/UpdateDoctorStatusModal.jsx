@@ -30,8 +30,6 @@ const UpdateDoctorStatusModal = () => {
         status,
       }).unwrap();
 
-      // toast.success(res.message || "Doctor status updated successfully");
-
       dispatch(
         setSuccessFeedback({
           message: res.message || "Dcotor status updated successfully",

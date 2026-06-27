@@ -1,11 +1,14 @@
 import {
-  countDoctorDocuments,
+  findDepartmentById,
+  findDepartments,
+} from "../repositories/departmentRepository.js";
+import {
   createDoctorRepo,
   findDoctorByEmail,
   findDoctorById,
   findDoctorByIdAndDelete,
   findDoctorByIdAndUpdate,
-  findDoctors,
+  getDoctors,
   findDoctorsBySearchQuery,
 } from "../repositories/doctorRepository.js";
 import { findUserById } from "../repositories/userRepository.js";
@@ -14,12 +17,18 @@ import { logAction } from "../utils/auditLogger.js";
 
 // =============> create doctor service <=============
 export const createDoctorService = async (data, user) => {
-  const { userId, department, workingHours, slotDuration, breakTimes } = data;
+  const { userId, departmentId, workingHours, slotDuration, breakTimes } = data;
 
   const userData = await findUserById(userId);
 
   if (!userData) {
     throw new AppError("User not found", 404);
+  }
+
+  const departmentData = await findDepartmentById(departmentId);
+
+  if (!departmentData) {
+    throw new AppError("Department not found", 404);
   }
 
   if (userData.role !== "doctor") {
@@ -33,11 +42,11 @@ export const createDoctorService = async (data, user) => {
   }
 
   const doctor = await createDoctorRepo({
-    userId,
+    userId: userData._id,
     firstName: userData.firstName,
     lastName: userData.lastName,
     email: userData.email,
-    department,
+    departmentId: departmentData._id,
     workingHours,
     slotDuration,
     breakTimes,
@@ -63,20 +72,25 @@ export const createDoctorService = async (data, user) => {
 // =============> search doctors by search query service <=============
 export const searchDoctorService = async (query) => {
   const { search } = query;
+  const searchQuery = {};
 
   if (!search) {
     throw new AppError("Search query is required", 400);
   }
 
-  const searchQuery = search
-    ? {
-        $or: [
-          { firstName: { $regex: `^${search}`, $options: "i" } },
-          { lastName: { $regex: `^${search}`, $options: "i" } },
-          { department: { $regex: `^${search}`, $options: "i" } },
-        ],
-      }
-    : {};
+  if (search.trim()) {
+    const departments = await findDepartments({
+      name: { $regex: search, $options: "i" },
+    });
+
+    const departmentIds = departments.map((dept) => dept._id);
+
+    searchQuery.$or = [
+      { firstName: { $regex: `^${search}`, $options: "i" } },
+      { lastName: { $regex: `^${search}`, $options: "i" } },
+      { departmentId: { $in: departmentIds } },
+    ];
+  }
 
   const doctors = await findDoctorsBySearchQuery(searchQuery);
 
@@ -91,26 +105,12 @@ export const getDoctorsServices = async (query) => {
   const search = query.search?.trim();
   const status = query.status;
 
-  const filter = {};
-
-  if (search) {
-    filter.$or = [
-      { firstName: { $regex: `^${search}`, $options: "i" } },
-      { lastName: { $regex: `^${search}`, $options: "i" } },
-      { email: { $regex: search, $options: "i" } },
-      { department: { $regex: search, $options: "i" } },
-    ];
-  }
-
-  if (status === "active") {
-    filter.isActive = true;
-  } else if (status === "inactive") {
-    filter.isActive = false;
-  }
-
-  const total = await countDoctorDocuments(filter);
-
-  const doctors = await findDoctors(filter, skip, limit);
+  const { doctors, total } = await getDoctors({
+    search,
+    status,
+    skip,
+    limit,
+  });
 
   const totalPages = Math.ceil(total / limit);
 
@@ -123,10 +123,7 @@ export const getDoctorByIdServices = async (doctorId) => {
     throw new AppError("Doctor id is required", 400);
   }
 
-  const doctor = await findDoctorById(doctorId).populate(
-    "userId",
-    "firstName lastName"
-  );
+  const doctor = await findDoctorById(doctorId);
   if (!doctor) {
     throw new AppError("Doctor not found", 404);
   }
@@ -138,7 +135,7 @@ export const getDoctorByIdServices = async (doctorId) => {
 export const updateDoctorService = async (params, data, user) => {
   const doctorId = params.id;
 
-  const { department, workingHours, slotDuration, breakTimes } = data;
+  const { departmentId, workingHours, slotDuration, breakTimes } = data;
 
   const doctor = await findDoctorById(doctorId);
   if (!doctor) {
@@ -151,7 +148,7 @@ export const updateDoctorService = async (params, data, user) => {
       firstName: doctor.firstName,
       lastName: doctor.lastName,
       email: doctor.email,
-      department,
+      departmentId,
       workingHours,
       slotDuration,
       breakTimes,
@@ -171,7 +168,7 @@ export const updateDoctorService = async (params, data, user) => {
         firstName: doctor.firstName,
         lastName: doctor.lastName,
         email: doctor.email,
-        department: doctor.department,
+        department: doctor.departmentId,
         workingHours: doctor.workingHours,
         slotDuration: doctor.slotDuration,
         breakTime: doctor.breakTimes,
@@ -180,7 +177,7 @@ export const updateDoctorService = async (params, data, user) => {
         firstName: updatedData.firstName,
         lastName: updatedData.lastName,
         email: updatedData.email,
-        department,
+        departmentId: updatedData.departmentId,
         workingHours,
         slotDuration,
         breakTimes,
@@ -238,7 +235,7 @@ export const deleteDoctorService = async (params, user) => {
     metadata: {
       firstName: deletedDoctor.firstName,
       lastName: deletedDoctor.lastName,
-      department: deletedDoctor.department,
+      department: deletedDoctor.departmentId,
       workingHours: deletedDoctor.workingHours,
       slotDuration: deletedDoctor.slotDuration,
       breakTimes: deletedDoctor.breakTimes,

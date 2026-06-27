@@ -41,8 +41,9 @@ const doctorSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    department: {
-      type: String,
+    departmentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Department",
       required: true,
     },
     workingHours: {

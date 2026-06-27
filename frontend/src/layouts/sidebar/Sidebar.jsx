@@ -27,7 +27,9 @@ const Sidebar = () => {
       >
         {/* Header */}
         <div className="flex justify-between items-center px-3 py-2 h-20">
-          <div className={clsx(sidebarOpen ? "w-14" : "w-0 hidden", "rounded-md")}>
+          <div
+            className={clsx(sidebarOpen ? "w-14" : "w-0 hidden", "rounded-md")}
+          >
             Logo
           </div>
           <Menu

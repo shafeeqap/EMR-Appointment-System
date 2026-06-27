@@ -18,7 +18,7 @@ import { generateAvailableSlots } from "./slotService.js";
 
 // =============> create appointments service <=============
 export const createAppointmentService = async (data, user) => {
-  const { doctorId, patientId, date, slotTime, notes } = data;
+  const { doctorId, departmentId, patientId, date, slotTime, notes } = data;
 
   const now = new Date();
 
@@ -52,7 +52,7 @@ export const createAppointmentService = async (data, user) => {
     doctorId,
     date,
     // slotTime,
-    status: "booked",
+    // status: "booked",
   });
 
   if (existingAppointment) {
@@ -64,6 +64,7 @@ export const createAppointmentService = async (data, user) => {
   const appointment = await createAppointmentRepo({
     doctorId,
     patientId,
+    departmentId,
     date,
     slotTime,
     tokenNumber,
@@ -114,6 +115,8 @@ export const getAppointmentsService = async (query, user) => {
   const allowedStatuses = [
     "booked",
     "arrived",
+    "ongoing",
+    "waiting",
     "cancelled",
     "completed",
     "no_show",
@@ -154,8 +157,6 @@ export const getAppointmentByIdService = async (params) => {
 export const updateAppointmentStatusService = async (params, data, user) => {
   const id = params.id;
   const { status } = data;
-  // console.log(id, "ID");
-  // console.log(status, "Status");
 
   const appointment = await findAppointmentById(id);
 

@@ -15,6 +15,10 @@ import Scheduler from "./features/appointments/Scheduler";
 import GlobalModal from "./components/modal/GlobalModal";
 import Users from "./features/users/Users";
 import NotFound from "./pages/NotFound";
+import Departments from "./features/departments/Departments";
+import Profile from "./pages/Profile";
+import LeaveManagement from "./features/leave/LeaveManagement";
+import LeaveRequest from "./features/leave/LeaveRequest";
 
 function App() {
   const isLoading = useAuthRestore();
@@ -39,6 +43,8 @@ function App() {
                 element={<ProtectedRoute allowedRoles={["super_admin"]} />}
               >
                 <Route path="/doctors" element={<Doctors />} />
+                <Route path="/departments" element={<Departments />} />
+                <Route path="/leaveManagement" element={<LeaveManagement />} />
               </Route>
 
               <Route
@@ -52,6 +58,8 @@ function App() {
                 <Route path="/appointments" element={<Booking />} />
                 <Route path="/shedules" element={<Scheduler />} />
                 <Route path="/users" element={<Users />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/leaveRequest" element={<LeaveRequest />} />
               </Route>
             </Route>
           </Route>

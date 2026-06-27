@@ -45,6 +45,17 @@ export const getAppointmentById = async (id) => {
     },
     { $unwind: "$doctor" },
 
+    // Join Department
+    {
+      $lookup: {
+        from: "departments",
+        localField: "departmentId",
+        foreignField: "_id",
+        as: "department",
+      },
+    },
+    { $unwind: "$department" },
+
     {
       $project: {
         _id: 1,
@@ -62,7 +73,8 @@ export const getAppointmentById = async (id) => {
         "doctor._id": 1,
         "doctor.firstName": 1,
         "doctor.lastName": 1,
-        "doctor.department": 1,
+        "department._id": 1,
+        "department.name": 1,
       },
     },
 
@@ -94,7 +106,15 @@ export const getAppointment = async ({
 
   const baseMatch = {
     status: {
-      $in: ["booked", "arrived", "completed", "cancelled", "no_show"],
+      $in: [
+        "booked",
+        "arrived",
+        "ongoing",
+        "waiting",
+        "completed",
+        "cancelled",
+        "no_show",
+      ],
     },
   };
 

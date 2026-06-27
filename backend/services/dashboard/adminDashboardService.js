@@ -27,30 +27,17 @@ export const getAdminDashboardDataService = async () => {
     appointment: item.total,
   }));
 
-  // const formattedAppointmentsByDays = data.appointmentsByDay.map((item) => ({
-  //   name: DAYS[new Date(item._id.date).getDay()],
-  //   name: new Date(item._id.date).toLocaleDateString("en-US", {
-  //     month: "short",
-  //     day: "numeric",
-  //   }),
-  //   appointment: item.total,
-  // }));
-
   return {
     stats: {
       totalUsers: data.totalUsers,
       totalDoctors: data.totalDoctors,
       totalPatients: data.totalPatients,
       totalAppointments: data.totalAppointments,
-      // todaysAppointments: data.todaysAppointments,
-      // checkedInPatients: data.checkedInPatients,
-      // totalCompleted: data.totalCompleted,
     },
 
     charts: {
       appointmentsByStatus: data.appointmentsByStatus,
       appointmentsByMonth: formattedAppointmentsByMonth,
-      // appointmentsByDay: formattedAppointmentsByDays,
     },
   };
 };

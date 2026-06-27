@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { closeModal } from "../../../../components/modal/modalSlice";
 import {
@@ -8,20 +8,36 @@ import {
   useUpdateDoctorMutation,
 } from "../doctorsApiSlice";
 import { editDoctorSchema } from "../../../../validator/editDoctorValidator";
-import { Button, InputField } from "../../../../components/ui";
+import {
+  AutocompleteInput,
+  Button,
+  InputField,
+} from "../../../../components/ui";
 import { getFullName } from "../../../../utils/userHelpers";
 import { toast } from "react-toastify";
 import { handleApiError } from "../../../../utils/handleApiError";
+import { useGetDepartmentsQuery } from "../../../departments/departmentApiSlice";
 
 const EditDoctorModal = () => {
+  const [searchDept, setSearchDept] = useState("");
+  const [selectedDept, setSelectedDept] = useState(null);
   const [breakTime, setBreakTime] = useState(false);
+
+  const dispatch = useDispatch();
 
   const { doctorId } = useSelector((state) => state.modal.modalProps || {});
 
   const { data: doctorData } = useGetDoctorByIdQuery(doctorId);
+
   const [updateDoctor, { isLoading }] = useUpdateDoctorMutation();
 
-  const dispatch = useDispatch();
+  const { data: departmentResponse } = useGetDepartmentsQuery({
+    page: 1,
+    limit: 100,
+    search: searchDept,
+  });
+
+  const departments = departmentResponse?.departments ?? [];
 
   const form = useForm({
     resolver: zodResolver(editDoctorSchema),
@@ -44,7 +60,7 @@ const EditDoctorModal = () => {
 
     form.reset({
       name: getFullName(doctor),
-      department: doctor.department,
+      department: doctor.departmentId?.name || "",
       workingStart: doctor.workingHours?.start || "",
       workingEnd: doctor.workingHours?.end || "",
       breakStart: doctor.breakTimes?.[0]?.start || "",
@@ -55,13 +71,17 @@ const EditDoctorModal = () => {
   }, [doctorData, form]);
 
   const onSubmit = async (data) => {
-    if (!form.formState.isDirty) {
+    const hasChanges =
+      Object.keys(form.formState.dirtyFields).length > 0 ||
+      selectedDept !== null;
+
+    if (!hasChanges) {
       toast.info("No changes detected");
       return;
     }
 
     const payload = {
-      department: data.department,
+      departmentId: selectedDept?._id || doctorData?.doctor?.departmentId?._id,
       workingHours: {
         start: data.workingStart,
         end: data.workingEnd,
@@ -103,13 +123,36 @@ const EditDoctorModal = () => {
           />
         </div>
         <div className="mb-4">
-          <InputField
-            label="Specialization/Department"
-            type="text"
-            {...form.register("department")}
-            error={form.formState.errors.department?.message}
-            placeholder="Enter specialization or department"
-            className="focus:ring focus:border-primary"
+          <Controller
+            name="department"
+            control={form.control}
+            render={({ field }) => (
+              <AutocompleteInput
+                label="Specialization/Department"
+                value={field.value ?? ""}
+                placeholder="Enter specialization or department"
+                onChange={(value) => {
+                  field.onChange(value);
+                  setSearchDept(value);
+                  setSelectedDept(null);
+                }}
+                onSelect={(dept) => {
+                  field.onChange(dept.name);
+                  setSearchDept(dept.name);
+                  setSelectedDept(dept);
+                }}
+                fetchItems={async () => departments}
+                renderItem={(dept) => {
+                  return (
+                    <div className="text-sm border-b py-2">
+                      <p>{dept?.name}</p>
+                    </div>
+                  );
+                }}
+                error={form.formState.errors.department?.message}
+                className="focus:ring focus:border-primary"
+              />
+            )}
           />
         </div>
 
