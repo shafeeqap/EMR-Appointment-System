@@ -21,7 +21,6 @@ const DeletePatientModal = () => {
   const handleDelete = async () => {
     try {
       const res = await deletePatient(patientData._id).unwrap();
-      // toast.success(res.message || "Doctor deleted successfully");
 
       dispatch(
         setSuccessFeedback({
@@ -30,7 +29,10 @@ const DeletePatientModal = () => {
       );
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error("Error deleting doctor:", error);
@@ -54,7 +56,7 @@ const DeletePatientModal = () => {
         ) : (
           <>
             Are you sure you want to delete{" "}
-            <span className="text-red-600">{patientData.name}'s</span> records?
+            <span className="text-red-600">{patientData?.name}'s</span> records?
             This process cannot be undone.
           </>
         )}

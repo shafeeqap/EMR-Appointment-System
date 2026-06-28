@@ -7,6 +7,7 @@ import {
   deleteAppointmentService,
   getAppointmentByIdService,
   startConsultationService,
+  getAppointmentFullDetailsService,
 } from "../services/appointmentService.js";
 
 // =============> Create a new appointment <=============
@@ -48,9 +49,20 @@ export const getAppointments = async (req, res, next) => {
 // =============> Get appointments By doctorId <=============
 export const getAppointmentById = async (req, res, next) => {
   try {
-    const appointments = await getAppointmentByIdService(req.params);
+    const appointment = await getAppointmentByIdService(req.params);
 
-    res.status(200).json({ appointments });
+    res.status(200).json({ appointment });
+  } catch (error) {
+    next(error);
+  }
+};
+// =============> Get appointments By doctorId <=============
+export const getAppointmentFullDetails = async (req, res, next) => {
+  try {
+    const { appointment, page, totalPages } =
+      await getAppointmentFullDetailsService(req.params, req.query);
+
+    res.status(200).json({ appointment, page, totalPages });
   } catch (error) {
     next(error);
   }

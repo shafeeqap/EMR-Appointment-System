@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MODAL_COMPONENTS } from "./ModalRegistry";
 import { closeModal } from "./modalSlice";
+import { AnimatePresence, motion } from "framer-motion";
 
 const GlobalModal = () => {
   const dispatch = useDispatch();
@@ -33,34 +34,60 @@ const GlobalModal = () => {
     };
   }, [isOpen]);
 
-  if (!isOpen || !modalType) return null;
+  // if (!isOpen || !modalType) return null;
 
   const Component = MODAL_COMPONENTS[modalType];
 
-  if (!Component) {
+  if (modalType && !Component) {
     console.warn(`Unknown modal type: ${modalType}`);
     return null;
   }
 
   return (
-    <>
-      <div className="fixed inset-0 flex pl-10 justify-center items-center z-50">
-        {/* Overlay */}
-        <div
-          // onClick={() => dispatch(closeModal())}
-          className="absolute inset-0 bg-black bg-opacity-50"
-        />
-        {/* Modal Content */}
-        <div
-          role="dialog"
-          aria-modal="true"
-          onClick={(e) => e.stopPropagation()}
-          className="relative bg-white rounded-lg shadow-lg sm:p-6 max-h-[580px] overflow-y-auto z-10"
-        >
-          <Component {...modalProps} />
+    <AnimatePresence>
+      {isOpen && modalType && (
+        <div className="fixed inset-0 flex pl-10 justify-center items-center z-50">
+          {/* Overlay */}
+          <motion.div
+            // onClick={() => dispatch(closeModal())}
+            className="absolute inset-0 bg-black bg-opacity-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          />
+
+          {/* Modal Content */}
+          <motion.div
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => e.stopPropagation()}
+            className="relative bg-white rounded-lg shadow-lg sm:p-6 max-h-[580px] overflow-y-auto z-10"
+            initial={{
+              opacity: 0,
+              scale: 0.96,
+              y: 20,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.96,
+              y: 20,
+            }}
+            transition={{
+              duration: 0.22,
+              ease: "easeOut",
+            }}
+          >
+            <Component {...modalProps} />
+          </motion.div>
         </div>
-      </div>
-    </>
+      )}
+    </AnimatePresence>
   );
 };
 

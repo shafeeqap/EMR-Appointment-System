@@ -22,6 +22,13 @@ const appointmentApiSlice = apiSlice.injectEndpoints({
       providesTags: ["Appointment"],
     }),
 
+    getAppointmentDetails: builder.query({
+      query: ({ id, page = 1, limit = 5 }) =>
+        `/appointments/${id}/details?page=${page}&limit=${limit}`,
+
+      providesTags: ["Appointment"],
+    }),
+
     createAppointment: builder.mutation({
       query: (appointmentData) => ({
         url: "/appointments",
@@ -72,6 +79,7 @@ export const {
   useGetAvailableSlotsQuery,
   useGetAppointmentsQuery,
   useGetAppointmentByIdQuery,
+  useGetAppointmentDetailsQuery,
   useCreateAppointmentMutation,
   useUpdateAppointmentMutation,
   useDeleteAppointmentMutation,

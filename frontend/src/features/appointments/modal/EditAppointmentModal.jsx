@@ -70,8 +70,7 @@ const EditAppointmentModal = () => {
   });
 
   const appointment = appointments?.appointments;
-  console.log(appointment, 'Appointment');
-  
+  console.log(appointment, "Appointment");
 
   const { data } = useGetDoctorsQuery({ page: 1, limit: 100 });
   const doctors = data?.doctors || [];
@@ -124,7 +123,10 @@ const EditAppointmentModal = () => {
       setTimeout(() => {
         reset();
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error("Error updating appointment:", error);

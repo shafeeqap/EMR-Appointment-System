@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AppointmentForm from "./AppointmentForm";
+import AppointmentForm from "../components/AppointmentForm";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { appointmentFormSchema } from "../../../validator/appointmentFormValidator";
@@ -7,8 +7,8 @@ import {
   useCreateAppointmentMutation,
   useGetAvailableSlotsQuery,
 } from "../appointmentApiSlice";
-import PatientInfo from "./PatientInfo";
-import SlotGrid from "./SlotGrid";
+import PatientInfo from "../components/PatientInfo";
+import SlotGrid from "../components/SlotGrid";
 import { Button, Loader } from "../../../components/ui";
 import { handleApiError } from "../../../utils/handleApiError";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,7 +85,10 @@ const CreateAppointmentModal = () => {
 
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
 
       setSelectedSlot(null);

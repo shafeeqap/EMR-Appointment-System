@@ -14,6 +14,7 @@ const Pagination = ({ setPage, page, totalPages }) => {
   }
 
   const visiblePages = [];
+  
   for (let i = start; i <= end; i++) {
     visiblePages.push(i);
   }

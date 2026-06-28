@@ -1,6 +1,7 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
 import { getFullName } from "../../utils/userHelpers";
 import { STATUS_UI } from "../../components/ui";
+import { formatTime } from "../../utils/formatHours";
 
 export const getColumns = ({ onEdit, onDelete, onDetails }) => [
   {
@@ -47,6 +48,7 @@ export const getColumns = ({ onEdit, onDelete, onDetails }) => [
   },
 ];
 
+// Get appointment history
 export const getAptHistoryColumns = () => [
   {
     header: "SL",
@@ -67,11 +69,11 @@ export const getAptHistoryColumns = () => [
   },
   {
     header: "Doctor",
-    render: (row) => getFullName(row.doctorId),
+    render: (row) => getFullName(row?.doctor),
   },
   {
     header: "Time",
-    accessor: "slotTime",
+    render: (row) => formatTime(row?.slotTime),
   },
   {
     header: "Status",
@@ -93,6 +95,6 @@ export const getAptHistoryColumns = () => [
           </span>
         </button>
       );
-    }
+    },
   },
 ];

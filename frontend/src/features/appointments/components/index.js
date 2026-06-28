@@ -2,8 +2,3 @@ export { default as AppointmentForm } from "./AppointmentForm";
 export { default as PatientInfo } from "../components/PatientInfo";
 export { default as SlotGrid } from "../components/SlotGrid";
 export { default as StatusColors } from "../components/StatusColors";
-export { default as CreateAppointmentModal } from "./CreateAppointmentModal";
-export { default as EditAppointmentModal } from "./EditAppointmentModal";
-export { default as DeleteAppointmentModal } from "./DeleteAppointmentModal";
-export { default as AppointmentDetailsModal } from "./AppointmentDetailsModal";
-export { default as UpdateAppointmentStatusModal } from "./UpdateAppointmentStatusModal";

@@ -4,7 +4,7 @@ import { useGetPatientDetailsQuery } from "../patientsApiSlice";
 import { Button, Loader, Pagination } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { closeModal } from "../../../components/modal/modalSlice";
-import { History, X } from "lucide-react";
+import { History, PenLine, X } from "lucide-react";
 import Table from "../../../components/table/Table";
 import { getAptHistoryColumns } from "../TableColumns";
 
@@ -13,26 +13,28 @@ const DetailsPatientModal = () => {
 
   const { patientId } = useSelector((state) => state.modal.modalProps || {});
 
-  const {
-    data: patientData,
-    isLoading,
-    error,
-  } = useGetPatientDetailsQuery(patientId);
-
   const dispatch = useDispatch();
 
-  const patient = patientData?.patient || [];
-  const appointment = patientData?.appointments || [];
-  // console.log(patient, "Patient...");
-  // console.log(appointment, "Appointment...");
+  const {
+    data,
+    isLoading,
+    error,
+  } = useGetPatientDetailsQuery({ id: patientId, page, limit: 5 });
+
+  const patient = data?.patientData?.patient || null;
+  const history = data?.history || [];
+  console.log(data, "patientData...");
+  console.log(history, "Appointment history...");
+  console.log(patient, 'Patient...');
+  
 
   const columns = getAptHistoryColumns({});
 
   const initials = patient?.name
-  ?.split(" ")
-  .map((word) => word[0])
-  .join("")
-  .toUpperCase();
+    ?.split(" ")
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase();
 
   if (isLoading) {
     <Loader />;
@@ -43,7 +45,7 @@ const DetailsPatientModal = () => {
   }
 
   return (
-    <div className="p-5 sm:p-0 w-fit sm:w-96 md:w-[700px]">
+    <div className="p-3 w-72 sm:p-0 sm:w-[500px] md:w-[700px]">
       <div className="flex items-center justify-between border-b px-2 py-4">
         <h2 className="text-xl font-semibold mb-4">Patient Details</h2>
 
@@ -59,7 +61,7 @@ const DetailsPatientModal = () => {
         {/* Patients */}
         <div className="border rounded-xl p-5">
           <div className="flex flex-col sm:flex-row gap-5 sm:items-center justify-between">
-            <div className="flex flex-col items-center sm:flex-row gap-4">
+            <div className="flex flex-col sm:items-center sm:flex-row gap-4">
               <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-indigo-100 flex items-center justify-center text-xl md:text-2xl font-bold text-indigo-700">
                 {initials}
               </div>
@@ -76,14 +78,13 @@ const DetailsPatientModal = () => {
               </div>
             </div>
 
-            <div className="space-x-4">
-              <Button variant="secondary">Edit</Button>
+            <div className="bgre space-x-4">
               <Button>Book Appointment</Button>
             </div>
           </div>
 
-          <div className="border-t mt-5 py-5">
-            <div className="grid grid-cols-3 gap-5">
+          <div className="border-t mt-5 py-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <div>
                 <p className="font-medium text-gray-800">Phone</p>
                 <span className="text-gray-500">{patient?.mobile}</span>
@@ -110,13 +111,13 @@ const DetailsPatientModal = () => {
             <h3 className="font-semibold text-lg">Appointment History</h3>
           </div>
 
-          <Table columns={columns} data={appointment} />
+          <Table columns={columns} data={history} />
 
-          {appointment.totalPages > 1 && (
+          {data?.totalPages > 1 && (
             <Pagination
               page={page}
               setPage={setPage}
-              totalPages={appointment?.totalPages || 1}
+              totalPages={data?.totalPages || 1}
             />
           )}
         </div>

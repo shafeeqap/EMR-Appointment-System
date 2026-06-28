@@ -3,9 +3,9 @@ import {
   findAppointmentById,
   findAppointmentByIdAndDelete,
   findAppointmentByIdAndUpdate,
+  findAppointmentDetails,
   findAppointmentOne,
   getAppointment,
-  getAppointmentById,
 } from "../repositories/appointmentRepository.js";
 import {
   findDoctorById,
@@ -148,9 +148,34 @@ export const getAppointmentByIdService = async (params) => {
     throw new AppError("Appointment id is required", 400);
   }
 
-  const appointments = await getAppointmentById(appointmentId);
+  const appointment = await findAppointmentById(appointmentId);
 
-  return appointments;
+  return appointment;
+};
+
+// =============> Get appointments service <=============
+export const getAppointmentFullDetailsService = async (params, query) => {
+  const appointmentId = params.id;
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 5;
+  const skip = (page - 1) * limit;
+  // const search = query.search?.trim();
+  // const status = query.status;
+  // const date = query.date;
+
+  if (!appointmentId) {
+    throw new AppError("Appointment id is required", 400);
+  }
+
+  const { appointment, total } = await findAppointmentDetails(
+    appointmentId,
+    skip,
+    limit
+  );
+
+  const totalPages = Math.ceil(total / limit);
+
+  return { appointment, page, totalPages };
 };
 
 // =============> Update appointment Status service <=============

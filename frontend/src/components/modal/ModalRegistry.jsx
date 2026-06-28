@@ -4,7 +4,7 @@ import {
   EditAppointmentModal,
   AppointmentDetailsModal,
   UpdateAppointmentStatusModal,
-} from "../../features/appointments/components";
+} from "../../features/appointments/modal";
 import {
   AddDoctorModal,
   DeleteDoctorModal,

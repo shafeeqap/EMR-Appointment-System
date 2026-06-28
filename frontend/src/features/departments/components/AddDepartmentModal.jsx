@@ -41,7 +41,10 @@ const AddDepartmentModal = () => {
 
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error("Error creating department:", error);

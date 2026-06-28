@@ -50,9 +50,10 @@ export const searchPatients = async (req, res, next) => {
 // ===========> Get Patinet full details <===========
 export const getPatientFullDetails = async (req, res, next) => {
   try {
-    const data = await getPatientFullDetailsService(req.params);
+    const { patientData, history, page, totalPages } =
+      await getPatientFullDetailsService(req.params, req.query);
 
-    res.json(data);
+    res.status(200).json({ patientData, history, page, totalPages });
   } catch (error) {
     next(error);
   }
@@ -62,6 +63,8 @@ export const getPatientFullDetails = async (req, res, next) => {
 export const getPatientById = async (req, res, next) => {
   try {
     const patient = await getPatientByIdService(req.params);
+
+    console.log(patient, "Patient...");
 
     res.status(200).json({ patient });
   } catch (error) {

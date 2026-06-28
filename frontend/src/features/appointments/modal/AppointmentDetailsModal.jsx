@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetAppointmentByIdQuery } from "../appointmentApiSlice";
+import { useGetAppointmentDetailsQuery } from "../appointmentApiSlice";
 import { getFullName } from "../../../utils/userHelpers";
 import { closeModal, openModal } from "../../../components/modal/modalSlice";
 import { Button, Loader } from "../../../components/ui";
@@ -9,25 +9,33 @@ import { STATUS_UI } from "../../../components/ui/StatusBadge";
 import { formatTime } from "../../../utils/formatHours";
 
 const AppointmentDetailsModal = () => {
+  const [page, setPage] = useState(1);
+
+  const dispatch = useDispatch();
+
   const { appointmentId } = useSelector(
     (state) => state.modal.modalProps || {}
   );
 
-  const dispatch = useDispatch();
-
   const {
-    data: appointments,
+    data: appointment,
     isLoading,
     error,
-  } = useGetAppointmentByIdQuery({
+  } = useGetAppointmentDetailsQuery({
     id: appointmentId,
+    page,
+    limit: 5,
   });
 
-  const appointment = appointments?.appointments;
-  const patient = appointments?.appointments?.patient;
-  const doctor = appointments?.appointments?.doctor;
+  const appointmentData = appointment?.appointment;
+  const patient = appointmentData?.patientId;
+  const doctor = appointmentData?.doctorId;
 
-  const statusConfig = STATUS_UI[appointment?.status];
+  // console.log(appointmentData, "Appointment");
+  console.log(appointment, 'appointment...');
+  
+
+  const statusConfig = STATUS_UI[appointmentData?.status];
   const Icon = statusConfig?.icon;
 
   const handleStatusModalOpen = (row) => {
@@ -50,7 +58,7 @@ const AppointmentDetailsModal = () => {
   if (error) return <ErrorMessage />;
 
   return (
-    <div className="bg-white w-64 sm:w-96 md:w-[700px]">
+    <div className="bg-white w-64 sm:w-[500px] md:w-[700px]">
       <div className="w-full p-6 ">
         {/* Header */}
         <h2 className="mb-4 text-xl font-semibold">Appointment Details</h2>
@@ -83,13 +91,13 @@ const AppointmentDetailsModal = () => {
           </legend>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
             <p>
-              <strong>Date:</strong> {appointment?.date.split("T")[0]}
+              <strong>Date:</strong> {appointmentData?.date.split("T")[0]}
             </p>
             <p>
-              <strong>Slot:</strong> {formatTime(appointment?.slotTime)}
+              <strong>Slot:</strong> {formatTime(appointmentData?.slotTime)}
             </p>
             <p>
-              <strong>Token:</strong> {appointment?.tokenNumber}
+              <strong>Token:</strong> {appointmentData?.tokenNumber}
             </p>
           </div>
         </fieldset>
@@ -104,7 +112,7 @@ const AppointmentDetailsModal = () => {
               <strong>Doctor:</strong> {getFullName(doctor)}
             </p>
             <p>
-              <strong>Department:</strong> {appointment?.department?.name}
+              <strong>Department:</strong> {appointmentData?.department?.name}
             </p>
           </div>
         </fieldset>
@@ -113,7 +121,7 @@ const AppointmentDetailsModal = () => {
         <fieldset className="mb-4 border border-gray-300 rounded p-4">
           <legend className="px-2 text-sm text-gray-500">Notes</legend>
           <p className="text-sm bg-gray-50 p-3 rounded-lg capitalize">
-            {appointment?.notes || "No notes available"}
+            {appointmentData?.notes || "No notes available"}
           </p>
         </fieldset>
 
@@ -125,7 +133,7 @@ const AppointmentDetailsModal = () => {
               <strong>Status:</strong>
             </p>
             <span
-              onClick={() => handleStatusModalOpen(appointment)}
+              onClick={() => handleStatusModalOpen(appointmentData)}
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase cursor-pointer ${
                 statusConfig?.className || "bg-gray-500 text-white"
               }`}

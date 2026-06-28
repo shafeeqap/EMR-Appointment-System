@@ -21,7 +21,8 @@ const patientApiSlice = apiSlice.injectEndpoints({
     }),
 
     getPatientDetails: builder.query({
-      query: (id) => `/patients/${id}/details`,
+      query: ({ id, page = 1, limit = 5 }) =>
+        `/patients/${id}/details?page=${page}&limit=${limit}`,
 
       providesTags: ["Patient"],
     }),
