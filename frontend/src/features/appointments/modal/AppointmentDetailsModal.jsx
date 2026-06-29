@@ -9,31 +9,35 @@ import { STATUS_UI } from "../../../components/ui/StatusBadge";
 import { formatTime } from "../../../utils/formatHours";
 
 const AppointmentDetailsModal = () => {
-  const [page, setPage] = useState(1);
-
-  const dispatch = useDispatch();
-
   const { appointmentId } = useSelector(
     (state) => state.modal.modalProps || {}
   );
+
+  const [page, setPage] = useState(1);
+
+  const dispatch = useDispatch();
 
   const {
     data: appointment,
     isLoading,
     error,
-  } = useGetAppointmentDetailsQuery({
-    id: appointmentId,
-    page,
-    limit: 5,
-  });
+  } = useGetAppointmentDetailsQuery(
+    {
+      id: appointmentId,
+      page,
+      limit: 5,
+    },
+    {
+      skip: !appointmentId,
+    }
+  );
 
   const appointmentData = appointment?.appointment;
-  const patient = appointmentData?.patientId;
-  const doctor = appointmentData?.doctorId;
+  const patient = appointmentData?.patient;
+  const doctor = appointmentData?.doctor;
 
   // console.log(appointmentData, "Appointment");
-  console.log(appointment, 'appointment...');
-  
+  console.log(appointment, "appointment...");
 
   const statusConfig = STATUS_UI[appointmentData?.status];
   const Icon = statusConfig?.icon;
@@ -91,7 +95,7 @@ const AppointmentDetailsModal = () => {
           </legend>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
             <p>
-              <strong>Date:</strong> {appointmentData?.date.split("T")[0]}
+              <strong>Date:</strong> {appointmentData?.date?.split("T")[0]}
             </p>
             <p>
               <strong>Slot:</strong> {formatTime(appointmentData?.slotTime)}

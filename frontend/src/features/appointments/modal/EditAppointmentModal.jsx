@@ -62,15 +62,15 @@ const EditAppointmentModal = () => {
   );
 
   const {
-    data: appointments,
+    data: appointment,
     isLoading,
     error,
   } = useGetAppointmentByIdQuery({
     id: appointmentId,
   });
 
-  const appointment = appointments?.appointments;
-  console.log(appointment, "Appointment");
+  const appointmentData = appointment?.appointment;
+  console.log(appointmentData, "Appointment");
 
   const { data } = useGetDoctorsQuery({ page: 1, limit: 100 });
   const doctors = data?.doctors || [];
@@ -79,21 +79,21 @@ const EditAppointmentModal = () => {
     useUpdateAppointmentMutation();
 
   useEffect(() => {
-    if (!appointment) return;
+    if (!appointmentData) return;
 
-    const doctor = appointment.doctor;
+    const doctor = appointmentData?.doctorId;
 
     reset({
-      patient: appointment?.patient?.name || "",
+      patient: appointmentData?.patientId?.name || "",
       doctorId: doctor?._id,
-      slotTime: appointment?.slotTime,
-      tokenNumber: appointment?.tokenNumber,
-      date: appointment?.date
-        ? new Date(appointment?.date).toISOString().split("T")[0]
+      slotTime: appointmentData?.slotTime,
+      tokenNumber: appointmentData?.tokenNumber,
+      date: appointmentData?.date
+        ? new Date(appointmentData?.date).toISOString().split("T")[0]
         : "",
-      notes: appointment?.notes,
+      notes: appointmentData?.notes,
     });
-  }, [appointment, reset]);
+  }, [appointmentData, reset]);
 
   const onSubmit = async (values) => {
     if (!isDirty) {
@@ -161,7 +161,7 @@ const EditAppointmentModal = () => {
           <>
             <h2 className="text-xl font-semibold mb-4">Edit Appointment</h2>
 
-            {appointments && (
+            {appointmentData && (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                   <InputField

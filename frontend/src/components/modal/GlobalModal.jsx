@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MODAL_COMPONENTS } from "./ModalRegistry";
 import { closeModal } from "./modalSlice";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion} from "framer-motion";
 
 const GlobalModal = () => {
   const dispatch = useDispatch();

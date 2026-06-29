@@ -163,6 +163,8 @@ export const getAppointmentFullDetailsService = async (params, query) => {
   // const status = query.status;
   // const date = query.date;
 
+  console.log(appointmentId, 'Appointment ID...');
+  
   if (!appointmentId) {
     throw new AppError("Appointment id is required", 400);
   }

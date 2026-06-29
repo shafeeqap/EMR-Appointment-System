@@ -64,8 +64,6 @@ export const getPatientById = async (req, res, next) => {
   try {
     const patient = await getPatientByIdService(req.params);
 
-    console.log(patient, "Patient...");
-
     res.status(200).json({ patient });
   } catch (error) {
     next(error);
