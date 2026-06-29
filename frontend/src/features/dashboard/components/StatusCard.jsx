@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 
-const StatusCard = ({ statusCardItems, data }) => {
+const StatusCard = ({ statusCardItems=[], data }) => {
   const stats = data?.data?.stats;
 
   return (

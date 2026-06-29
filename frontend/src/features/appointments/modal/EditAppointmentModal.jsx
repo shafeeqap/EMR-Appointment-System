@@ -20,6 +20,7 @@ import {
   setSuccessFeedback,
 } from "../../../components/successFedback/successFeedbackSlice";
 import SuccessFeedback from "../../../components/successFedback/SuccessFeedback";
+import { isEqual } from "lodash";
 
 const EditAppointmentModal = () => {
   const { appointmentId } = useSelector(
@@ -86,7 +87,7 @@ const EditAppointmentModal = () => {
     reset({
       patient: appointmentData?.patientId?.name || "",
       doctorId: doctor?._id,
-      slotTime: appointmentData?.slotTime,
+      slotTime: formatTime(appointmentData?.slotTime),
       tokenNumber: appointmentData?.tokenNumber,
       date: appointmentData?.date
         ? new Date(appointmentData?.date).toISOString().split("T")[0]
@@ -96,7 +97,16 @@ const EditAppointmentModal = () => {
   }, [appointmentData, reset]);
 
   const onSubmit = async (values) => {
-    if (!isDirty) {
+    const isChanged = !isEqual(values, {
+      doctorId: appointmentData?.doctorId?._id,
+      slotTime: appointmentData?.slotTime,
+      date: appointmentData?.date
+        ? new Date(appointmentData?.date).toISOString().split("T")[0]
+        : "",
+      notes: appointmentData?.notes,
+    });
+
+    if (!isChanged) {
       toast.info("No changes detected");
       return;
     }
@@ -105,7 +115,7 @@ const EditAppointmentModal = () => {
       doctorId: values.doctorId,
       slotTime: values.slotTime,
       date: values.date,
-      notes: values.notes,
+      notes: values.notes || "",
     };
 
     try {
@@ -180,7 +190,6 @@ const EditAppointmentModal = () => {
                     {...register("slotTime")}
                     className="focus:ring focus:border-primary"
                     disabled
-                    // error={errors.slotTime}
                   />
                 </div>
 
