@@ -42,7 +42,7 @@ const DetailsPatientModal = () => {
   }
 
   return (
-    <div className="p-3 w-72 sm:p-0 sm:w-[500px] md:w-[700px]">
+    <div className="p-3 w-[80vw] sm:p-0 max-w-5xl">
       <ModalHeader
         title="Patient Details"
         icon={<Contact size={40} className="text-primary" />}

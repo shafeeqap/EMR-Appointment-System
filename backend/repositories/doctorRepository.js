@@ -4,14 +4,6 @@ export const createDoctorRepo = async (data) => {
   return Doctor.create(data);
 };
 
-// export const findDoctors = async (filter, skip, limit) => {
-//   return Doctor.find(filter)
-//     .skip(skip)
-//     .limit(limit)
-//     .sort({ createdAt: -1 })
-//     .populate("userId", "firstName lastName")
-//     .populate("departmentId", "name");
-// };
 
 // =============> Get doctors with search, filter, pagination, and department details <=============
 export const getDoctors = async ({ search, status, skip, limit }) => {

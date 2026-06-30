@@ -78,9 +78,13 @@ export const findAppointmentDetails = async (id, skip, limit) => {
             "doctor._id": 1,
             "doctor.firstName": 1,
             "doctor.lastName": 1,
+            "doctor.slotDuration": 1,
+            "doctor.email": 1,
 
             "department._id": 1,
             "department.name": 1,
+
+            // "user.mobile": 1,
           },
         },
 

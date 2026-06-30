@@ -3,23 +3,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetAppointmentDetailsQuery } from "../appointmentApiSlice";
 import { getFullName } from "../../../utils/userHelpers";
 import { closeModal, openModal } from "../../../components/modal/modalSlice";
-import { Button, Loader } from "../../../components/ui";
+import { Button, DetailRow, Loader } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { STATUS_UI } from "../../../components/ui/StatusBadge";
 import { formatTime } from "../../../utils/formatHours";
 import {
   Calendar,
   CalendarClock,
+  CalendarDays,
+  ClipboardList,
   Clock,
   NotepadText,
   ReceiptText,
   Rows4,
+  ShieldCheck,
+  Stethoscope,
   X,
 } from "lucide-react";
 import ModalHeader from "../../../components/modal/ModalHeader";
 import clsx from "clsx";
-import { formatDate } from "../../../utils/formatDate";
+import { formatDate, formatDay } from "../../../utils/formatDate";
 import InfoCard from "../components/InfoCard";
+import { colorMap } from "../../../constants/colorMap";
 
 const AppointmentDetailsModal = () => {
   const { appointmentId } = useSelector(
@@ -49,11 +54,12 @@ const AppointmentDetailsModal = () => {
   const patient = appointmentData?.patient;
   const doctor = appointmentData?.doctor;
 
-  // console.log(appointmentData, "Appointment");
-  console.log(appointment, "appointment...");
+  console.log(appointmentData, "Appointment");
+  // console.log(appointment, "appointment...");
 
   const statusConfig = STATUS_UI[appointmentData?.status];
   const Icon = statusConfig?.icon;
+  const colors = colorMap[statusConfig?.color];
 
   const handleStatusModalOpen = (row) => {
     dispatch(
@@ -74,15 +80,20 @@ const AppointmentDetailsModal = () => {
 
   if (error) return <ErrorMessage />;
 
+  // Cards
   const cards = [
     {
       title: "Status",
       value: (
         <span
-          onClick={() => handleStatusModalOpen(appointmentData)}
-          className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase ${statusConfig.className}`}
+          // onClick={() => handleStatusModalOpen(appointmentData)}
+          className={clsx(
+            colors.bg,
+            colors.text,
+            "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase ${statusConfig.className}"
+          )}
         >
-          <Icon size={16} />
+          <Icon size={16} className={colors.text} />
           {statusConfig.label}
         </span>
       ),
@@ -100,7 +111,7 @@ const AppointmentDetailsModal = () => {
     {
       title: "Appointment Date",
       value: formatDate(appointmentData.date),
-      // subtitle: formatDay(appointmentData.date),
+      subtitle: formatDay(appointmentData.date),
       icon: Calendar,
       color: "green",
     },
@@ -121,8 +132,51 @@ const AppointmentDetailsModal = () => {
     },
   ];
 
+  // Details
+  const details = [
+    {
+      title: "Patient information",
+      icon: ClipboardList,
+      color: "violet",
+      fields: [
+        { label: "Patient Name", value: () => patient?.name },
+        { label: "UHID", value: () => patient?.patientId },
+        { label: "Age", value: () => patient?.age },
+        { label: "Mobile", value: () => patient?.mobile },
+      ],
+    },
+    {
+      title: "Doctor information",
+      icon: Stethoscope,
+      color: "green",
+      fields: [
+        { label: "Doctor", value: () => getFullName(doctor) },
+        { label: "Email", value: () => doctor?.email },
+        { label: "Slot Duration", value: () => doctor?.slotDuration },
+        { label: "Mobile", value: () => doctor?.mobile },
+      ],
+    },
+    {
+      title: "Appointment information",
+      icon: CalendarDays,
+      color: "sky",
+      fields: [
+        { label: "Date", value: () => formatDate(appointmentData?.date) },
+        {
+          label: "Slot Time",
+          value: () => formatTime(appointmentData?.slotTime),
+        },
+        { label: "Token Number", value: () => appointmentData?.tokenNumber },
+        {
+          label: "Booked On",
+          value: () => formatDate(appointmentData?.createdAt),
+        },
+      ],
+    },
+  ];
+
   return (
-    <div className="bg-white w-64 sm:w-[500px] md:w-[1080px]">
+    <div className="bg-white w-[80vw] max-w-6xl">
       <div className="w-full p-4">
         <ModalHeader
           title="Appointment Details"
@@ -132,7 +186,7 @@ const AppointmentDetailsModal = () => {
 
         <div className="py-3">
           {/* Info cards */}
-          <div className="bg-white min-h-28 grid grid-cols-1 sm:grid-cols-2 sm:py-3 md:grid-cols-5 gap-5 px-4 border shadow">
+          <div className="min-h-28 grid grid-cols-1 sm:grid-cols-2 sm:py-3 xl:grid-cols-5 gap-5 px-4 border shadow">
             {cards.map((card, index) => (
               <InfoCard
                 key={card.title}
@@ -144,129 +198,76 @@ const AppointmentDetailsModal = () => {
                 }
               />
             ))}
-            
-
-            {/* Appointment Date */}
-            {/* <div className="min-w-44 flex sm:border-b-0 cursor-pointer sm:border-r-2 border-b-2 pb-4">
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-green-100">
-                  <Calendar size={30} className="text-green-600" />
-                </div>
-                <div>
-                  <small className="text-textPrimary">Appointment Date</small>
-                  <h2 className="font-semibold">29 Jun 2026</h2>
-                  <span className="text-gray-600">Monday</span>
-                </div>
-              </div>
-            </div> */}
-
-            {/* Slot Time */}
-            {/* <div className="min-w-44 flex sm:border-b-0 cursor-pointer sm:border-r-2 border-b-2 pb-4">
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-fuchsia-100">
-                  <Clock size={30} className="text-fuchsia-600" />
-                </div>
-                <div>
-                  <small className="text-textPrimary">Slot Time</small>
-                  <h2 className="font-semibold">11:15 AM</h2>
-                  <span className="text-gray-600">15 mins</span>
-                </div>
-              </div>
-            </div> */}
-
-            {/* Department*/}
-            {/* <div className="min-w-44 flex sm:border-b-0 cursor-pointer pb-4">
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-12 h-12 flex items-center justify-center rounded-lg bg-sky-100">
-                  <Rows4 size={30} className="text-sky-600" />
-                </div>
-                <div>
-                  <small className="text-textPrimary">Department</small>
-                  <h2 className="font-semibold">Cardiology</h2>
-                </div>
-              </div>
-            </div> */}
           </div>
         </div>
 
         {/* Patient Info */}
-        <div className="mb-4 mt-3 border border-gray-300 rounded p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <p>
-              <strong>Name:</strong> {patient?.name}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 py-5">
+          {details.map((item) => {
+            const Icon = item?.icon;
+            const colors = colorMap[item?.color];
+
+            return (
+              <div key={item.title} className="border rounded p-4">
+                <div className="flex items-center gap-2 mb-5">
+                  <Icon className={colors.text} />
+                  <h3 className={clsx(colors.text, "font-semibold text-lg")}>
+                    {item.title}
+                  </h3>
+                </div>
+
+                {item.fields.map((field) => (
+                  <DetailRow
+                    key={field.label}
+                    label={field.label}
+                    value={field.value()}
+                  />
+                ))}
+              </div>
+            );
+          })}
+
+          <div className="mb-4 col-span-2 border border-gray-300 rounded p-4">
+            <div className="flex gap-2">
+              <NotepadText className="text-orange-600" />
+              <h3 className="font-semibold text-lg text-orange-600">Notes</h3>
+            </div>
+            <p className="text-sm mt-3 bg-gray-100 min-h-[5rem] p-3 rounded-lg capitalize">
+              {appointmentData?.notes || "No notes available"}
             </p>
-            <p>
-              <strong>UHID:</strong> {patient?.patientId}
-            </p>
-            <p>
-              <strong>Age:</strong> {patient?.age}
-            </p>
-            <p>
-              <strong>Mobile:</strong> {patient?.mobile}
-            </p>
+          </div>
+
+          <div className="mb-4 border border-gray-300 rounded p-4">
+            <div className="flex items-center gap-2 mb-5">
+              <ShieldCheck className="text-green-600" />
+              <h3 className="font-semibold text-lg text-green-600">
+                Status Information
+              </h3>
+            </div>
+
+            <DetailRow
+              label="Status"
+              value={
+                <span
+                  // onClick={() => handleStatusModalOpen(appointmentData)}
+                  className={clsx(
+                    colors.bg,
+                    colors.text,
+                    "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase cursor-pointer"
+                  )}
+                >
+                  {Icon && <Icon size={16} className={colors.text} />}
+                  {statusConfig?.label}
+                </span>
+              }
+            />
+            <DetailRow
+              label="Updated On"
+              value={formatDate(appointmentData?.createdAt)}
+            />
+            <DetailRow label="Updated On" value={"Admin"} />
           </div>
         </div>
-
-        {/* Appointment Info */}
-        <fieldset className="mb-4 border border-gray-300 rounded p-4">
-          <legend className="px-2 text-sm text-gray-500 mb-2">
-            Appointment Info
-          </legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <p>
-              <strong>Date:</strong> {appointmentData?.date?.split("T")[0]}
-            </p>
-            <p>
-              <strong>Slot:</strong> {formatTime(appointmentData?.slotTime)}
-            </p>
-            <p>
-              <strong>Token:</strong> {appointmentData?.tokenNumber}
-            </p>
-          </div>
-        </fieldset>
-
-        {/* Doctor Info */}
-        <fieldset className="mb-4 border border-gray-300 rounded p-4">
-          <legend className="px-2 text-sm text-gray-500 mb-2">
-            Doctor Info
-          </legend>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <p>
-              <strong>Doctor:</strong> {getFullName(doctor)}
-            </p>
-            <p>
-              <strong>Department:</strong> {appointmentData?.department?.name}
-            </p>
-          </div>
-        </fieldset>
-
-        {/* Notes */}
-        <fieldset className="mb-4 border border-gray-300 rounded p-4">
-          <legend className="px-2 text-sm text-gray-500">Notes</legend>
-          <p className="text-sm bg-gray-50 p-3 rounded-lg capitalize">
-            {appointmentData?.notes || "No notes available"}
-          </p>
-        </fieldset>
-
-        {/* Status */}
-        <fieldset className="mb-4 border border-gray-300 rounded p-4">
-          <legend className="px-2 text-sm text-gray-500 ">Status</legend>
-          <div className="flex items-center justify-between text-sm">
-            <p>
-              <strong>Status:</strong>
-            </p>
-            <span
-              onClick={() => handleStatusModalOpen(appointmentData)}
-              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase cursor-pointer ${
-                statusConfig?.className || "bg-gray-500 text-white"
-              }`}
-            >
-              {Icon && <Icon size={16} />}
-              {statusConfig?.label}
-            </span>
-          </div>
-        </fieldset>
-
         {/* Footer */}
         <div className="flex justify-end gap-2 border-t pt-3">
           <Button variant="secondary" onClick={() => dispatch(closeModal())}>

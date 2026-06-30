@@ -1,6 +1,8 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
 import { getFullName } from "../../utils/userHelpers";
 import { STATUS_UI } from "../../components/ui";
+import { colorMap } from "../../constants/colorMap";
+import clsx from "clsx";
 
 export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
   {
@@ -45,6 +47,8 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
     render: (row) => {
       const statusConfig = STATUS_UI[row?.status];
       const Icon = statusConfig?.icon;
+      const color = statusConfig?.color;
+      const colors = colorMap[color];
 
       const isFinalState = [
         "completed",
@@ -62,9 +66,13 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
           className="cursor-pointer disabled:cursor-not-allowed"
         >
           <span
-            className={`inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full cursor-pointer uppercase ${statusConfig?.className}`}
+            className={clsx(
+              colors.bg,
+              colors.text,
+              "inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center ${colors.text} rounded-full cursor-pointer uppercase"
+            )}
           >
-            {Icon && <Icon size={16} />}
+            {Icon && <Icon size={16} className={colors.text} />}
             {statusConfig?.label}
           </span>
         </button>
@@ -102,7 +110,10 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
     header: "Details",
     render: (row) => (
       <span className="flex gap-5">
-        <Eye onClick={() => onDetails(row)} className="cursor-pointer text-gray-500" />
+        <Eye
+          onClick={() => onDetails(row)}
+          className="cursor-pointer text-gray-500"
+        />
       </span>
     ),
   },

@@ -2,8 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetLeaveByIdQuery } from "../leaveApiSlice";
 import { formatDate } from "../../../utils/formatDate";
-import DetailRow from "../components/DetailRow";
-import { Button, Loader, STATUS_UI } from "../../../components/ui";
+import { Button, DetailRow, Loader, STATUS_UI } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
 import {
   CalendarDays,
@@ -14,6 +13,8 @@ import {
 } from "lucide-react";
 import { getFullName } from "../../../utils/userHelpers";
 import { closeModal } from "../../../components/modal/modalSlice";
+import { colorMap } from "../../../constants/colorMap";
+import clsx from "clsx";
 
 const LeaveDetailsModal = () => {
   const { leaveId } = useSelector((state) => state.modal.modalProps || {});
@@ -27,7 +28,6 @@ const LeaveDetailsModal = () => {
   const leave = data?.leave;
 
   const start = new Date(leave?.startDate);
-
   const end = new Date(leave?.endDate);
 
   const totalDays = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
@@ -42,7 +42,9 @@ const LeaveDetailsModal = () => {
   if (isError) return <ErrorMessage />;
 
   const statusConfig = STATUS_UI[leave?.status];
+  const color = statusConfig?.color;
   const Icon = statusConfig?.icon;
+  const colors = colorMap[color];
   const fullName = getFullName(leave?.employeeId);
 
   const initials = fullName
@@ -94,9 +96,13 @@ const LeaveDetailsModal = () => {
 
             {statusConfig && (
               <span
-                className={`inline-flex items-center gap-2 mt-1 px-2 py-1 text-sm font-medium text-center rounded-full ${statusConfig.className}`}
+                className={clsx(
+                  colors.bg,
+                  colors.text,
+                  "inline-flex items-center gap-2 mt-1 px-2 py-1 text-sm font-medium text-center rounded-full"
+                )}
               >
-                {Icon && <Icon size={16} />}
+                {Icon && <Icon size={16} className={colors.text} />}
                 {statusConfig.label}
               </span>
             )}

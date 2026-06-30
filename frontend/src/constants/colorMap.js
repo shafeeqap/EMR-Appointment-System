@@ -33,4 +33,14 @@ export const colorMap = {
       bg: "bg-purple-100",
       text: "text-purple-600",
     },
+
+    yellow: {
+      bg: "bg-yellow-100",
+      text: "text-yellow-600",
+    },
+
+    gray: {
+      bg: "bg-gray-100",
+      text: "text-gray-600",
+    },
   };

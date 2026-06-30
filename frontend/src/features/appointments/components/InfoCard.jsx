@@ -1,5 +1,5 @@
 import React from "react";
-import { colorMap } from "../config/colorMap";
+import { colorMap } from "../../../constants/colorMap";
 
 const InfoCard = ({
   title,
