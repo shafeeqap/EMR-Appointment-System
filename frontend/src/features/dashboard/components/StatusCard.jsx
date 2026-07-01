@@ -1,12 +1,14 @@
 import React from "react";
 import clsx from "clsx";
+import { colorMap } from "../../../constants/colorMap";
 
-const StatusCard = ({ statusCardItems=[], data }) => {
+const StatusCard = ({ statusCardItems = [], data }) => {
   const stats = data?.data?.stats;
 
   return (
     <div className="bg-white min-h-28 grid grid-cols-1 sm:grid-cols-4 px-4 py-2 border shadow">
       {statusCardItems.map((item, index) => {
+        const colors = colorMap[item?.color];
         const Icon = item.icon;
 
         return (
@@ -18,13 +20,13 @@ const StatusCard = ({ statusCardItems=[], data }) => {
             )}
           >
             {/* Icon */}
-            <Icon size={30} className="text-icon" />
-            <div className="w-full">
-              <p className="text-textPrimary text-sm truncate text-center">
-                {item.title}
-              </p>
+            <div className={clsx(colors?.bg, "w-10 h-10 flex justify-center items-center bg-blue-100 rounded-lg")}>
+              <Icon size={25} className={colors?.text} />
             </div>
-            <h2 className="text-lg font-bold">{stats?.[item.key] || 0}</h2>
+            <div className="w-full text-center">
+              <h2 className="text-lg font-bold">{stats?.[item.key] || 0}</h2>
+              <p className="text-textPrimary text-sm truncate">{item.title}</p>
+            </div>
           </div>
         );
       })}

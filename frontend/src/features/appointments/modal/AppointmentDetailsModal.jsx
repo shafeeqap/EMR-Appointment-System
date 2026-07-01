@@ -3,9 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useGetAppointmentDetailsQuery } from "../appointmentApiSlice";
 import { getFullName } from "../../../utils/userHelpers";
 import { closeModal, openModal } from "../../../components/modal/modalSlice";
-import { Button, DetailRow, Loader } from "../../../components/ui";
+import {
+  Button,
+  DetailRow,
+  InfoCard,
+  Loader,
+  StatusBadge,
+} from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
-import { STATUS_UI } from "../../../components/ui/StatusBadge";
 import { formatTime } from "../../../utils/formatHours";
 import {
   Calendar,
@@ -16,14 +21,12 @@ import {
   NotepadText,
   ReceiptText,
   Rows4,
-  ShieldCheck,
   Stethoscope,
   X,
 } from "lucide-react";
 import ModalHeader from "../../../components/modal/ModalHeader";
 import clsx from "clsx";
 import { formatDate, formatDay } from "../../../utils/formatDate";
-import InfoCard from "../components/InfoCard";
 import { colorMap } from "../../../constants/colorMap";
 
 const AppointmentDetailsModal = () => {
@@ -57,10 +60,6 @@ const AppointmentDetailsModal = () => {
   console.log(appointmentData, "Appointment");
   // console.log(appointment, "appointment...");
 
-  const statusConfig = STATUS_UI[appointmentData?.status];
-  const Icon = statusConfig?.icon;
-  const colors = colorMap[statusConfig?.color];
-
   const handleStatusModalOpen = (row) => {
     dispatch(
       openModal({
@@ -84,19 +83,7 @@ const AppointmentDetailsModal = () => {
   const cards = [
     {
       title: "Status",
-      value: (
-        <span
-          // onClick={() => handleStatusModalOpen(appointmentData)}
-          className={clsx(
-            colors.bg,
-            colors.text,
-            "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase ${statusConfig.className}"
-          )}
-        >
-          <Icon size={16} className={colors.text} />
-          {statusConfig.label}
-        </span>
-      ),
+      value: <StatusBadge data={appointmentData} />,
       icon: NotepadText,
       color: "orange",
     },
@@ -173,6 +160,33 @@ const AppointmentDetailsModal = () => {
         },
       ],
     },
+    {
+      title: "Notes",
+      icon: NotepadText,
+      color: "orange",
+      colSpan: 2,
+      render: () => (
+        <p className="text-sm mt-3 bg-gray-100 min-h-[5rem] p-3 rounded-lg capitalize">
+          {appointmentData?.notes || "No notes available"}
+        </p>
+      ),
+    },
+    {
+      title: "Status information",
+      icon: CalendarDays,
+      color: "green",
+      fields: [
+        {
+          label: "Status",
+          value: () => <StatusBadge data={appointmentData} />,
+        },
+        {
+          label: "Updated On",
+          value: () => formatTime(appointmentData?.createdAt),
+        },
+        { label: "Updated By", value: () => appointmentData?.updatedBy?.name },
+      ],
+    },
   ];
 
   return (
@@ -208,7 +222,13 @@ const AppointmentDetailsModal = () => {
             const colors = colorMap[item?.color];
 
             return (
-              <div key={item.title} className="border rounded p-4">
+              <div
+                key={item.title}
+                className={clsx(
+                  "border rounded p-4",
+                  item.colSpan === 2 && "lg:col-span-2"
+                )}
+              >
                 <div className="flex items-center gap-2 mb-5">
                   <Icon className={colors.text} />
                   <h3 className={clsx(colors.text, "font-semibold text-lg")}>
@@ -216,58 +236,20 @@ const AppointmentDetailsModal = () => {
                   </h3>
                 </div>
 
-                {item.fields.map((field) => (
-                  <DetailRow
-                    key={field.label}
-                    label={field.label}
-                    value={field.value()}
-                  />
-                ))}
+                {item.render
+                  ? item.render()
+                  : item.fields.map((field) => (
+                      <DetailRow
+                        key={field.label}
+                        label={field.label}
+                        value={field.value()}
+                      />
+                    ))}
               </div>
             );
           })}
-
-          <div className="mb-4 col-span-2 border border-gray-300 rounded p-4">
-            <div className="flex gap-2">
-              <NotepadText className="text-orange-600" />
-              <h3 className="font-semibold text-lg text-orange-600">Notes</h3>
-            </div>
-            <p className="text-sm mt-3 bg-gray-100 min-h-[5rem] p-3 rounded-lg capitalize">
-              {appointmentData?.notes || "No notes available"}
-            </p>
-          </div>
-
-          <div className="mb-4 border border-gray-300 rounded p-4">
-            <div className="flex items-center gap-2 mb-5">
-              <ShieldCheck className="text-green-600" />
-              <h3 className="font-semibold text-lg text-green-600">
-                Status Information
-              </h3>
-            </div>
-
-            <DetailRow
-              label="Status"
-              value={
-                <span
-                  // onClick={() => handleStatusModalOpen(appointmentData)}
-                  className={clsx(
-                    colors.bg,
-                    colors.text,
-                    "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase cursor-pointer"
-                  )}
-                >
-                  {Icon && <Icon size={16} className={colors.text} />}
-                  {statusConfig?.label}
-                </span>
-              }
-            />
-            <DetailRow
-              label="Updated On"
-              value={formatDate(appointmentData?.createdAt)}
-            />
-            <DetailRow label="Updated On" value={"Admin"} />
-          </div>
         </div>
+
         {/* Footer */}
         <div className="flex justify-end gap-2 border-t pt-3">
           <Button variant="secondary" onClick={() => dispatch(closeModal())}>

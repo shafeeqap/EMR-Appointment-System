@@ -6,28 +6,28 @@ export const statusCardItems = [
     title: "Total User",
     key: "totalUsers",
     icon: Users,
-    // value: 500,
+    color: "red",
   },
   {
     id: 2,
     title: "Total Patients",
     key: "totalPatients",
     icon: Activity,
-    // value: 500,
+    color: "green",
   },
   {
     id: 3,
     title: "Total Doctors",
     key: "totalDoctors",
     icon: Stethoscope,
-    // value: 50,
+    color: "blue",
   },
   {
     id: 4,
     title: "Total Appointments",
     key: "totalAppointments",
     icon: CalendarCheck,
-    // value: 450,
+    color: "orange",
   },
 ];
 

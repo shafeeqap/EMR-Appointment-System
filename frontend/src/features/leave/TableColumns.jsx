@@ -1,7 +1,5 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
-import { STATUS_UI } from "../../components/ui";
-import { colorMap } from "../../constants/colorMap";
-import clsx from "clsx";
+import { StatusBadge } from "../../components/ui";
 
 export const getColumns = ({ onUpdateStatus, onDetails }) => [
   {
@@ -65,31 +63,16 @@ export const getColumns = ({ onUpdateStatus, onDetails }) => [
   {
     header: "Status",
     render: (row) => {
-      const statusConfig = STATUS_UI[row.status];
-      const Icon = statusConfig?.icon;
-      const color = statusConfig?.color;
-      const colors = colorMap[color];
       const isFinalState = ["approved", "cancelled", "rejected"].includes(
         row.status
       );
 
       return (
-        <button
+        <StatusBadge
+          data={row}
           onClick={() => onUpdateStatus(row)}
           disabled={isFinalState}
-          className="cursor-pointer disabled:cursor-not-allowed"
-        >
-          <span
-            className={clsx(
-              colors.bg,
-              colors.text,
-              "inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full uppercase"
-            )}
-          >
-            {Icon && <Icon size={16} className={colors.text} />}
-            {statusConfig?.label}
-          </span>
-        </button>
+        />
       );
     },
   },

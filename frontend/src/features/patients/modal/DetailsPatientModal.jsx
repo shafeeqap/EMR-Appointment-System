@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetPatientDetailsQuery } from "../patientsApiSlice";
-import { Loader, Pagination } from "../../../components/ui";
+import { Loader } from "../../../components/ui";
 import ErrorMessage from "../../../components/ErrorMessage";
 import { Contact } from "lucide-react";
-import Table from "../../../components/table/Table";
 import { getAptHistoryColumns } from "../TableColumns";
-import Header from "../components/Header";
+import PatientInfo from "../components/PatientInfo";
 import Footer from "../components/Footer";
 import Histories from "../components/Histories";
 import ModalHeader from "../../../components/modal/ModalHeader";
@@ -22,7 +21,9 @@ const DetailsPatientModal = () => {
     limit: 5,
   });
 
-  const patient = data?.patientData?.patient || null;
+  console.log(data, "Patient Details Data...");
+
+  const patient = data?.patient || null;
   const history = data?.history || [];
 
   const columns = getAptHistoryColumns({});
@@ -51,21 +52,21 @@ const DetailsPatientModal = () => {
 
       <div className="p-6 space-y-6">
         {/* Patients */}
-        <Header initials={initials} patient={patient} />
+        <PatientInfo initials={initials} patient={patient} />
 
         {/* Appointment History */}
         <div className="border rounded-xl p-5">
-          <div>
-            <Histories />
-          </div>
-
-          <Table columns={columns} data={history} />
-
-          {data?.totalPages > 1 && (
-            <Pagination
+          {history.length === 0 ? (
+            <div className="text-center text-gray-500">
+              No appointment history found.
+            </div>
+          ) : (
+            <Histories
+              columns={columns}
+              patientData={data}
+              history={history}
               page={page}
               setPage={setPage}
-              totalPages={data?.totalPages || 1}
             />
           )}
         </div>

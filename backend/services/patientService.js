@@ -134,6 +134,7 @@ export const getPatientService = async (query, user) => {
 // ===========> Get Patinet full details Service <===========
 export const getPatientFullDetailsService = async (params, query) => {
   const patientId = params.id;
+
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 5;
   const skip = (page - 1) * limit;
@@ -144,15 +145,11 @@ export const getPatientFullDetailsService = async (params, query) => {
     throw new AppError("Patient not found", 404);
   }
 
-  const { patientData, history, total } = await findPatientDetails(
-    patientId,
-    skip,
-    limit
-  );
+  const { history, total } = await findPatientDetails(patientId, skip, limit);
 
   const totalPages = Math.ceil(total / limit);
 
-  return { patientData, history, page, totalPages };
+  return { patient, history, page, totalPages };
 };
 
 // ===========> Get Patient By ID Service <===========

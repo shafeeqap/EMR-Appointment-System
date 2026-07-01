@@ -6,28 +6,28 @@ export const statusCardItems = [
     title: "Today's Appointments",
     key: "todaysAppointments",
     icon: CalendarCheck,
-    // value: 150,
+    color: 'blue',
   },
   {
     id: 2,
     title: "Checked-in Patients",
     key: "checkedInPatients",
     icon: CheckLine,
-    // value: 100,
+    color: 'orange',
   },
   {
     id: 3,
     title: "Cancelled Appointments",
     key: "cancelledAppointments",
     icon: CircleX,
-    // value: 100,
+    color: 'red',
   },
   {
     id: 4,
     title: "Doctor Availability",
     key: "doctorsAvailable",
     icon: Stethoscope,
-    // value: 50,
+    color: 'purple',
   },
 ];
 

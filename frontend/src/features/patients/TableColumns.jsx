@@ -1,9 +1,7 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
 import { getFullName } from "../../utils/userHelpers";
-import { STATUS_UI } from "../../components/ui";
 import { formatTime } from "../../utils/formatHours";
-import { colorMap } from "../../constants/colorMap";
-import clsx from "clsx";
+import { StatusBadge } from "../../components/ui";
 
 export const getColumns = ({ onEdit, onDelete, onDetails }) => [
   {
@@ -79,30 +77,6 @@ export const getAptHistoryColumns = () => [
   },
   {
     header: "Status",
-    render: (row) => {
-      const statusConfig = STATUS_UI[row?.status];
-      const color = statusConfig?.color;
-      const Icon = statusConfig?.icon;
-      const colors = colorMap[color];
-
-      return (
-        <button
-          // onClick={() => onUpdateStatus(row)}
-          // disabled={isFinalState}
-          className="cursor-pointer disabled:cursor-not-allowed"
-        >
-          <span
-            className={clsx(
-              colors.bg,
-              colors.text,
-              "inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full cursor-pointer uppercase"
-            )}
-          >
-            {Icon && <Icon size={16} className={colors.text} />}
-            {statusConfig?.label}
-          </span>
-        </button>
-      );
-    },
+    render: (row) => <StatusBadge data={row} />,
   },
 ];

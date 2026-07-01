@@ -83,8 +83,6 @@ export const findAppointmentDetails = async (id, skip, limit) => {
 
             "department._id": 1,
             "department.name": 1,
-
-            // "user.mobile": 1,
           },
         },
 

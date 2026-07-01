@@ -1,3 +1,4 @@
+import React from "react";
 import {
   CalendarCheck,
   CheckCheck,
@@ -10,8 +11,10 @@ import {
   RefreshCcw,
   UserRoundCheck,
 } from "lucide-react";
+import clsx from "clsx";
+import { colorMap } from "../../constants/colorMap";
 
-export const STATUS_UI = {
+const STATUS_UI = {
   booked: {
     label: "Booked",
     color: "yellow",
@@ -63,3 +66,34 @@ export const STATUS_UI = {
     icon: CircleAlert,
   },
 };
+
+const StatusBadge = ({ data, onClick, disabled }) => {
+  const statusConfig = STATUS_UI[data?.status] ?? {
+    label: "Unknown",
+    color: "gray",
+    icon: CircleAlert,
+  };
+
+  const Icon = statusConfig?.icon;
+  const colors = colorMap[statusConfig?.color];
+
+  return (
+    <button
+      type="button"
+      onClick={() => onClick?.(data)}
+      disabled={disabled}
+      className={clsx(
+        colors.bg,
+        colors.text,
+        "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase",
+        onClick && !disabled && "cursor-pointer",
+        disabled && "cursor-not-allowed"
+      )}
+    >
+      <Icon size={16} />
+      {statusConfig.label}
+    </button>
+  );
+};
+
+export default StatusBadge;

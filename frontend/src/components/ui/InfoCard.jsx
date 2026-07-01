@@ -1,5 +1,5 @@
 import React from "react";
-import { colorMap } from "../../../constants/colorMap";
+import { colorMap } from "../../constants/colorMap";
 
 const InfoCard = ({
   title,
@@ -24,7 +24,7 @@ const InfoCard = ({
         <div>
           <small className="text-textPrimary">{title}</small>
 
-          <div className="font-semibold">{value}</div>
+          <div className="font-semibold capitalize">{value}</div>
 
           {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
         </div>

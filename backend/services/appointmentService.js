@@ -163,8 +163,6 @@ export const getAppointmentFullDetailsService = async (params, query) => {
   // const status = query.status;
   // const date = query.date;
 
-  console.log(appointmentId, 'Appointment ID...');
-  
   if (!appointmentId) {
     throw new AppError("Appointment id is required", 400);
   }
@@ -191,7 +189,11 @@ export const updateAppointmentStatusService = async (params, data, user) => {
     throw new AppError("Appointment not found", 404);
   }
 
+  const oldStatus = appointment.status;
+
   appointment.status = status;
+  appointment.updatedBy = user.id;
+
   await appointment.save();
 
   await logAction({
@@ -201,8 +203,9 @@ export const updateAppointmentStatusService = async (params, data, user) => {
     entity: "Appointment",
     entityId: appointment._id,
     metadata: {
-      oldStatus: "booked",
+      oldStatus: oldStatus,
       newStatus: status,
+      updatedBy: user.id,
     },
   });
 

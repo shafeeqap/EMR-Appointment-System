@@ -43,4 +43,9 @@ export const colorMap = {
       bg: "bg-gray-100",
       text: "text-gray-600",
     },
+
+    pink: {
+      bg: "bg-pink-100",
+      text: "text-pink-600",
+    },
   };
