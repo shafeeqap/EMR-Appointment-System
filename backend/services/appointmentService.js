@@ -51,8 +51,6 @@ export const createAppointmentService = async (data, user) => {
     patientId,
     doctorId,
     date,
-    // slotTime,
-    // status: "booked",
   });
 
   if (existingAppointment) {

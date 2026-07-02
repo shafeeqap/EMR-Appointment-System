@@ -1,5 +1,6 @@
 import { findAppointment } from "../repositories/appointmentRepository.js";
 import { findDoctorOne } from "../repositories/doctorRepository.js";
+import { findOneLeave } from "../repositories/leaveRepository.js";
 import { formattedDate } from "../utils/formattedDate.js";
 
 // =============> generate available slots <=============
@@ -13,6 +14,16 @@ export const generateAvailableSlots = async (data) => {
   if (!doctor) {
     throw new Error("Doctor not found");
   }
+
+  // const leave = await findOneLeave({
+  //   employeeId: doctorId,
+  //   startDate: { $lte: date },
+  //   endDate: { $gte: date },
+  //   status: "approved",
+  // });
+
+  // console.log(leave, 'Leave');
+  
 
   const appointments = await findAppointment(
     {

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   createLeaveRepo,
   findLeaveById,
@@ -72,7 +73,7 @@ export const applyLeaveService = async (data, user) => {
 };
 
 // ===========> Get leaves service <===========>
-export const getLeavesService = async (query) => {
+export const getLeavesService = async (query, user) => {
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 5;
   const search = query.search?.trim();
@@ -80,6 +81,14 @@ export const getLeavesService = async (query) => {
   const category = query.category || "";
 
   const filter = {};
+
+  // if (!mongoose.Types.ObjectId.isValid(user.id)) {
+  //   throw new Error("Invalid leave ID");
+  // }
+
+  // if (user.role !== "super_admin") {
+  //   filter.employeeId = new mongoose.Types.ObjectId(user.id);
+  // }
 
   if (category) {
     filter.leaveCategory = category;
@@ -89,7 +98,7 @@ export const getLeavesService = async (query) => {
     filter.status = status;
   }
 
-  const leaves = await findLeaves(filter, search, { page, limit });
+  const leaves = await findLeaves(filter, user, search, { page, limit });
 
   return leaves;
 };
@@ -136,6 +145,8 @@ export const cancelLeaveService = async (params, user) => {
 // ===========> Get leave by ID service <===========>
 export const getLeaveByIdService = async (params) => {
   const leaveId = params.id;
+  console.log("Leave ID in service:", leaveId);
+  
 
   const leave = await findOneLeave({ _id: leaveId });
 

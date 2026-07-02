@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Leave } from "../models/Leave.js";
 
 export const createLeaveRepo = async (leaveData) => {
@@ -10,12 +11,28 @@ export const findOneLeave = async (query) => {
     .populate("approvedBy", "firstName lastName role");
 };
 
-export const findLeaves = async (filter, search, options = {}) => {
+// ============> Find leaves with pagination and search <===========
+export const findLeaves = async (filter, user, search, options = {}) => {
+  if (!mongoose.Types.ObjectId.isValid(user.id)) {
+    throw new Error("Invalid leave ID");
+  }
+
   const { page = 1, limit = 3 } = options;
   const skip = (page - 1) * limit;
 
+  const baseMatch = {
+    ...filter,
+    // employeeId: new mongoose.Types.ObjectId(userId),
+  };
+
+  if (user.role !== "super_admin") {
+    baseMatch.employeeId = new mongoose.Types.ObjectId(user.id);
+  }
+
   const pipeline = [
-    { $match: filter },
+    {
+      $match: filter,
+    },
 
     // Employee lookup
     {
@@ -99,6 +116,8 @@ export const findLeaves = async (filter, search, options = {}) => {
   );
 
   const result = await Leave.aggregate(pipeline);
+  console.log(result, "Leaves result...");
+  
 
   const leaves = result[0].data || [];
 
