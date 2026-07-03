@@ -19,7 +19,7 @@ const DetailsPatientModal = () => {
     id: patientId,
     page,
     limit: 5,
-  });
+  }, {skip: !patientId});
 
   console.log(data, "Patient Details Data...");
 

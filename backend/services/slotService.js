@@ -11,8 +11,6 @@ export const generateAvailableSlots = async (data) => {
 
   const doctor = await findDoctorOne({ _id: doctorId });
 
-  console.log(doctor, "Doctor");
-
   if (!doctor) {
     throw new Error("Doctor not found");
   }
@@ -23,8 +21,6 @@ export const generateAvailableSlots = async (data) => {
     endDate: { $gte: date },
     status: "approved",
   });
-
-  console.log(leave, "Leave");
 
   if (leave) {
     return {

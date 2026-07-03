@@ -115,8 +115,7 @@ export const findPatientDetails = async (id, skip, limit) => {
   const result = await Appointment.aggregate(pipeline);
 
   const patientData = result[0]?.patient?.[0] || null;
-  console.log(patientData, "Patient Data from Repository...");
-  
+
   const history = result[0]?.history || [];
   const total = result[0]?.totalCount[0]?.total || 0;
 

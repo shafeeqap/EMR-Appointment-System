@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Loader } from "../../../components/ui";
 import { formatTime } from "../../../utils/formatHours";
 import StatusColors from "./StatusColors";
+import { formatDate } from "../../../utils/formatDate";
 
 const SlotGrid = ({
   isOnLeave,
@@ -17,8 +18,6 @@ const SlotGrid = ({
     a.localeCompare(b)
   );
 
-  console.log(leaveReason, "Leave Reason");
-  
   if (isLoading) {
     return (
       <div className="text-center py-5">
@@ -38,10 +37,11 @@ const SlotGrid = ({
           <p>
             {isleaveType === "full-day"
               ? "The doctor is on leave for the entire day."
-              : `The doctor is on leave from ${leaveReason?.startDate} to ${leaveReason?.endDate}.`}
+              : `The doctor is on leave from ${formatDate(
+                  leaveReason?.startDate
+                )} to ${formatDate(leaveReason?.endDate)}.`}
           </p>
         </div>
-        
       ) : allSlots?.length > 0 ? (
         <div className="flex flex-col px-5 py-5 border border-gray-300 rounded">
           <h2 className="font-semibold text-lg py-3 uppercase">

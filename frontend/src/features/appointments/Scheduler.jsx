@@ -27,7 +27,8 @@ const Scheduler = () => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [existingPatient, setExistingPatient] = useState(false);
 
-  const [doctor, date] = watch(["doctor", "date"]);
+  const doctor = watch("doctor");
+  const date = watch("date");
 
   const { data, isLoading, refetch } = useGetAvailableSlotsQuery(
     {
@@ -38,8 +39,6 @@ const Scheduler = () => {
       skip: !doctor || !doctor._id || !date,
     }
   );
-
-  console.log(data, "Available Slots Data");
 
   const [createAppointment] = useCreateAppointmentMutation();
 
@@ -67,7 +66,7 @@ const Scheduler = () => {
 
     try {
       const res = await createAppointment(payload).unwrap();
-      console.log(res, "APPOINTMENT CREATED");
+
       toast.success(res.message || "Appointment created successfully");
 
       // Reset form and state
@@ -107,10 +106,11 @@ const Scheduler = () => {
           )}
         </div>
 
-        {!data?.isOnLeave && (
+        {doctor && data && !data?.isOnLeave && (
           <Button
             type="submit"
             variant="danger"
+            disabled={isLoading}
             className="uppercase w-full mt-5"
           >
             {isLoading ? <Loader /> : "Book Appointment"}
