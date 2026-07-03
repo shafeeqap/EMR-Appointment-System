@@ -71,11 +71,12 @@ export const getAppointmentFullDetails = async (req, res, next) => {
 // =============> Get available time slots for a doctor <=============
 export const getAvailableSlots = async (req, res, next) => {
   try {
-    const { availableSlots, bookedSlots } = await generateAvailableSlots(
-      req.query
-    );
+    const { isOnLeave, availableSlots, bookedSlots, leaveReason, leaveType } =
+      await generateAvailableSlots(req.query);
 
-    res.status(200).json({ availableSlots, bookedSlots });
+    res
+      .status(200)
+      .json({ isOnLeave, availableSlots, bookedSlots, leaveReason, leaveType });
   } catch (error) {
     next(error);
   }

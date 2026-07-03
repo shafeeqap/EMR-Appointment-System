@@ -13,12 +13,14 @@ import { Eye, EyeOff } from "lucide-react";
 import Button from "../../components/ui/Button";
 
 const Login = () => {
-  const [login, { isLoading }] = useLoginMutation();
+  const [showPassword, setShowPassword] = useState(false);
+  
+  const { user } = useSelector((state) => state.auth);
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [showPassword, setShowPassword] = useState(false);
-
-  const { user } = useSelector((state) => state.auth);
+  
+  const [login, { isLoading }] = useLoginMutation();
 
   useEffect(() => {
     if (user) {

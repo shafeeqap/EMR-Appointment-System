@@ -4,6 +4,6 @@ import { getReceptionistDashboard } from "../controllers/dashboard/receptionistC
 
 const router = express.Router();
 
-router.get("/:id", protect, getReceptionistDashboard);
+router.get("/", protect, getReceptionistDashboard);
 
 export const receptionistdashboardRoutes = router;

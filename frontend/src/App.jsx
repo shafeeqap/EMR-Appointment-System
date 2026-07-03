@@ -1,7 +1,6 @@
 import "./App.css";
 import Login from "./features/auth/Login";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./routes/protectedRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useAuthRestore from "./hooks/useAuthRestore";
@@ -19,6 +18,7 @@ import Departments from "./features/departments/Departments";
 import Profile from "./pages/Profile";
 import LeaveManagement from "./features/leave/LeaveManagement";
 import LeaveRequest from "./features/leave/LeaveRequest";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   const isLoading = useAuthRestore();

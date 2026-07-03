@@ -12,22 +12,9 @@ export const findOneLeave = async (query) => {
 };
 
 // ============> Find leaves with pagination and search <===========
-export const findLeaves = async (filter, user, search, options = {}) => {
-  if (!mongoose.Types.ObjectId.isValid(user.id)) {
-    throw new Error("Invalid leave ID");
-  }
-
+export const findLeaves = async (filter, search, options = {}) => {
   const { page = 1, limit = 3 } = options;
   const skip = (page - 1) * limit;
-
-  const baseMatch = {
-    ...filter,
-    // employeeId: new mongoose.Types.ObjectId(userId),
-  };
-
-  if (user.role !== "super_admin") {
-    baseMatch.employeeId = new mongoose.Types.ObjectId(user.id);
-  }
 
   const pipeline = [
     {
@@ -116,8 +103,6 @@ export const findLeaves = async (filter, user, search, options = {}) => {
   );
 
   const result = await Leave.aggregate(pipeline);
-  console.log(result, "Leaves result...");
-  
 
   const leaves = result[0].data || [];
 

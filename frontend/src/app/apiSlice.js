@@ -30,8 +30,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
       extraOptions
     );
 
-    
-
     if (refreshResult?.data) {
       const currentUser = api.getState()?.auth.user;
 

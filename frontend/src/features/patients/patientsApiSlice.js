@@ -33,11 +33,13 @@ const patientApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: patientData,
       }),
+
       invalidatesTags: ["Patient"],
     }),
 
     getPatientById: builder.query({
       query: (id) => `/patients/${id}`,
+
       providesTags: ["Patient"],
     }),
 
@@ -47,6 +49,7 @@ const patientApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+
       invalidatesTags: ["Patient"],
     }),
 
@@ -55,6 +58,7 @@ const patientApiSlice = apiSlice.injectEndpoints({
         url: `/patients/${id}`,
         method: "DELETE",
       }),
+      
       invalidatesTags: ["Patient"],
     }),
   }),

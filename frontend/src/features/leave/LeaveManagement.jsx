@@ -31,11 +31,7 @@ const LeaveManagement = () => {
     status,
   });
 
-  console.log(leaveData, "Leave Data...");
-  
   const leaves = leaveData?.leaves?.leaves || [];
-  console.log(leaves, 'Leaves...');
-  
 
   const handleStatusModalOpen = (row) => {
     dispatch(

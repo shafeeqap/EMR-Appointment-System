@@ -215,7 +215,7 @@ const AppointmentDetailsModal = () => {
           </div>
         </div>
 
-        {/* Patient Info */}
+        {/* Appointment Details */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 py-5">
           {details.map((item) => {
             const Icon = item?.icon;

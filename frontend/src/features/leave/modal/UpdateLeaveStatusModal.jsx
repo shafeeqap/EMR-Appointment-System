@@ -19,14 +19,15 @@ import { formatDate } from "../../../utils/formatDate";
 
 const UpdateLeaveStatusModal = () => {
   const { leaveId } = useSelector((state) => state.modal.modalProps || {});
-  console.log("leaveId:", leaveId);
 
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
   const [status, setStatus] = useState("");
 
   const dispatch = useDispatch();
 
-  const { data } = useGetLeaveByIdQuery(leaveId);
+  const { data } = useGetLeaveByIdQuery(leaveId, {
+    skip: !leaveId,
+  });
 
   const leave = data?.leave;
 

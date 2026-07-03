@@ -39,6 +39,8 @@ const Scheduler = () => {
     }
   );
 
+  console.log(data, "Available Slots Data");
+
   const [createAppointment] = useCreateAppointmentMutation();
 
   const handlePatient = () => {
@@ -93,6 +95,9 @@ const Scheduler = () => {
           {/* Available Slots */}
           {doctor && date && (
             <SlotGrid
+              isOnLeave={data?.isOnLeave}
+              leaveReason={data?.leaveReason}
+              isleaveType={data?.leaveType}
               availableSlots={data?.availableSlots || []}
               bookedSlots={data?.bookedSlots || []}
               isLoading={isLoading}
@@ -102,13 +107,15 @@ const Scheduler = () => {
           )}
         </div>
 
-        <Button
-          type="submit"
-          variant="danger"
-          className="uppercase w-full mt-5"
-        >
-          {isLoading ? <Loader /> : "Book Appointment"}
-        </Button>
+        {!data?.isOnLeave && (
+          <Button
+            type="submit"
+            variant="danger"
+            className="uppercase w-full mt-5"
+          >
+            {isLoading ? <Loader /> : "Book Appointment"}
+          </Button>
+        )}
       </form>
     </FormProvider>
   );

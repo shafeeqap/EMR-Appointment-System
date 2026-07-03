@@ -12,7 +12,7 @@ const DoctorDashboard = () => {
   const { user } = useSelector((state) => state.auth);
   const fullName = getFullName(user);
 
-  const { data } = useGetDoctorDashboardDataQuery({ id: user._id });
+  const { data } = useGetDoctorDashboardDataQuery();
 
   const appointmentsByDay = data?.data?.charts?.appointmentsByDay;
 

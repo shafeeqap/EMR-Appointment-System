@@ -82,13 +82,13 @@ export const getLeavesService = async (query, user) => {
 
   const filter = {};
 
-  // if (!mongoose.Types.ObjectId.isValid(user.id)) {
-  //   throw new Error("Invalid leave ID");
-  // }
+  if (!mongoose.Types.ObjectId.isValid(user.id)) {
+    throw new Error("Invalid leave ID");
+  }
 
-  // if (user.role !== "super_admin") {
-  //   filter.employeeId = new mongoose.Types.ObjectId(user.id);
-  // }
+  if (user.role !== "super_admin") {
+    filter.employeeId = new mongoose.Types.ObjectId(user.id);
+  }
 
   if (category) {
     filter.leaveCategory = category;
@@ -98,7 +98,7 @@ export const getLeavesService = async (query, user) => {
     filter.status = status;
   }
 
-  const leaves = await findLeaves(filter, user, search, { page, limit });
+  const leaves = await findLeaves(filter, search, { page, limit });
 
   return leaves;
 };
@@ -113,7 +113,9 @@ export const cancelLeaveService = async (params, user) => {
     throw new AppError("Leave not found", 404);
   }
 
-  if (leave.employeeId.toString() !== user.id.toString()) {
+  const employeeId = leave.employeeId._id;
+
+  if (employeeId.toString() !== user.id.toString()) {
     throw new AppError("You are not authorized to cancel this leave", 403);
   }
 
@@ -145,8 +147,10 @@ export const cancelLeaveService = async (params, user) => {
 // ===========> Get leave by ID service <===========>
 export const getLeaveByIdService = async (params) => {
   const leaveId = params.id;
-  console.log("Leave ID in service:", leaveId);
-  
+
+  if (!mongoose.Types.ObjectId.isValid(leaveId)) {
+    throw new AppError("Invalid leave ID", 400);
+  }
 
   const leave = await findOneLeave({ _id: leaveId });
 

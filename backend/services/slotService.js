@@ -11,20 +11,36 @@ export const generateAvailableSlots = async (data) => {
 
   const doctor = await findDoctorOne({ _id: doctorId });
 
+  console.log(doctor, "Doctor");
+
   if (!doctor) {
     throw new Error("Doctor not found");
   }
 
-  // const leave = await findOneLeave({
-  //   employeeId: doctorId,
-  //   startDate: { $lte: date },
-  //   endDate: { $gte: date },
-  //   status: "approved",
-  // });
+  const leave = await findOneLeave({
+    employeeId: doctor.userId,
+    startDate: { $lte: date },
+    endDate: { $gte: date },
+    status: "approved",
+  });
 
-  // console.log(leave, 'Leave');
-  
+  console.log(leave, "Leave");
 
+  if (leave) {
+    return {
+      isOnLeave: true,
+      availableSlots: [],
+      bookedSlots: [],
+      leaveReason: {
+        reason: leave.reason,
+        startDate: leave.startDate,
+        endDate: leave.endDate,
+      },
+      leaveType: leave.leaveType,
+    };
+  }
+
+  // Get booked appointments for the selected day
   const appointments = await findAppointment(
     {
       doctorId,
@@ -35,21 +51,23 @@ export const generateAvailableSlots = async (data) => {
 
   const bookedSlots = new Set(appointments.map((a) => a.slotTime));
 
+  // Generate all working-hour slots
   const allSlots = generateSlots(
     doctor.workingHours.start,
     doctor.workingHours.end,
     doctor.slotDuration
   );
 
-  const now = new Date();
-
+  // Remove break-time slots
   const slotsWithoutBreaks = removeBreakTimeSlots(allSlots, doctor.breakTimes);
 
+  // Remove booked slots
   const availableSlots = slotsWithoutBreaks.filter(
     (slot) => !bookedSlots.has(slot)
   );
 
-  const pastSlots = now.toTimeString().slice(0, 5);
+  // If the selected date is today, remove past slots
+  const pastSlots = new Date().toTimeString().slice(0, 5);
 
   const slotsAfterCurrentTime = availableSlots.filter(
     (slot) => slot > pastSlots
@@ -58,8 +76,11 @@ export const generateAvailableSlots = async (data) => {
   const today = new Date().toISOString().split("T")[0];
 
   return {
+    isOnLeave: false,
     availableSlots: date === today ? slotsAfterCurrentTime : availableSlots,
-    bookedSlots: Array.from(bookedSlots),
+    bookedSlots: [...bookedSlots],
+    leaveReason: null,
+    leaveType: null,
   };
 };
 
