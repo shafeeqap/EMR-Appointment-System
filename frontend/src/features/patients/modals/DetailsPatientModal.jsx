@@ -15,13 +15,14 @@ const DetailsPatientModal = () => {
 
   const { patientId } = useSelector((state) => state.modal.modalProps || {});
 
-  const { data, isLoading, error } = useGetPatientDetailsQuery({
-    id: patientId,
-    page,
-    limit: 5,
-  }, {skip: !patientId});
-
-  console.log(data, "Patient Details Data...");
+  const { data, isLoading, error } = useGetPatientDetailsQuery(
+    {
+      id: patientId,
+      page,
+      limit: 5,
+    },
+    { skip: !patientId }
+  );
 
   const patient = data?.patient || null;
   const history = data?.history || [];

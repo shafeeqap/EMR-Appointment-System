@@ -200,7 +200,7 @@ const AppointmentDetailsModal = () => {
 
         <div className="py-3">
           {/* Info cards */}
-          <div className="min-h-28 grid grid-cols-1 sm:grid-cols-2 sm:py-3 xl:grid-cols-5 gap-5 px-4 border shadow">
+          <div className="min-h-28 mt-4 grid grid-cols-1 sm:grid-cols-2 sm:py-3 xl:grid-cols-5 gap-5 px-4 border shadow">
             {cards.map((card, index) => (
               <InfoCard
                 key={card.title}

@@ -1,5 +1,5 @@
 import React from "react";
-import Info from "./Info";
+import Info from "../components/Info";
 import { Button } from "../../../../components/ui";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../../../../components/modal/modalSlice";
@@ -11,7 +11,7 @@ import {
 } from "../../../../components/successFedback/successFeedbackSlice";
 import SuccessFeedback from "../../../../components/successFedback/SuccessFeedback";
 
-const PatientDetails = () => {
+const PatientDetailsModal = () => {
   const { appointmentData } = useSelector(
     (state) => state.modal.modalProps || {}
   );
@@ -116,4 +116,4 @@ const PatientDetails = () => {
   );
 };
 
-export default PatientDetails;
+export default PatientDetailsModal;
