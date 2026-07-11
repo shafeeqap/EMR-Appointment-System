@@ -2,7 +2,7 @@ import { getReceptionistDashboardServices } from "../../services/dashboard/recep
 
 export const getReceptionistDashboard = async (req, res, next) => {
   try {
-    const dashboardData = await getReceptionistDashboardServices(req.params);
+    const dashboardData = await getReceptionistDashboardServices(req.user);
 
     res.status(200).json({ data: dashboardData });
   } catch (error) {

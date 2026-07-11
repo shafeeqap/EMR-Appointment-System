@@ -1,5 +1,5 @@
 import React from "react";
-import Info from "./Info";
+import Info from "../components/Info";
 import { Button } from "../../../../components/ui";
 import { useDispatch, useSelector } from "react-redux";
 import { closeModal } from "../../../../components/modal/modalSlice";
@@ -11,13 +11,15 @@ import {
 } from "../../../../components/successFedback/successFeedbackSlice";
 import SuccessFeedback from "../../../../components/successFedback/SuccessFeedback";
 
-const PatientDetails = () => {
+const PatientDetailsModal = () => {
   const { appointmentData } = useSelector(
     (state) => state.modal.modalProps || {}
   );
   console.log(appointmentData);
 
-  const disabledStatus = ["ongoing", "completed"].includes(appointmentData?.status);
+  const disabledStatus = ["ongoing", "completed"].includes(
+    appointmentData?.status
+  );
 
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
 
@@ -47,7 +49,10 @@ const PatientDetails = () => {
 
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error(error);
@@ -79,18 +84,18 @@ const PatientDetails = () => {
                   {appointmentData?.name}
                 </h3>
 
-                <p className="text-sm text-gray-800">{appointmentData.notes}</p>
+                <p className="text-sm text-gray-800">{appointmentData?.notes}</p>
               </div>
 
               <span className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-lg">
-                {appointmentData.patientId}
+                {appointmentData?.patientId}
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-5">
-            <Info label="Age" value={appointmentData.age} />
-            <Info label="Gender" value={appointmentData.gender} />
+            <Info label="Age" value={appointmentData?.age} />
+            <Info label="Gender" value={appointmentData?.gender} />
             <Info label="Weight" value={"65 kg"} />
             <Info label="Height" value={"165 cm"} />
             <Info label="Date of Birth" value={"23-05-2000"} />
@@ -101,10 +106,7 @@ const PatientDetails = () => {
               Close
             </Button>
 
-            <Button
-              disabled={disabledStatus}
-              onClick={handleStartConsultation}
-            >
+            <Button disabled={disabledStatus} onClick={handleStartConsultation}>
               Start Consultation
             </Button>
           </div>
@@ -114,4 +116,4 @@ const PatientDetails = () => {
   );
 };
 
-export default PatientDetails;
+export default PatientDetailsModal;

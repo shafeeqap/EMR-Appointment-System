@@ -10,9 +10,11 @@ import { useGetReceptionistDashboardQuery } from "./receptionistApiSlice.js";
 const ReceptionistDashboard = () => {
   const { user } = useSelector((state) => state.auth);
 
+
   const fullName = getFullName(user);
 
-  const { data } = useGetReceptionistDashboardQuery({ id: user._id });
+  const { data } = useGetReceptionistDashboardQuery();
+
   console.log(data, "Receptionist data...");
 
   const deptAppointmentDistribution =

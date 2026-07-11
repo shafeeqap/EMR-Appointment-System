@@ -58,7 +58,9 @@ export const rotateRefreshToken = async (session, newToken) => {
   const hashedToken = await hashValue(newToken);
 
   session.refreshToken = hashedToken;
+
   await session.save();
+  
 };
 
 // =============> Delete Session <=============

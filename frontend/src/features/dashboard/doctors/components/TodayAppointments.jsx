@@ -14,7 +14,6 @@ const TodayAppointments = ({ data }) => {
         modalProps: { appointmentData: row },
       })
     );
-    console.log("DETAILS CLICKED", row);
   };
 
   const handleStatusModalOpen = (row) => {
@@ -24,7 +23,6 @@ const TodayAppointments = ({ data }) => {
         modalProps: { appointment: row },
       })
     );
-    console.log("UPDATE APPOINTMENT STATUS CLICKED", row);
   };
 
   const columnData = getTodayAppointmentColumns({
@@ -33,14 +31,16 @@ const TodayAppointments = ({ data }) => {
   });
 
   return (
-    <div className="bg-white rounded-xl shadow p-4 w-full">
-      <h1 className="text-lg font-semibold text-gray-800 mb-5">
-        Today Appointments
-      </h1>
+    <div className="rounded-xl  p-4 w-full">
       {data.length === 0 ? (
         <p>No data available</p>
       ) : (
-        <Table columns={columnData} data={data} />
+        <>
+          <h1 className="text-lg font-semibold text-gray-800 mb-5">
+            Today Appointments
+          </h1>
+          <Table columns={columnData} data={data} />
+        </>
       )}
     </div>
   );

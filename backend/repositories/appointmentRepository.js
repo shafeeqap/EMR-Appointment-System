@@ -13,7 +13,7 @@ export const findAppointmentById = async (id) => {
 };
 
 // =============> Get appointment by ID with patient and doctor details <=============
-export const getAppointmentById = async (id) => {
+export const findAppointmentDetails = async (id, skip, limit) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new Error("Invalid appointment ID");
   }
@@ -55,34 +55,52 @@ export const getAppointmentById = async (id) => {
       },
     },
     { $unwind: "$department" },
-
-    {
-      $project: {
-        _id: 1,
-        status: 1,
-        date: 1,
-        slotTime: 1,
-        tokenNumber: 1,
-        notes: 1,
-        createdAt: 1,
-        "patient._id": 1,
-        "patient.name": 1,
-        "patient.mobile": 1,
-        "patient.age": 1,
-        "patient.patientId": 1,
-        "doctor._id": 1,
-        "doctor.firstName": 1,
-        "doctor.lastName": 1,
-        "department._id": 1,
-        "department.name": 1,
-      },
-    },
-
-    { $sort: { createdAt: -1 } },
   ];
 
+  pipeline.push({
+    $facet: {
+      data: [
+        {
+          $project: {
+            _id: 1,
+            status: 1,
+            date: 1,
+            slotTime: 1,
+            tokenNumber: 1,
+            notes: 1,
+            createdAt: 1,
+            "patient._id": 1,
+            "patient.name": 1,
+            "patient.mobile": 1,
+            "patient.age": 1,
+            "patient.patientId": 1,
+
+            "doctor._id": 1,
+            "doctor.firstName": 1,
+            "doctor.lastName": 1,
+            "doctor.slotDuration": 1,
+            "doctor.email": 1,
+
+            "department._id": 1,
+            "department.name": 1,
+          },
+        },
+
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit },
+      ],
+
+      totalCount: [{ $count: "total" }],
+    },
+  });
+
   const result = await Appointment.aggregate(pipeline);
-  return result[0] || null;
+
+  const appointment = result[0]?.data?.[0] || null;
+  const total = result[0]?.totalCount?.[0]?.total || 0;
+
+  return { appointment, total };
 };
 
 // =============> Find appointments with doctor and patient details <=============
@@ -227,29 +245,27 @@ export const getAppointment = async ({
   return { appointments, total };
 };
 
-export const findAppointmentDetails = (patientId) => {
-  return Appointment.find({ patientId })
-    .populate("doctorId", "firstName lastName")
-    .populate("patientId", "name")
-    .sort({ createdAt: -1 });
-};
-
+// =============> Find appointment by ID and update <=============
 export const findAppointmentByIdAndUpdate = (id, update, options) => {
   return Appointment.findByIdAndUpdate(id, update, options);
 };
 
+// =============> Find appointment by ID and delete <=============
 export const findAppointmentByIdAndDelete = async (id) => {
   return Appointment.findByIdAndDelete(id);
 };
 
+// =============> Find appointment one with filter  <=============
 export const findAppointmentOne = async (filter) => {
   return Appointment.findOne(filter);
 };
 
+// =============> Count appointments documents <=============
 export const countAppointmentDocuments = async (filter) => {
   return Appointment.countDocuments(filter);
 };
 
+// =============> Get appointments Distinct value <=============
 export const getAppointmentDistinctValue = async (field, query, option) => {
   return Appointment.distinct(field, query, option);
 };

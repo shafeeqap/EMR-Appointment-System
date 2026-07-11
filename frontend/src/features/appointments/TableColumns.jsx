@@ -1,6 +1,7 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
 import { getFullName } from "../../utils/userHelpers";
-import { STATUS_UI } from "../../components/ui";
+import { StatusBadge } from "../../components/ui";
+
 
 export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
   {
@@ -43,9 +44,6 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
   {
     header: "Appointment Type",
     render: (row) => {
-      const statusConfig = STATUS_UI[row?.status];
-      const Icon = statusConfig?.icon;
-
       const isFinalState = [
         "completed",
         "ongoing",
@@ -56,18 +54,11 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
       ].includes(row.status);
 
       return (
-        <button
+        <StatusBadge
+          data={row}
           onClick={() => onUpdateStatus(row)}
           disabled={isFinalState}
-          className="cursor-pointer disabled:cursor-not-allowed"
-        >
-          <span
-            className={`inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full cursor-pointer uppercase ${statusConfig?.className}`}
-          >
-            {Icon && <Icon size={16} />}
-            {statusConfig?.label}
-          </span>
-        </button>
+        />
       );
     },
   },
@@ -102,7 +93,10 @@ export const getColumns = ({ onEdit, onDelete, onUpdateStatus, onDetails }) => [
     header: "Details",
     render: (row) => (
       <span className="flex gap-5">
-        <Eye onClick={() => onDetails(row)} className="cursor-pointer text-gray-500" />
+        <Eye
+          onClick={() => onDetails(row)}
+          className="cursor-pointer text-gray-500"
+        />
       </span>
     ),
   },

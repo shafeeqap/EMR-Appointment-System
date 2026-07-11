@@ -23,7 +23,7 @@ const EditPatientModal = () => {
   const { patientId } = useSelector((state) => state.modal.modalProps || {});
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
 
-  const { data: patientData, isLoading } = useGetPatientByIdQuery(patientId);
+  const { data: patientData, isLoading } = useGetPatientByIdQuery(patientId, {skip: !patientId});
 
   const [updatePatient, { isLoading: loading, error }] =
     useUpdatePatientMutation();
@@ -72,7 +72,10 @@ const EditPatientModal = () => {
 
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error("Error updating patient:", error);

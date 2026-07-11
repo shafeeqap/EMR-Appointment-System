@@ -2,8 +2,12 @@ import React from "react";
 import { Button, Loader } from "../../../components/ui";
 import { formatTime } from "../../../utils/formatHours";
 import StatusColors from "./StatusColors";
+import { formatDate } from "../../../utils/formatDate";
 
 const SlotGrid = ({
+  isOnLeave,
+  leaveReason,
+  isleaveType,
   availableSlots = [],
   bookedSlots = [],
   isLoading,
@@ -24,7 +28,21 @@ const SlotGrid = ({
 
   return (
     <>
-      {allSlots?.length > 0 ? (
+      {isOnLeave ? (
+        <div
+          className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-5"
+          role="alert"
+        >
+          <p className="font-bold">Doctor is on leave</p>
+          <p>
+            {isleaveType === "full-day"
+              ? "The doctor is on leave for the entire day."
+              : `The doctor is on leave from ${formatDate(
+                  leaveReason?.startDate
+                )} to ${formatDate(leaveReason?.endDate)}.`}
+          </p>
+        </div>
+      ) : allSlots?.length > 0 ? (
         <div className="flex flex-col px-5 py-5 border border-gray-300 rounded">
           <h2 className="font-semibold text-lg py-3 uppercase">
             Available Time Slots

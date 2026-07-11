@@ -61,7 +61,7 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
     }),
 
     getDoctorDashboardData: builder.query({
-      query: ({ id }) => `/dcotor/dashboard/${id}`,
+      query: () => "/dcotor/dashboard",
 
       providesTags: ["Dashboard"],
     }),

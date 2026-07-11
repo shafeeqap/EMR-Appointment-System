@@ -1,3 +1,4 @@
+import React from "react";
 import {
   CalendarCheck,
   CheckCheck,
@@ -8,59 +9,91 @@ import {
   ClockFading,
   EyeOff,
   RefreshCcw,
-  StickyNoteCheck,
   UserRoundCheck,
 } from "lucide-react";
+import clsx from "clsx";
+import { colorMap } from "../../constants/colorMap";
 
-export const STATUS_UI = {
+const STATUS_UI = {
   booked: {
     label: "Booked",
-    className: "bg-yellow-100 text-yellow-700",
+    color: "yellow",
     icon: CalendarCheck,
   },
   arrived: {
     label: "Arrived",
-    className: "bg-blue-100 text-blue-700",
+    color: "blue",
     icon: UserRoundCheck,
   },
   ongoing: {
     label: "On going",
-    className: "bg-orange-100 text-orange-700",
+    color: "orange",
     icon: RefreshCcw,
   },
   waiting: {
     label: "Waiting",
-    className: "bg-violet-100 text-violet-700",
+    color: "violet",
     icon: ClockFading,
   },
   completed: {
     label: "Completed",
-    className: "bg-green-100 text-green-700",
+    color: "green",
     icon: CheckCheck,
   },
   no_show: {
     label: "No Show",
-    className: "bg-gray-100 text-gray-700",
+    color: "gray",
     icon: EyeOff,
   },
   cancelled: {
     label: "Cancelled",
-    className: "bg-red-100 text-red-700",
+    color: "red",
     icon: CircleX,
   },
   pending: {
     label: "Pending",
-    className: "bg-yellow-100 text-yellow-700",
+    color: "yellow",
     icon: Clock,
   },
   approved: {
     label: "Approved",
-    className: "bg-green-100 text-green-700",
+    color: "green",
     icon: CircleCheckBig,
   },
   rejected: {
     label: "Rejected",
-    className: "bg-red-100 text-red-700",
+    color: "red",
     icon: CircleAlert,
   },
 };
+
+const StatusBadge = ({ data, onClick, disabled }) => {
+  const statusConfig = STATUS_UI[data?.status] ?? {
+    label: "Unknown",
+    color: "gray",
+    icon: CircleAlert,
+  };
+
+  const Icon = statusConfig?.icon;
+  const colors = colorMap[statusConfig?.color];
+
+  return (
+    <button
+      type="button"
+      onClick={() => onClick?.(data)}
+      disabled={disabled}
+      className={clsx(
+        colors.bg,
+        colors.text,
+        "inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium uppercase",
+        onClick && !disabled && "cursor-pointer",
+        disabled && "cursor-not-allowed"
+      )}
+    >
+      <Icon size={16} />
+      {statusConfig.label}
+    </button>
+  );
+};
+
+export default StatusBadge;

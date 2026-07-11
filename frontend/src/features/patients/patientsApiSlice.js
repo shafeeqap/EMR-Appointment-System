@@ -21,7 +21,8 @@ const patientApiSlice = apiSlice.injectEndpoints({
     }),
 
     getPatientDetails: builder.query({
-      query: (id) => `/patients/${id}/details`,
+      query: ({ id, page = 1, limit = 5 }) =>
+        `/patients/${id}/details?page=${page}&limit=${limit}`,
 
       providesTags: ["Patient"],
     }),
@@ -32,11 +33,13 @@ const patientApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: patientData,
       }),
+
       invalidatesTags: ["Patient"],
     }),
 
     getPatientById: builder.query({
       query: (id) => `/patients/${id}`,
+
       providesTags: ["Patient"],
     }),
 
@@ -46,6 +49,7 @@ const patientApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         body: data,
       }),
+
       invalidatesTags: ["Patient"],
     }),
 
@@ -54,6 +58,7 @@ const patientApiSlice = apiSlice.injectEndpoints({
         url: `/patients/${id}`,
         method: "DELETE",
       }),
+      
       invalidatesTags: ["Patient"],
     }),
   }),

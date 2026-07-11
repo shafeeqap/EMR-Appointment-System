@@ -4,10 +4,12 @@ import { useRefreshTokenMutation } from "../features/auth/authApiSlice";
 import { setCredentials } from "../features/auth/authSlice";
 
 const useAuthRestore = () => {
-  const dispatch = useDispatch();
-  const [refreshToken] = useRefreshTokenMutation();
   const [isLoading, setIsLoading] = useState(true);
   const { user, isLoggedOut } = useSelector((state) => state.auth);
+  
+  const [refreshToken] = useRefreshTokenMutation();
+  
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const refreshUser = async () => {

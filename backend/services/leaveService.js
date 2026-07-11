@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import {
   createLeaveRepo,
   findLeaveById,
@@ -72,7 +73,7 @@ export const applyLeaveService = async (data, user) => {
 };
 
 // ===========> Get leaves service <===========>
-export const getLeavesService = async (query) => {
+export const getLeavesService = async (query, user) => {
   const page = Number(query.page) || 1;
   const limit = Number(query.limit) || 5;
   const search = query.search?.trim();
@@ -80,6 +81,14 @@ export const getLeavesService = async (query) => {
   const category = query.category || "";
 
   const filter = {};
+
+  if (!mongoose.Types.ObjectId.isValid(user.id)) {
+    throw new Error("Invalid leave ID");
+  }
+
+  if (user.role !== "super_admin") {
+    filter.employeeId = new mongoose.Types.ObjectId(user.id);
+  }
 
   if (category) {
     filter.leaveCategory = category;
@@ -104,7 +113,9 @@ export const cancelLeaveService = async (params, user) => {
     throw new AppError("Leave not found", 404);
   }
 
-  if (leave.employeeId.toString() !== user.id.toString()) {
+  const employeeId = leave.employeeId._id;
+
+  if (employeeId.toString() !== user.id.toString()) {
     throw new AppError("You are not authorized to cancel this leave", 403);
   }
 
@@ -137,9 +148,11 @@ export const cancelLeaveService = async (params, user) => {
 export const getLeaveByIdService = async (params) => {
   const leaveId = params.id;
 
+  if (!mongoose.Types.ObjectId.isValid(leaveId)) {
+    throw new AppError("Invalid leave ID", 400);
+  }
+
   const leave = await findOneLeave({ _id: leaveId });
-  console.log(leave);
-  
 
   if (!leave) {
     throw new AppError("Leave not found", 404);

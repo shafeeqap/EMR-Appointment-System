@@ -19,12 +19,15 @@ import { formatDate } from "../../../utils/formatDate";
 
 const UpdateLeaveStatusModal = () => {
   const { leaveId } = useSelector((state) => state.modal.modalProps || {});
+
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
   const [status, setStatus] = useState("");
 
   const dispatch = useDispatch();
 
-  const { data } = useGetLeaveByIdQuery(leaveId);
+  const { data } = useGetLeaveByIdQuery(leaveId, {
+    skip: !leaveId,
+  });
 
   const leave = data?.leave;
 
@@ -56,7 +59,10 @@ const UpdateLeaveStatusModal = () => {
 
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error(error);

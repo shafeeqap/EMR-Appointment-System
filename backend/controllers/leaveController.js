@@ -19,7 +19,7 @@ export const applyLeave = async (req, res, next) => {
 // ===========> Get leaves controller <===========
 export const getLeaves = async (req, res, next) => {
   try {
-    const leaves = await getLeavesService(req.query);
+    const leaves = await getLeavesService(req.query, req.user);
     res.status(200).json({ message: "Leaves fetched successfully", leaves });
   } catch (error) {
     next(error);

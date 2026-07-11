@@ -1,4 +1,7 @@
 import { Trash2, PenLine, Eye } from "lucide-react";
+import { getFullName } from "../../utils/userHelpers";
+import { formatTime } from "../../utils/formatHours";
+import { StatusBadge } from "../../components/ui";
 
 export const getColumns = ({ onEdit, onDelete, onDetails }) => [
   {
@@ -42,5 +45,38 @@ export const getColumns = ({ onEdit, onDelete, onDetails }) => [
         <Eye onClick={() => onDetails(row)} className="cursor-pointer" />
       </span>
     ),
+  },
+];
+
+// Get appointment history
+export const getAptHistoryColumns = () => [
+  {
+    header: "SL",
+    render: (_, index) => index + 1,
+  },
+  {
+    header: "Date",
+    render: (row) => {
+      const today = new Date().toISOString().split("T")[0];
+      const date = new Date(row.date).toISOString().split("T")[0];
+
+      return (
+        <span className={`${date >= today ? "text-black font-semibold" : ""}`}>
+          {new Date(row.date).toISOString().split("T")[0]}
+        </span>
+      );
+    },
+  },
+  {
+    header: "Doctor",
+    render: (row) => getFullName(row?.doctor),
+  },
+  {
+    header: "Time",
+    render: (row) => formatTime(row?.slotTime),
+  },
+  {
+    header: "Status",
+    render: (row) => <StatusBadge data={row} />,
   },
 ];

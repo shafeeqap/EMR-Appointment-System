@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { Leave } from "../models/Leave.js";
 
 export const createLeaveRepo = async (leaveData) => {
@@ -10,12 +11,15 @@ export const findOneLeave = async (query) => {
     .populate("approvedBy", "firstName lastName role");
 };
 
+// ============> Find leaves with pagination and search <===========
 export const findLeaves = async (filter, search, options = {}) => {
   const { page = 1, limit = 3 } = options;
   const skip = (page - 1) * limit;
 
   const pipeline = [
-    { $match: filter },
+    {
+      $match: filter,
+    },
 
     // Employee lookup
     {

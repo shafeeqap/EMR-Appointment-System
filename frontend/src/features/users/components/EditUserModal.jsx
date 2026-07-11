@@ -81,7 +81,10 @@ const EditUserModal = () => {
 
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error("Error updating user:", error);
@@ -106,7 +109,7 @@ const EditUserModal = () => {
             <h2 className="text-xl font-semibold mb-4">Update User</h2>
 
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid grid-cols-1  md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="mb-4">
                   <InputField
                     label="First Name"

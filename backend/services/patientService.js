@@ -11,6 +11,7 @@ import {
   findPatientById,
   findPatientByIdAndDelete,
   findPatientByIdAndUpdate,
+  findPatientDetails,
   findPatientsBySearchQuery,
 } from "../repositories/patientRepository.js";
 import { AppError } from "../utils/AppError.js";
@@ -131,8 +132,12 @@ export const getPatientService = async (query, user) => {
 };
 
 // ===========> Get Patinet full details Service <===========
-export const getPatientFullDetailsService = async (params) => {
+export const getPatientFullDetailsService = async (params, query) => {
   const patientId = params.id;
+
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 5;
+  const skip = (page - 1) * limit;
 
   const patient = await findPatientById(patientId);
 
@@ -140,9 +145,11 @@ export const getPatientFullDetailsService = async (params) => {
     throw new AppError("Patient not found", 404);
   }
 
-  const appointments = await findAppointmentDetails(patientId);
+  const { history, total } = await findPatientDetails(patientId, skip, limit);
 
-  return { patient, appointments };
+  const totalPages = Math.ceil(total / limit);
+
+  return { patient, history, page, totalPages };
 };
 
 // ===========> Get Patient By ID Service <===========

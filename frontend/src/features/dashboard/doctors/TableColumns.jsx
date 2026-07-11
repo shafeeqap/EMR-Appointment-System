@@ -1,7 +1,8 @@
 import { Trash2, PenLine } from "lucide-react";
 import { formatTime, formatWorkingHours } from "../../../utils/formatHours";
 import { getDuration } from "../../../utils/calculateDuration";
-import { STATUS_UI } from "../../../components/ui";
+import { StatusBadge } from "../../../components/ui";
+// import { STATUS_UI, StatusBadge } from "../../../components/ui";
 
 export const getColumns = ({ onEdit, onDelete, onUpdateStatus }) => [
   {
@@ -100,25 +101,16 @@ export const getTodayAppointmentColumns = ({ onDetails, onUpdateStatus }) => [
   {
     header: "Appointment Type",
     render: (row) => {
-      const statusConfig = STATUS_UI[row.status];
-      const Icon = statusConfig?.icon;
       const isFinalState = ["arrived", "waiting", "completed"].includes(
         row.status
       );
 
       return (
-        <button
+        <StatusBadge
+          data={row}
           onClick={() => onUpdateStatus(row)}
           disabled={isFinalState}
-          className="cursor-pointer disabled:cursor-not-allowed"
-        >
-          <span
-            className={`inline-flex items-center gap-2 px-2 py-1 text-xs font-medium text-center rounded-full cursor-pointer uppercase ${statusConfig?.className}`}
-          >
-            {Icon && <Icon size={16} />}
-            {statusConfig?.label}
-          </span>
-        </button>
+        />
       );
     },
   },

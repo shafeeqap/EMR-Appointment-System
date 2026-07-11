@@ -17,7 +17,10 @@ const CancelLeaveRequestModal = () => {
   const dispatch = useDispatch();
 
   const [cancelLeaveRequest] = useCancelLeaveMutation();
-  const { data: leaveData } = useGetLeaveByIdQuery(leaveId);
+
+  const { data: leaveData } = useGetLeaveByIdQuery(leaveId, {
+    skip: !leaveId,
+  });
 
   const leaveDataForCancel = leaveData?.leave || {};
 
@@ -32,7 +35,10 @@ const CancelLeaveRequestModal = () => {
       );
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error("Error cancel leave request:", error);

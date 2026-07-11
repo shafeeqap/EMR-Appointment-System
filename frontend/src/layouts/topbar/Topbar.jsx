@@ -43,21 +43,21 @@ const Topbar = () => {
 
   return (
     <div className="bg-white shadow pl-20 p-4 flex justify-between items-center">
-      <h1 className="font-semibold text-lg">
+      <h1 className="font-semibold text-lg text-gray-600">
         {currentMenu?.name || "Dashboard"}
       </h1>
 
       <div className="flex gap-2 items-center ">
         <IconButton>
-          <Settings size={30} />
+          <Settings size={30} className="text-gray-600"/>
         </IconButton>
 
         <IconButton>
-          <Bell size={30} />
+          <Bell size={30} className="text-gray-600"/>
         </IconButton>
 
         <div className="hidden sm:block">
-          <p className="font-semibold">{fullName}</p>
+          <p className="font-semibold ">{fullName}</p>
           <p className="text-textPrimary">
             <small>{roleLabel}</small>
           </p>
@@ -66,7 +66,7 @@ const Topbar = () => {
         {/* User profile */}
         <div ref={dropdownRef} className="relative">
           <IconButton onClick={handleDropdownToggle}>
-            <UserRound size={30} />
+            <UserRound size={30} className="text-gray-600"/>
           </IconButton>
 
           <div className="absolute right-0 top-16">

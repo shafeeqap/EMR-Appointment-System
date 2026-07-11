@@ -2,7 +2,7 @@ import React from "react";
 import { CircleX } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { openModal } from "../../../components/modal/modalSlice";
-import { STATUS_UI } from "../../../components/ui";
+import { StatusBadge } from "../../../components/ui";
 
 const LeaveCard = ({
   leaveId,
@@ -24,9 +24,6 @@ const LeaveCard = ({
     );
   };
 
-  const statusConfig = STATUS_UI[status];
-  const Icon = statusConfig?.icon;
-
   return (
     <div className="py-3 px-5">
       <h1 className="text-gray-600 font-semibold text-xl">{month}</h1>
@@ -46,14 +43,8 @@ const LeaveCard = ({
             </div>
           </div>
           <div className="flex flex-col gap-3 justify-center items-center">
-            {statusConfig && (
-              <span
-                className={`inline-flex items-center gap-2 text-sm capitalize w-full text-center ${statusConfig?.className} rounded-full px-2 py-1`}
-              >
-                {Icon && <Icon size={16} />}
-                {statusConfig?.label}
-              </span>
-            )}
+            <StatusBadge data={{ status }} />
+
             {status === "pending" && (
               <CircleX
                 onClick={() => handleCancelModalOpen(leaveId)}

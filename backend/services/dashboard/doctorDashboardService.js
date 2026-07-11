@@ -20,8 +20,8 @@ const MONTHS = [
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-export const getDoctorDashboardServices = async (params) => {
-  const userId = params.id;
+export const getDoctorDashboardServices = async (user) => {
+  const userId = user.id;
 
   const doctor = await findDoctorOne({ userId });
 

@@ -9,6 +9,7 @@ import {
   updateAppointments,
   updateAppointmentStatus,
   startConsultation,
+  getAppointmentFullDetails,
 } from "../controllers/appointmentController.js";
 import { validate } from "../middleware/validationMiddleware.js";
 import {
@@ -22,13 +23,8 @@ const router = express.Router();
 router.get("/", protect, getAppointments);
 router.get("/slots", protect, getAvailableSlots);
 router.get("/:id", protect, getAppointmentById);
+router.get("/:id/details", protect, getAppointmentFullDetails);
 router.post("/", protect, validate(createAppointmentSchema), createAppointment);
-// router.get(
-//   "/",
-//   protect,
-//   validate(getAppontmentSchema, "query"),
-//   getAppointmentByIdAndDate
-// );
 router.put(
   "/:id/reschedule",
   protect,

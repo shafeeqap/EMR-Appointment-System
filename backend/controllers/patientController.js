@@ -50,9 +50,10 @@ export const searchPatients = async (req, res, next) => {
 // ===========> Get Patinet full details <===========
 export const getPatientFullDetails = async (req, res, next) => {
   try {
-    const data = await getPatientFullDetailsService(req.params);
+    const { patient, history, page, totalPages } =
+      await getPatientFullDetailsService(req.params, req.query);
 
-    res.json(data);
+    res.status(200).json({ patient, history, page, totalPages });
   } catch (error) {
     next(error);
   }

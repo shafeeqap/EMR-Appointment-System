@@ -4,14 +4,14 @@ import {
   EditAppointmentModal,
   AppointmentDetailsModal,
   UpdateAppointmentStatusModal,
-} from "../../features/appointments/components";
+} from "../../features/appointments/modals";
 import {
   AddDoctorModal,
   DeleteDoctorModal,
   EditDoctorModal,
-  PatientDetails,
+  PatientDetailsModal,
   UpdateDoctorStatusModal,
-} from "../../features/dashboard/doctors/components";
+} from "../../features/dashboard/doctors/modals";
 import {
   UpdateDepartmentStatusModal,
   AddDepartmentModal,
@@ -22,13 +22,13 @@ import {
   CancelLeaveRequestModal,
   LeaveDetailsModal,
   UpdateLeaveStatusModal,
-} from "../../features/leave/components";
+} from "../../features/leave/modals";
 import {
   AddPatientModal,
   DeletePatientModal,
   DetailsPatientModal,
   EditPatientModal,
-} from "../../features/patients/components";
+} from "../../features/patients/modals";
 import {
   AddUserModal,
   DeleteUserModal,
@@ -42,7 +42,7 @@ export const MODAL_COMPONENTS = {
   EDIT_DOCTOR: EditDoctorModal,
   DELETE_DOCTOR: DeleteDoctorModal,
   UPDATE_DOCTOR_STATUS: UpdateDoctorStatusModal,
-  PATIENT_DETAILS: PatientDetails,
+  PATIENT_DETAILS: PatientDetailsModal,
 
   // Patient Modals
   ADD_PATIENT: AddPatientModal,

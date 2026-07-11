@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useDeleteAppointmentMutation } from "../appointmentApiSlice";
 import { closeModal } from "../../../components/modal/modalSlice";
 import { handleApiError } from "../../../utils/handleApiError";
+import { useDeletePatientMutation } from "../patientsApiSlice";
 import { Trash2 } from "lucide-react";
 import {
   resetSuccessFeedback,
@@ -10,33 +10,32 @@ import {
 } from "../../../components/successFedback/successFeedbackSlice";
 import SuccessFeedback from "../../../components/successFedback/SuccessFeedback";
 
-const DeleteAppointmentModal = () => {
-  const { appointmentData } = useSelector(
-    (state) => state.modal.modalProps || {}
-  );
+const DeletePatientModal = () => {
+  const { patientData } = useSelector((state) => state.modal.modalProps || {});
   const { isSuccess, message } = useSelector((state) => state.successFeedback);
+
+  const [deletePatient] = useDeletePatientMutation();
 
   const dispatch = useDispatch();
 
-  const patient = appointmentData?.patient;
-
-  const [deleteAppointment] = useDeleteAppointmentMutation();
-
   const handleDelete = async () => {
     try {
-      const res = await deleteAppointment(appointmentData._id).unwrap();
+      const res = await deletePatient(patientData._id).unwrap();
 
       dispatch(
         setSuccessFeedback({
-          message: res.message || "Appointment deleted successfully",
+          message: res.message || "Department deleted successfully",
         })
       );
       setTimeout(() => {
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
-      console.error("Error deleting appointment:", error);
+      console.error("Error deleting doctor:", error);
       handleApiError(error);
     }
   };
@@ -53,11 +52,11 @@ const DeleteAppointmentModal = () => {
 
       <p className="text-textSecondary text-center">
         {isSuccess ? (
-          message || "Department has been deleted successfully."
+          message || "Patient has been deleted successfully."
         ) : (
           <>
             Are you sure you want to delete{" "}
-            <span className="text-red-600">{patient?.name}'s</span> appointment?
+            <span className="text-red-600">{patientData?.name}'s</span> records?
             This process cannot be undone.
           </>
         )}
@@ -83,4 +82,4 @@ const DeleteAppointmentModal = () => {
   );
 };
 
-export default DeleteAppointmentModal;
+export default DeletePatientModal;

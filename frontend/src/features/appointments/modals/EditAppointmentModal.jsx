@@ -20,6 +20,7 @@ import {
   setSuccessFeedback,
 } from "../../../components/successFedback/successFeedbackSlice";
 import SuccessFeedback from "../../../components/successFedback/SuccessFeedback";
+import { isEqual } from "lodash";
 
 const EditAppointmentModal = () => {
   const { appointmentId } = useSelector(
@@ -62,16 +63,15 @@ const EditAppointmentModal = () => {
   );
 
   const {
-    data: appointments,
+    data: appointment,
     isLoading,
     error,
   } = useGetAppointmentByIdQuery({
     id: appointmentId,
   });
 
-  const appointment = appointments?.appointments;
-  console.log(appointment, 'Appointment');
-  
+  const appointmentData = appointment?.appointment;
+  console.log(appointmentData, "Appointment");
 
   const { data } = useGetDoctorsQuery({ page: 1, limit: 100 });
   const doctors = data?.doctors || [];
@@ -80,24 +80,33 @@ const EditAppointmentModal = () => {
     useUpdateAppointmentMutation();
 
   useEffect(() => {
-    if (!appointment) return;
+    if (!appointmentData) return;
 
-    const doctor = appointment.doctor;
+    const doctor = appointmentData?.doctorId;
 
     reset({
-      patient: appointment?.patient?.name || "",
+      patient: appointmentData?.patientId?.name || "",
       doctorId: doctor?._id,
-      slotTime: appointment?.slotTime,
-      tokenNumber: appointment?.tokenNumber,
-      date: appointment?.date
-        ? new Date(appointment?.date).toISOString().split("T")[0]
+      slotTime: formatTime(appointmentData?.slotTime),
+      tokenNumber: appointmentData?.tokenNumber,
+      date: appointmentData?.date
+        ? new Date(appointmentData?.date).toISOString().split("T")[0]
         : "",
-      notes: appointment?.notes,
+      notes: appointmentData?.notes,
     });
-  }, [appointment, reset]);
+  }, [appointmentData, reset]);
 
   const onSubmit = async (values) => {
-    if (!isDirty) {
+    const isChanged = !isEqual(values, {
+      doctorId: appointmentData?.doctorId?._id,
+      slotTime: appointmentData?.slotTime,
+      date: appointmentData?.date
+        ? new Date(appointmentData?.date).toISOString().split("T")[0]
+        : "",
+      notes: appointmentData?.notes,
+    });
+
+    if (!isChanged) {
       toast.info("No changes detected");
       return;
     }
@@ -106,7 +115,7 @@ const EditAppointmentModal = () => {
       doctorId: values.doctorId,
       slotTime: values.slotTime,
       date: values.date,
-      notes: values.notes,
+      notes: values.notes || "",
     };
 
     try {
@@ -124,7 +133,10 @@ const EditAppointmentModal = () => {
       setTimeout(() => {
         reset();
         dispatch(closeModal());
-        dispatch(resetSuccessFeedback());
+
+        setTimeout(() => {
+          dispatch(resetSuccessFeedback());
+        }, 200);
       }, 1500);
     } catch (error) {
       console.error("Error updating appointment:", error);
@@ -159,7 +171,7 @@ const EditAppointmentModal = () => {
           <>
             <h2 className="text-xl font-semibold mb-4">Edit Appointment</h2>
 
-            {appointments && (
+            {appointmentData && (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="mb-4">
                   <InputField
@@ -178,7 +190,6 @@ const EditAppointmentModal = () => {
                     {...register("slotTime")}
                     className="focus:ring focus:border-primary"
                     disabled
-                    // error={errors.slotTime}
                   />
                 </div>
 
