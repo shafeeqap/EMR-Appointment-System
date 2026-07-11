@@ -6,7 +6,6 @@ dotenv.config();
 
 // console.log(process.env.MONGO_URI);
 
-
 await mongoose.connect(process.env.MONGO_URI);
 
 const hashed = await bcrypt.hash("admin123", 10);
